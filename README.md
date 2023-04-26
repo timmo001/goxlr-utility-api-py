@@ -5,4 +5,4 @@
 [![Deploy](https://github.com/timmo001/goxlr-utility-api-py/actions/workflows/deploy.yml/badge.svg)](https://github.com/timmo001/goxlr-utility-api-py/actions/workflows/deploy.yml)
 [![Lint](https://github.com/timmo001/goxlr-utility-api-py/actions/workflows/lint.yml/badge.svg)](https://github.com/timmo001/goxlr-utility-api-py/actions/workflows/lint.yml)
 
-GoXLR Utility API Python Package.
+[GoXLR Utility](https://github.com/GoXLR-on-Linux/goxlr-utility) API Python Package.
