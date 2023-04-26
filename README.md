@@ -6,17 +6,3 @@
 [![Lint](https://github.com/timmo001/goxlr-utility-api-py/actions/workflows/lint.yml/badge.svg)](https://github.com/timmo001/goxlr-utility-api-py/actions/workflows/lint.yml)
 
 GoXLR Utility API Python Package.
-
-## Support my work
-
-If you like my work, and would like to send me a tip/donation, please use the
-links below:
-
-[![Sponsor Timmo][sponsor-badge]][sponsor]
-
-[![Buy me a coffee][buymeacoffee-shield]][buymeacoffee]
-
-[buymeacoffee-shield]: https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-2.svg
-[buymeacoffee]: https://www.buymeacoffee.com/timmo
-[sponsor-badge]: https://raw.githubusercontent.com/timmo001/home-panel/master/documentation/resources/sponsor.png
-[sponsor]: https://github.com/sponsors/timmo001?o=esc
