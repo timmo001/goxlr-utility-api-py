@@ -3,10 +3,12 @@ from __future__ import annotations
 
 from typing import Any
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field  # pylint: disable=no-name-in-module
 
 
 class Config(BaseModel):
+    """Config Model"""
+
     daemon_version: str
     autostart_enabled: bool
     show_tray_icon: bool
@@ -14,12 +16,16 @@ class Config(BaseModel):
 
 
 class Versions(BaseModel):
+    """Versions Model"""
+
     firmware: list[int]
     fpga_count: int
     dice: list[int]
 
 
 class UsbDevice(BaseModel):
+    """USB Device Model"""
+
     manufacturer_name: str
     product_name: str
     version: list[int]
@@ -29,6 +35,8 @@ class UsbDevice(BaseModel):
 
 
 class Hardware(BaseModel):
+    """Hardware Model"""
+
     versions: Versions
     serial_number: str
     manufactured_date: str
@@ -36,48 +44,35 @@ class Hardware(BaseModel):
     usb_device: UsbDevice
 
 
-class A(BaseModel):
-    channel: str
-    mute_type: str
-    scribble: Any
-    mute_state: str
-
-
-class B(BaseModel):
-    channel: str
-    mute_type: str
-    scribble: Any
-    mute_state: str
-
-
-class C(BaseModel):
-    channel: str
-    mute_type: str
-    scribble: Any
-    mute_state: str
-
-
-class D(BaseModel):
-    channel: str
-    mute_type: str
-    scribble: Any
-    mute_state: str
-
-
 class FaderStatus(BaseModel):
-    a: A = Field(..., alias="A")
-    b: B = Field(..., alias="B")
-    c: C = Field(..., alias="C")
-    d: D = Field(..., alias="D")
+    """Fader Status Model"""
+
+    channel: str
+    mute_type: str
+    scribble: Any
+    mute_state: str
+
+
+class FaderStatuses(BaseModel):
+    """Fader Statuses Model"""
+
+    a: FaderStatus = Field(..., alias="A")
+    b: FaderStatus = Field(..., alias="B")
+    c: FaderStatus = Field(..., alias="C")
+    d: FaderStatus = Field(..., alias="D")
 
 
 class MicGains(BaseModel):
+    """Mic Gains Model"""
+
     dynamic: int = Field(..., alias="Dynamic")
     condenser: int = Field(..., alias="Condenser")
     jack: int = Field(..., alias="Jack")
 
 
 class Gain(BaseModel):
+    """Gain Model"""
+
     equalizer4_k_hz: int = Field(..., alias="Equalizer4KHz")
     equalizer16_k_hz: int = Field(..., alias="Equalizer16KHz")
     equalizer1_k_hz: int = Field(..., alias="Equalizer1KHz")
@@ -91,6 +86,8 @@ class Gain(BaseModel):
 
 
 class Frequency(BaseModel):
+    """Frequency Model"""
+
     equalizer16_k_hz: int = Field(..., alias="Equalizer16KHz")
     equalizer500_hz: int = Field(..., alias="Equalizer500Hz")
     equalizer125_hz: int = Field(..., alias="Equalizer125Hz")
@@ -104,11 +101,15 @@ class Frequency(BaseModel):
 
 
 class Equaliser(BaseModel):
+    """Equaliser Model"""
+
     gain: Gain
     frequency: Frequency
 
 
 class Gain1(BaseModel):
+    """Gain1 Model"""
+
     equalizer90_hz: int = Field(..., alias="Equalizer90Hz")
     equalizer250_hz: int = Field(..., alias="Equalizer250Hz")
     equalizer1_k_hz: int = Field(..., alias="Equalizer1KHz")
@@ -118,6 +119,8 @@ class Gain1(BaseModel):
 
 
 class Frequency1(BaseModel):
+    """Frequency1 Model"""
+
     equalizer3_k_hz: int = Field(..., alias="Equalizer3KHz")
     equalizer1_k_hz: int = Field(..., alias="Equalizer1KHz")
     equalizer90_hz: int = Field(..., alias="Equalizer90Hz")
@@ -127,11 +130,15 @@ class Frequency1(BaseModel):
 
 
 class EqualiserMini(BaseModel):
+    """Equaliser Mini Model"""
+
     gain: Gain1
     frequency: Frequency1
 
 
 class NoiseGate(BaseModel):
+    """Noise Gate Model"""
+
     threshold: int
     attack: int
     release: int
@@ -140,6 +147,8 @@ class NoiseGate(BaseModel):
 
 
 class Compressor(BaseModel):
+    """Compressor Model"""
+
     threshold: int
     ratio: int
     attack: int
@@ -148,6 +157,8 @@ class Compressor(BaseModel):
 
 
 class MicStatus(BaseModel):
+    """Mic Status Model"""
+
     mic_type: str
     mic_gains: MicGains
     equaliser: Equaliser
@@ -157,6 +168,8 @@ class MicStatus(BaseModel):
 
 
 class Volumes(BaseModel):
+    """Volumes Model"""
+
     mic: int = Field(..., alias="Mic")
     line_in: int = Field(..., alias="LineIn")
     console: int = Field(..., alias="Console")
@@ -171,6 +184,8 @@ class Volumes(BaseModel):
 
 
 class Levels(BaseModel):
+    """Levels Model"""
+
     submix_supported: bool
     volumes: Volumes
     submix: Any
@@ -178,63 +193,9 @@ class Levels(BaseModel):
     deess: int
 
 
-class Microphone(BaseModel):
-    headphones: bool = Field(..., alias="Headphones")
-    broadcast_mix: bool = Field(..., alias="BroadcastMix")
-    chat_mic: bool = Field(..., alias="ChatMic")
-    sampler: bool = Field(..., alias="Sampler")
-    line_out: bool = Field(..., alias="LineOut")
+class RouterItem(BaseModel):
+    """Router Item Model"""
 
-
-class Chat(BaseModel):
-    headphones: bool = Field(..., alias="Headphones")
-    broadcast_mix: bool = Field(..., alias="BroadcastMix")
-    chat_mic: bool = Field(..., alias="ChatMic")
-    sampler: bool = Field(..., alias="Sampler")
-    line_out: bool = Field(..., alias="LineOut")
-
-
-class Music(BaseModel):
-    headphones: bool = Field(..., alias="Headphones")
-    broadcast_mix: bool = Field(..., alias="BroadcastMix")
-    chat_mic: bool = Field(..., alias="ChatMic")
-    sampler: bool = Field(..., alias="Sampler")
-    line_out: bool = Field(..., alias="LineOut")
-
-
-class Game(BaseModel):
-    headphones: bool = Field(..., alias="Headphones")
-    broadcast_mix: bool = Field(..., alias="BroadcastMix")
-    chat_mic: bool = Field(..., alias="ChatMic")
-    sampler: bool = Field(..., alias="Sampler")
-    line_out: bool = Field(..., alias="LineOut")
-
-
-class Console(BaseModel):
-    headphones: bool = Field(..., alias="Headphones")
-    broadcast_mix: bool = Field(..., alias="BroadcastMix")
-    chat_mic: bool = Field(..., alias="ChatMic")
-    sampler: bool = Field(..., alias="Sampler")
-    line_out: bool = Field(..., alias="LineOut")
-
-
-class LineIn(BaseModel):
-    headphones: bool = Field(..., alias="Headphones")
-    broadcast_mix: bool = Field(..., alias="BroadcastMix")
-    chat_mic: bool = Field(..., alias="ChatMic")
-    sampler: bool = Field(..., alias="Sampler")
-    line_out: bool = Field(..., alias="LineOut")
-
-
-class System(BaseModel):
-    headphones: bool = Field(..., alias="Headphones")
-    broadcast_mix: bool = Field(..., alias="BroadcastMix")
-    chat_mic: bool = Field(..., alias="ChatMic")
-    sampler: bool = Field(..., alias="Sampler")
-    line_out: bool = Field(..., alias="LineOut")
-
-
-class Samples(BaseModel):
     headphones: bool = Field(..., alias="Headphones")
     broadcast_mix: bool = Field(..., alias="BroadcastMix")
     chat_mic: bool = Field(..., alias="ChatMic")
@@ -243,107 +204,89 @@ class Samples(BaseModel):
 
 
 class Router(BaseModel):
-    microphone: Microphone = Field(..., alias="Microphone")
-    chat: Chat = Field(..., alias="Chat")
-    music: Music = Field(..., alias="Music")
-    game: Game = Field(..., alias="Game")
-    console: Console = Field(..., alias="Console")
-    line_in: LineIn = Field(..., alias="LineIn")
-    system: System = Field(..., alias="System")
-    samples: Samples = Field(..., alias="Samples")
+    """Router Model"""
+
+    microphone: RouterItem = Field(..., alias="Microphone")
+    chat: RouterItem = Field(..., alias="Chat")
+    music: RouterItem = Field(..., alias="Music")
+    game: RouterItem = Field(..., alias="Game")
+    console: RouterItem = Field(..., alias="Console")
+    line_in: RouterItem = Field(..., alias="LineIn")
+    system: RouterItem = Field(..., alias="System")
+    samples: RouterItem = Field(..., alias="Samples")
 
 
 class CoughButton(BaseModel):
+    """Cough Button Model"""
+
     is_toggle: bool
     mute_type: str
     state: str
 
 
 class Colours(BaseModel):
+    """Colours Model"""
+
     colour_one: str
     colour_two: str
 
 
-class B1(BaseModel):
-    style: str
-    colours: Colours
+class Fader(BaseModel):
+    """Fader Model"""
 
-
-class D1(BaseModel):
-    style: str
-    colours: Colours
-
-
-class A1(BaseModel):
-    style: str
-    colours: Colours
-
-
-class C1(BaseModel):
     style: str
     colours: Colours
 
 
 class Faders(BaseModel):
-    b: B1 = Field(..., alias="B")
-    d: D1 = Field(..., alias="D")
-    a: A1 = Field(..., alias="A")
-    c: C1 = Field(..., alias="C")
+    """Faders Model"""
+
+    a: Fader = Field(..., alias="A")
+    b: Fader = Field(..., alias="B")
+    c: Fader = Field(..., alias="C")
+    d: Fader = Field(..., alias="D")
 
 
-class Bleep(BaseModel):
-    off_style: str
-    colours: Colours
+class Button(BaseModel):
+    """Button Model"""
 
-
-class Fader1Mute(BaseModel):
-    off_style: str
-    colours: Colours
-
-
-class Fader3Mute(BaseModel):
-    off_style: str
-    colours: Colours
-
-
-class Fader2Mute(BaseModel):
-    off_style: str
-    colours: Colours
-
-
-class Fader4Mute(BaseModel):
-    off_style: str
-    colours: Colours
-
-
-class Cough(BaseModel):
     off_style: str
     colours: Colours
 
 
 class Buttons(BaseModel):
-    bleep: Bleep = Field(..., alias="Bleep")
-    fader1_mute: Fader1Mute = Field(..., alias="Fader1Mute")
-    fader3_mute: Fader3Mute = Field(..., alias="Fader3Mute")
-    fader2_mute: Fader2Mute = Field(..., alias="Fader2Mute")
-    fader4_mute: Fader4Mute = Field(..., alias="Fader4Mute")
-    cough: Cough = Field(..., alias="Cough")
+    """Buttons Model"""
+
+    bleep: Button = Field(..., alias="Bleep")
+    fader1_mute: Button = Field(..., alias="Fader1Mute")
+    fader3_mute: Button = Field(..., alias="Fader3Mute")
+    fader2_mute: Button = Field(..., alias="Fader2Mute")
+    fader4_mute: Button = Field(..., alias="Fader4Mute")
+    cough: Button = Field(..., alias="Cough")
 
 
 class Global(BaseModel):
+    """Global Model"""
+
     colour_one: str
 
 
 class Accent(BaseModel):
+    """Accent Model"""
+
     colour_one: str
 
 
 class Simple(BaseModel):
+    """Simple Model"""
+
     global_: Global = Field(..., alias="Global")
     accent: Accent = Field(..., alias="Accent")
 
 
 class Lighting(BaseModel):
+    """Lighting Model"""
+
     faders: Faders
     buttons: Buttons
     simple: Simple
@@ -352,6 +295,8 @@ class Lighting(BaseModel):
 
 
 class Display(BaseModel):
+    """Display Model"""
+
     gate: str
     compressor: str
     equaliser: str
@@ -359,12 +304,16 @@ class Display(BaseModel):
 
 
 class Settings(BaseModel):
+    """Settings Model"""
+
     display: Display
     mute_hold_duration: int
     vc_mute_also_mute_cm: bool
 
 
 class ButtonDown(BaseModel):
+    """Button Down Model"""
+
     fader1_mute: bool = Field(..., alias="Fader1Mute")
     fader2_mute: bool = Field(..., alias="Fader2Mute")
     fader3_mute: bool = Field(..., alias="Fader3Mute")
@@ -392,9 +341,11 @@ class ButtonDown(BaseModel):
 
 
 class Mixer(BaseModel):
+    """Mixer Model"""
+
     hardware: Hardware
     shutdown_commands: list
-    fader_status: FaderStatus
+    fader_status: FaderStatuses
     mic_status: MicStatus
     levels: Levels
     router: Router
@@ -409,6 +360,8 @@ class Mixer(BaseModel):
 
 
 class Paths(BaseModel):
+    """Paths Model"""
+
     profile_directory: str
     mic_profile_directory: str
     samples_directory: str
@@ -417,6 +370,8 @@ class Paths(BaseModel):
 
 
 class Files(BaseModel):
+    """Files Model"""
+
     profiles: list[str]
     mic_profiles: list[str]
     presets: list[str]
@@ -425,6 +380,8 @@ class Files(BaseModel):
 
 
 class Status(BaseModel):
+    """Status Model"""
+
     config: Config
     mixers: dict[str, Mixer]
     paths: Paths
@@ -432,4 +389,6 @@ class Status(BaseModel):
 
 
 class Data(BaseModel):
+    """Data Model"""
+
     status: Status = Field(..., alias="Status")
