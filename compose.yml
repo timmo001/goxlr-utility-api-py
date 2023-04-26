@@ -1,6 +1,6 @@
 ---
 services:
-  python-template:
+  goxlr-utility-api-py:
     build: .
     restart: unless-stopped
     ports:
@@ -9,8 +9,8 @@ services:
         protocol: tcp
     volumes:
       - type: volume
-        source: python-template-data
-        target: /data/python-template
+        source: goxlr-utility-api-py-data
+        target: /data/goxlr-utility-api-py
 
 volumes:
-  python-template-data: {}
+  goxlr-utility-api-py-data: {}

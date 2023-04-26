@@ -17,7 +17,7 @@ RUN \
     python3-wheel \
     \
     && pip install --upgrade \
-    timmopytemplate \
+    goxlrutilityapi \
     \
     && rm -fr \
     /tmp/* \
@@ -44,7 +44,7 @@ LABEL \
     org.opencontainers.image.vendor="Timmo" \
     org.opencontainers.image.authors="Aidan Timson <contact@timmo.xyz>" \
     org.opencontainers.image.licenses="MIT" \
-    org.opencontainers.image.url="https://python-template.timmo.dev" \
+    org.opencontainers.image.url="https://goxlr-utility-api-py.timmo.dev" \
     org.opencontainers.image.source="https://github.com/${BUILD_REPOSITORY}" \
     org.opencontainers.image.documentation="https://github.com/${BUILD_REPOSITORY}/blob/master/README.md" \
     org.opencontainers.image.created=${BUILD_DATE} \

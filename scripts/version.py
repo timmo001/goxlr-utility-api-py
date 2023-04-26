@@ -1,4 +1,4 @@
-"""Python Template: Version"""
+"""GoXLR Utility API: Version"""
 import os
 import subprocess
 import sys
@@ -6,7 +6,7 @@ import sys
 import typer
 
 PACKAGES = [
-    {"path": "module", "module": "timmopytemplate"},
+    {"path": "module", "module": "goxlrutilityapi"},
 ]
 
 app = typer.Typer()

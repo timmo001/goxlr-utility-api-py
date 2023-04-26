@@ -1,4 +1,4 @@
-"""Python Template: Main"""
+"""GoXLR Utility API: Main"""
 from __future__ import annotations
 
 import typer
