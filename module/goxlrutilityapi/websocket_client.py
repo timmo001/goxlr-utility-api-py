@@ -3,8 +3,8 @@ from __future__ import annotations
 
 import asyncio
 import socket
-from collections.abc import Callable
-from typing import Any, Awaitable, Optional
+from collections.abc import Awaitable, Callable
+from typing import Any, Optional
 
 import aiohttp
 
@@ -121,8 +121,8 @@ class WebsocketClient(Base):
             self._logger.debug("New message: %s", message[KEY_ID])
 
             # Get first object in message
-            type = message[KEY_DATA].popitem()[0]
-            self._logger.info("Message type: %s", type)
+            message_type = message[KEY_DATA].popitem()[0]
+            self._logger.info("Message type: %s", message_type)
 
             # if message.get(KEY_ID) is not None:
             #     response_tuple = self._responses.get(message[KEY_ID])
