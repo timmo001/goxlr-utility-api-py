@@ -28,8 +28,6 @@ jobs:
     uses: timmo001/workflows/.github/workflows/lint-markdown-links.yml@master
   lint-markdownlint:
     uses: timmo001/workflows/.github/workflows/lint-markdownlint.yml@master
-  lint-prettier:
-    uses: timmo001/workflows/.github/workflows/lint-prettier.yml@master
   lint-pylint-module:
     uses: timmo001/workflows/.github/workflows/lint-pylint.yml@master
     with:
