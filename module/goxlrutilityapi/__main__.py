@@ -6,6 +6,11 @@ import asyncio
 import typer
 
 from ._version import __version__
+from .exceptions import (
+    BadMessageException,
+    ConnectionClosedException,
+    ConnectionErrorException,
+)
 from .logger import setup_logger
 from .models.response import Response
 from .websocket_client import WebsocketClient
@@ -19,11 +24,18 @@ websocket_client = WebsocketClient()
 
 def setup_websocket() -> None:
     """Listen for messages on another thread"""
-    loop.run_until_complete(websocket_client.connect())
-    loop.create_task(
-        websocket_client.listen(),
-        name="Websocket Listener",
-    )
+    try:
+        loop.run_until_complete(websocket_client.connect())
+        loop.create_task(
+            websocket_client.listen(),
+            name="Websocket Listener",
+        )
+    except (BadMessageException, ConnectionClosedException, ConnectionErrorException) as error:
+        typer.secho(
+            f"Error: {error}",
+            fg=typer.colors.RED,
+        )
+        loop.stop()
 
 
 @app.command(name="get_status", short_help="Get Status of GoXLR")
@@ -32,7 +44,14 @@ def get_status(debug: bool = False) -> None:
     if debug:
         setup_logger("DEBUG")
     setup_websocket()
-    response: Response = loop.run_until_complete(websocket_client.get_status())
+    try:
+        response: Response = loop.run_until_complete(websocket_client.get_status())
+    except BadMessageException as error:
+        typer.secho(
+            f"Failed to get status from GoXLR: {error}",
+            fg=typer.colors.RED,
+        )
+        return
     typer.secho(response.json(), fg=typer.colors.GREEN)
 
 

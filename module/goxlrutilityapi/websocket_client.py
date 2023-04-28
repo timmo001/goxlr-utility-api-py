@@ -154,12 +154,14 @@ class WebsocketClient(Base):
             if (model := MODEL_MAP.get(message_type)) is None:
                 self._logger.warning("Unknown model: %s", message_type)
             else:
-                response.data = model(**response.data)
+                try:
+                    response.data = model(**response.data)
+                except TypeError as error:
+                    raise BadMessageException(
+                        f"Failed to create model '{message_type}' with data: {response.data}"
+                    ) from error
                 if callback is not None:
-                    await callback(
-                        message_type,
-                        response,
-                    )
+                    await callback(message_type, response)
 
             self._logger.info(
                 "Response: %s",
