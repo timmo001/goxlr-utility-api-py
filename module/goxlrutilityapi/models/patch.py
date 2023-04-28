@@ -1,10 +1,12 @@
 """GoXLR Utility API: Patch Models"""
 from __future__ import annotations
 
-from pydantic import BaseModel, Field  # pylint: disable=no-name-in-module
+from pydantic import Field
+
+from . import DefaultBaseModel
 
 
-class Patch(BaseModel):
+class Patch(DefaultBaseModel):
     """Patch Model"""
 
     op: str
@@ -12,7 +14,7 @@ class Patch(BaseModel):
     value: int
 
 
-class Data(BaseModel):
+class Data(DefaultBaseModel):
     """Data Model"""
 
     patch: list[Patch] = Field(..., alias="Patch")

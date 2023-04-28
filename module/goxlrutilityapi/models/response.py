@@ -3,10 +3,12 @@ from __future__ import annotations
 
 from typing import Any, Optional
 
-from pydantic import BaseModel, Field  # pylint: disable=no-name-in-module
+from pydantic import Field
+
+from . import DefaultBaseModel
 
 
-class Response(BaseModel):
+class Response(DefaultBaseModel):
     """Response Model"""
 
     id: Optional[int] = Field(None, description="Message ID")

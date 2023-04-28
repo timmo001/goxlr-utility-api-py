@@ -3,10 +3,12 @@ from __future__ import annotations
 
 from typing import Optional
 
-from pydantic import BaseModel, Field  # pylint: disable=no-name-in-module
+from pydantic import Field
+
+from . import DefaultBaseModel
 
 
-class Request(BaseModel):
+class Request(DefaultBaseModel):
     """Request Model"""
 
     id: Optional[int] = None
