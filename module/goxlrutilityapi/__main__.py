@@ -28,13 +28,13 @@ websocket_client = WebsocketClient()
 
 
 def setup_websocket(
-    callback: Optional[Callable[[Response], Awaitable[None]]] = None
+    patch_callback: Optional[Callable[[Response[Patch]], Awaitable[None]]] = None
 ) -> None:
     """Listen for messages on another thread"""
     try:
         loop.run_until_complete(websocket_client.connect())
         loop.create_task(
-            websocket_client.listen(callback),
+            websocket_client.listen(patch_callback),
             name="Websocket Listener",
         )
     except (
@@ -78,9 +78,9 @@ def get_status(debug: bool = False) -> None:
     typer.secho(status.json(), fg=typer.colors.GREEN)
 
 
-@app.command(name="listen_for_messages", short_help="Listen for messages")
+@app.command(name="listen_for_messages", short_help="Listen for patch messages from GoXLR")
 def listen_for_messages(debug: bool = False) -> None:
-    """Listen for messages"""
+    """Listen for patch messages from GoXLR"""
     if debug:
         setup_logger("DEBUG")
     setup_websocket(patch_callback)
