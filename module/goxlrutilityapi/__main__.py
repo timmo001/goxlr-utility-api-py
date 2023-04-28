@@ -18,6 +18,7 @@ websocket_client = WebsocketClient()
 loop = asyncio.new_event_loop()
 asyncio.set_event_loop(loop)
 
+
 @app.command(name="get_status", short_help="Get Status of GoXLR")
 def get_status() -> None:
     """Get Status of GoXLR"""
