@@ -48,14 +48,17 @@ def setup_websocket(
 
 async def patch_callback(response: Response[Patch]) -> None:
     """Response callback function"""
-    typer.secho(response.json(
-        include={
-            KEY_ID,
-            KEY_TYPE,
-            KEY_DATA,
-        },
-        exclude_unset=True,
-    ), fg=typer.colors.GREEN)
+    typer.secho(
+        response.json(
+            include={
+                KEY_ID,
+                KEY_TYPE,
+                KEY_DATA,
+            },
+            exclude_unset=True,
+        ),
+        fg=typer.colors.GREEN,
+    )
 
 
 @app.command(name="get_status", short_help="Get Status of GoXLR")

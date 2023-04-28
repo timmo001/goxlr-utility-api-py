@@ -1,6 +1,6 @@
 """GoXLR Utility API: Constants"""
 
-from typing import Any, Final, Type
+from typing import Any, Final
 
 from .models import DefaultBaseModel
 from .models.patch import Patch
@@ -21,12 +21,12 @@ RESPONSE_TYPE_PATCH: Final[str] = "Patch"
 RESPONSE_TYPE_STATUS: Final[str] = "Status"
 
 # Models
-MODEL_PATCH: Type[Patch] = Patch
-MODEL_REQUEST: Type[Request] = Request
-MODEL_RESPONSE: Type[Response[Any]] = Response
-MODEL_STATUS: Type[Status] = Status
+MODEL_PATCH: type[Patch] = Patch
+MODEL_REQUEST: type[Request] = Request
+MODEL_RESPONSE: type[Response[Any]] = Response
+MODEL_STATUS: type[Status] = Status
 
-MODEL_MAP: Final[dict[str, Type[DefaultBaseModel]]] = {
+MODEL_MAP: Final[dict[str, type[DefaultBaseModel]]] = {
     RESPONSE_TYPE_PATCH: MODEL_PATCH,
     RESPONSE_TYPE_STATUS: MODEL_STATUS,
 }
