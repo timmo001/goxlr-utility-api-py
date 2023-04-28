@@ -128,8 +128,14 @@ class WebsocketClient(Base):
             """Message Callback"""
             self._logger.debug("New message")
 
-            # Get first object in message
-            message_type = message[KEY_DATA].popitem()[0]
+            message_data = message.get(KEY_DATA)
+            if message_data is None:
+                raise BadMessageException("Message data is missing")
+
+            # Get key of first object in message data
+            message_type = next(iter(message_data))
+            if message_type is None:
+                raise BadMessageException("Message type is missing")
 
             self._logger.debug("Message ID: %s", message[KEY_ID])
             self._logger.debug("Message type: %s", message_type)
