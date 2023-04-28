@@ -2,7 +2,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Module",
+      "name": "Get Status",
       "type": "python",
       "request": "launch",
       "module": "goxlrutilityapi",
@@ -10,6 +10,16 @@
       "cwd": "${workspaceFolder}/module",
       "justMyCode": false,
       "args": ["get_status", "--debug"]
+    },
+    {
+      "name": "Listen for Messages",
+      "type": "python",
+      "request": "launch",
+      "module": "goxlrutilityapi",
+      "preLaunchTask": "Module: pip install",
+      "cwd": "${workspaceFolder}/module",
+      "justMyCode": false,
+      "args": ["listen_for_messages", "--debug"]
     }
   ]
 }

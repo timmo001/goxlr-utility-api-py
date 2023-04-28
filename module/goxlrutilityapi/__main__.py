@@ -36,6 +36,16 @@ def get_status(debug: bool = False) -> None:
     typer.secho(response.json(), fg=typer.colors.GREEN)
 
 
+@app.command(name="listen_for_messages", short_help="Listen for messages")
+def listen_for_messages(debug: bool = False) -> None:
+    """Listen for messages"""
+    if debug:
+        setup_logger("DEBUG")
+    setup_websocket()
+    typer.secho("Listening for messages...", fg=typer.colors.GREEN)
+    loop.run_forever()
+
+
 @app.command(name="version", short_help="Module Version")
 def version() -> None:
     """Module Version"""
