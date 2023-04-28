@@ -11,3 +11,4 @@ class Response(BaseModel):
 
     id: Optional[int] = Field(None, description="Message ID")
     data: Optional[Any] = Field(None, description="Data")
+    type: Optional[str] = Field(None, description="Type of Response")

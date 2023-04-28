@@ -9,7 +9,14 @@ from typing import Any, Optional
 import aiohttp
 
 from .base import Base
-from .const import KEY_DATA, KEY_ID, REQUEST_TYPE_GET_STATUS, RESPONSE_TYPE_STATUS
+from .const import (
+    KEY_DATA,
+    KEY_ID,
+    KEY_TYPE,
+    MODEL_MAP,
+    REQUEST_TYPE_GET_STATUS,
+    RESPONSE_TYPE_STATUS,
+)
 from .exceptions import (
     BadMessageException,
     ConnectionClosedException,
@@ -76,7 +83,7 @@ class WebsocketClient(Base):
 
     async def _send_message(
         self,
-        request,
+        request: Request,
         wait_for_response: bool = True,
         response_type: Optional[str] = None,
     ) -> Response:
@@ -99,6 +106,7 @@ class WebsocketClient(Base):
         return Response(
             id=request.id,
             data=None,
+            type=None,
         )
 
     async def get_status(self) -> Response:
@@ -118,89 +126,64 @@ class WebsocketClient(Base):
 
         async def _callback_message(message: dict) -> None:
             """Message Callback"""
-            self._logger.debug("New message: %s", message[KEY_ID])
+            self._logger.debug("New message")
 
             # Get first object in message
             message_type = message[KEY_DATA].popitem()[0]
-            self._logger.info("Message type: %s", message_type)
 
-            # if message.get(KEY_ID) is not None:
-            #     response_tuple = self._responses.get(message[KEY_ID])
-            #     if response_tuple is not None:
-            #         future, response_type = response_tuple
-            #         if (
-            #             response_type is not None
-            #             and response_type != message[EVENT_TYPE]
-            #         ):
-            #             self._logger.info(
-            #                 "Response type '%s' does not match requested type '%s'.",
-            #                 message[EVENT_TYPE],
-            #                 response_type,
-            #             )
-            #         else:
-            #             response = Response(**message)
+            self._logger.debug("Message ID: %s", message[KEY_ID])
+            self._logger.debug("Message type: %s", message_type)
 
-            #             if (
-            #                 response.type == TYPE_DATA_UPDATE
-            #                 and response.module is not None
-            #                 and message[EVENT_DATA] is not None
-            #             ):
-            #                 # Find model from module
-            #                 model = MODEL_MAP.get(message[EVENT_MODULE])
-            #                 if model is None:
-            #                     self._logger.warning(
-            #                         "Unknown model: %s", message[EVENT_MODULE]
-            #                     )
-            #                 else:
-            #                     response.data = model(**message[EVENT_DATA])
+            response = Response(
+                **message,
+                type=message_type,
+            )
 
-            #             self._logger.info(
-            #                 "Response: %s",
-            #                 response.json(
-            #                     include={
-            #                         EVENT_ID,
-            #                         EVENT_TYPE,
-            #                         EVENT_SUBTYPE,
-            #                         EVENT_MESSAGE,
-            #                     },
-            #                     exclude_unset=True,
-            #                 ),
-            #             )
+            self._logger.info(
+                "Response: %s",
+                response.json(
+                    include={
+                        KEY_ID,
+                        KEY_TYPE,
+                    },
+                    exclude_unset=True,
+                ),
+            )
 
-            #             try:
-            #                 future.set_result(response)
-            #             except asyncio.InvalidStateError:
-            #                 self._logger.debug(
-            #                     "Future already set for response ID: %s",
-            #                     message[EVENT_ID],
-            #                 )
+            # Find model from module
+            model = MODEL_MAP.get(message_type)
+            if model is None:
+                self._logger.warning("Unknown model: %s", message_type)
+            else:
+                response.data = model(**message[KEY_DATA])
+                if callback is not None:
+                    await callback(
+                        message_type,
+                        response,
+                    )
 
-            # if message[EVENT_TYPE] == TYPE_ERROR:
-            #     if message[EVENT_SUBTYPE] == SUBTYPE_LISTENER_ALREADY_REGISTERED:
-            #         self._logger.debug(message)
-            #     else:
-            #         self._logger.warning("Error message: %s", message)
-            # elif (
-            #     message[EVENT_TYPE] == TYPE_DATA_UPDATE
-            #     and message[EVENT_MODULE] is not None
-            #     and message[EVENT_DATA] is not None
-            # ):
-            #     self._logger.debug(
-            #         "New data for: %s\n%s", message[EVENT_MODULE], message[EVENT_DATA]
-            #     )
-            #     model = MODEL_MAP.get(message[EVENT_MODULE])
-            #     if model is None:
-            #         self._logger.warning("Unknown model: %s", message[EVENT_MODULE])
-            #     else:
-            #         if callback is not None:
-            #             await callback(
-            #                 message[EVENT_MODULE],
-            #                 model(**message[EVENT_DATA]),
-            #             )
+            if message.get(KEY_ID) is not None:
+                response_tuple = self._responses.get(message[KEY_ID])
+                if response_tuple is not None:
+                    future, response_type = response_tuple
+                    if response_type is not None and response_type != message_type:
+                        self._logger.info(
+                            "Response type '%s' does not match requested type '%s'.",
+                            message_type,
+                            response_type,
+                        )
+                    else:
+                        try:
+                            future.set_result(response)
+                        except asyncio.InvalidStateError:
+                            self._logger.debug(
+                                "Future already set for response ID: %s",
+                                message[KEY_ID],
+                            )
 
-        await self.listen_for_messages(callback=_callback_message)
+        await self._listen_for_messages(callback=_callback_message)
 
-    async def listen_for_messages(
+    async def _listen_for_messages(
         self,
         callback: Callable[[dict[Any, Any]], Awaitable[None]],
     ) -> None:
