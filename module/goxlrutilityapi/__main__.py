@@ -47,7 +47,7 @@ def setup_websocket(
 
 
 async def patch_callback(response: Response[Patch]) -> None:
-    """Response callback function"""
+    """Patch response callback function"""
     typer.secho(
         response.json(
             include={
