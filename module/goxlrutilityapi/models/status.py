@@ -384,10 +384,10 @@ class Files(DefaultBaseModel):
 class Status(DefaultBaseModel):
     """Status Model"""
 
-    config: Config = Field(..., alias="Config")
-    mixers: dict[str, Mixer] = Field(..., alias="Mixers")
-    paths: Paths = Field(..., alias="Paths")
-    files: Files = Field(..., alias="Files")
+    config: Config
+    mixers: dict[str, Mixer]
+    paths: Paths
+    files: Files
 
 
 class Data(DefaultBaseModel):

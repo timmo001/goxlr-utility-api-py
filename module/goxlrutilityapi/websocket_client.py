@@ -128,21 +128,38 @@ class WebsocketClient(Base):
             """Message Callback"""
             self._logger.debug("New message")
 
+            # Get message ID
+            message_id = message.get(KEY_ID)
+
             if (message_data := message.get(KEY_DATA)) is None:
                 raise BadMessageException("Message data is missing")
 
             # Get key of first object in message data
-
             if (message_type := next(iter(message_data))) is None:
                 raise BadMessageException("Message type is missing")
 
-            self._logger.debug("Message ID: %s", message[KEY_ID])
+            self._logger.debug("Message ID: %s", message_id)
             self._logger.debug("Message type: %s", message_type)
 
             response = Response(
-                **message,
+                id=message_id,
+                data=message_data.get(message_type),
                 type=message_type,
             )
+
+            if response.data is None:
+                raise BadMessageException("Message data is missing")
+
+            # Find model from module
+            if (model := MODEL_MAP.get(message_type)) is None:
+                self._logger.warning("Unknown model: %s", message_type)
+            else:
+                response.data = model(**response.data)
+                if callback is not None:
+                    await callback(
+                        message_type,
+                        response,
+                    )
 
             self._logger.info(
                 "Response: %s",
@@ -155,19 +172,8 @@ class WebsocketClient(Base):
                 ),
             )
 
-            # Find model from module
-            if (model := MODEL_MAP.get(message_type)) is None:
-                self._logger.warning("Unknown model: %s", message_type)
-            else:
-                response.data = model(**message[KEY_DATA])
-                if callback is not None:
-                    await callback(
-                        message_type,
-                        response,
-                    )
-
-            if message.get(KEY_ID) is not None:
-                response_tuple = self._responses.get(message[KEY_ID])
+            if message_id is not None:
+                response_tuple = self._responses.get(message_id)
                 if response_tuple is not None:
                     future, response_type = response_tuple
                     if response_type is not None and response_type != message_type:
@@ -182,7 +188,7 @@ class WebsocketClient(Base):
                         except asyncio.InvalidStateError:
                             self._logger.debug(
                                 "Future already set for response ID: %s",
-                                message[KEY_ID],
+                                message_id,
                             )
 
         await self._listen_for_messages(callback=_callback_message)
