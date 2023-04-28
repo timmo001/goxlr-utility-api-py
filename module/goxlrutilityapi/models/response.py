@@ -1,7 +1,7 @@
 """GoXLR Utility API: Response Model"""
 from __future__ import annotations
 
-from typing import Generic, Optional, TypeVar, Union
+from typing import Generic, Optional, TypeVar
 
 from pydantic import Field
 
