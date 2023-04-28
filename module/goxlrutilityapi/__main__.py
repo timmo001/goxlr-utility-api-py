@@ -29,7 +29,7 @@ websocket_client = WebsocketClient()
 
 def setup_websocket(
     callback: Optional[Callable[[Response[Patch]], Awaitable[None]]] = None
-) -> None:
+) -> bool:
     """Listen for messages on another thread"""
     try:
         loop.run_until_complete(websocket_client.connect())
@@ -44,6 +44,8 @@ def setup_websocket(
     ) as error:
         typer.secho(f"Error: {error}", fg=typer.colors.RED)
         loop.stop()
+        return False
+    return True
 
 
 async def patch_callback(response: Response[Patch]) -> None:
@@ -66,7 +68,9 @@ def get_status(debug: bool = False) -> None:
     """Get Status of GoXLR"""
     if debug:
         setup_logger("DEBUG")
-    setup_websocket()
+    if setup_websocket() is False:
+        typer.secho("Failed to connect to GoXLR", fg=typer.colors.RED)
+        return
     try:
         status: Status = loop.run_until_complete(websocket_client.get_status())
     except BadMessageException as error:
