@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import asyncio
+from collections.abc import Awaitable, Callable
+from typing import Any, Optional
 
 import typer
 
@@ -22,20 +24,31 @@ asyncio.set_event_loop(loop)
 websocket_client = WebsocketClient()
 
 
-def setup_websocket() -> None:
+def setup_websocket(
+    callback: Optional[Callable[[Response], Awaitable[None]]] = None
+) -> None:
     """Listen for messages on another thread"""
     try:
         loop.run_until_complete(websocket_client.connect())
         loop.create_task(
-            websocket_client.listen(),
+            websocket_client.listen(callback),
             name="Websocket Listener",
         )
-    except (BadMessageException, ConnectionClosedException, ConnectionErrorException) as error:
+    except (
+        BadMessageException,
+        ConnectionClosedException,
+        ConnectionErrorException,
+    ) as error:
         typer.secho(
             f"Error: {error}",
             fg=typer.colors.RED,
         )
         loop.stop()
+
+
+async def callback(data: Response) -> None:
+    """Callback function"""
+    typer.secho(data.json(), fg=typer.colors.GREEN)
 
 
 @app.command(name="get_status", short_help="Get Status of GoXLR")
@@ -60,7 +73,7 @@ def listen_for_messages(debug: bool = False) -> None:
     """Listen for messages"""
     if debug:
         setup_logger("DEBUG")
-    setup_websocket()
+    setup_websocket(callback)
     typer.secho("Listening for messages...", fg=typer.colors.GREEN)
     loop.run_forever()
 

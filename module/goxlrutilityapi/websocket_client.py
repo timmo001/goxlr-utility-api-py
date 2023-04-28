@@ -120,12 +120,12 @@ class WebsocketClient(Base):
 
     async def listen(
         self,
-        callback: Optional[Callable[[str, Any], Awaitable[None]]] = None,
+        callback: Optional[Callable[[Response], Awaitable[None]]] = None,
     ) -> None:
         """Listen for messages and map to modules"""
 
         async def _callback_message(message: dict) -> None:
-            """Message Callback"""
+            """Message callback"""
             self._logger.debug("New message")
 
             # Get message ID
@@ -155,13 +155,16 @@ class WebsocketClient(Base):
                 self._logger.warning("Unknown model: %s", message_type)
             else:
                 try:
-                    response.data = model(**response.data)
+                    if isinstance(response.data, list):
+                        response.data = [model(**item) for item in response.data]
+                    else:
+                        response.data = model(**response.data)
                 except TypeError as error:
                     raise BadMessageException(
-                        f"Failed to create model '{message_type}' with data: {response.data}"
+                        f"Failed to create model '{message_type}' with data:\n{response.data}"
                     ) from error
                 if callback is not None:
-                    await callback(message_type, response)
+                    await callback(response)
 
             self._logger.info(
                 "Response: %s",
