@@ -1,7 +1,9 @@
 """GoXLR Utility API: Logger"""
 import logging
+from typing import Final
 
-from .const import DATE_FORMAT, FORMAT
+DATE_FORMAT: Final[str] = "%Y-%m-%d %H:%M:%S"
+FORMAT: Final[str] = "%(asctime)s %(levelname)s (%(threadName)s) [%(name)s] %(message)s"
 
 
 def setup_logger(

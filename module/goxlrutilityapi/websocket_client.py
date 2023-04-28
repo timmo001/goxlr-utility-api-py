@@ -128,13 +128,12 @@ class WebsocketClient(Base):
             """Message Callback"""
             self._logger.debug("New message")
 
-            message_data = message.get(KEY_DATA)
-            if message_data is None:
+            if (message_data := message.get(KEY_DATA)) is None:
                 raise BadMessageException("Message data is missing")
 
             # Get key of first object in message data
-            message_type = next(iter(message_data))
-            if message_type is None:
+
+            if (message_type := next(iter(message_data))) is None:
                 raise BadMessageException("Message type is missing")
 
             self._logger.debug("Message ID: %s", message[KEY_ID])
@@ -157,8 +156,7 @@ class WebsocketClient(Base):
             )
 
             # Find model from module
-            model = MODEL_MAP.get(message_type)
-            if model is None:
+            if (model := MODEL_MAP.get(message_type)) is None:
                 self._logger.warning("Unknown model: %s", message_type)
             else:
                 response.data = model(**message[KEY_DATA])
