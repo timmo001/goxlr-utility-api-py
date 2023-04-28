@@ -4,7 +4,7 @@ from __future__ import annotations
 import asyncio
 import socket
 from collections.abc import Awaitable, Callable
-from typing import Any, Optional
+from typing import Any, Optional, cast
 
 import aiohttp
 
@@ -17,6 +17,7 @@ from .const import (
     KEY_TYPE,
     MODEL_MAP,
     REQUEST_TYPE_GET_STATUS,
+    RESPONSE_TYPE_PATCH,
     RESPONSE_TYPE_STATUS,
 )
 from .exceptions import (
@@ -24,8 +25,10 @@ from .exceptions import (
     ConnectionClosedException,
     ConnectionErrorException,
 )
+from .models.patch import Patch
 from .models.request import Request
 from .models.response import Response
+from .models.status import Status
 
 
 class WebsocketClient(Base):
@@ -35,7 +38,9 @@ class WebsocketClient(Base):
         """Initialize Websocket Client"""
         super().__init__()
         self._current_id: int = 1
-        self._responses: dict[int, tuple[asyncio.Future[Response], Optional[str]]] = {}
+        self._responses: dict[
+            int, tuple[asyncio.Future[Response[Any]], Optional[str]]
+        ] = {}
         self._session: Optional[aiohttp.ClientSession] = None
         self._websocket: Optional[aiohttp.ClientWebSocketResponse] = None
 
@@ -88,7 +93,7 @@ class WebsocketClient(Base):
         request: Request,
         wait_for_response: bool = True,
         response_type: Optional[str] = None,
-    ) -> Response:
+    ) -> Response[Any]:
         """Send a message to the WebSocket"""
         if not self.connected or self._websocket is None:
             raise ConnectionClosedException("Connection is closed")
@@ -96,7 +101,9 @@ class WebsocketClient(Base):
         self._current_id += 1
         request.id = self._current_id
 
-        future: asyncio.Future[Response] = asyncio.get_running_loop().create_future()
+        future: asyncio.Future[
+            Response[Any]
+        ] = asyncio.get_running_loop().create_future()
         self._responses[request.id] = future, response_type
         await self._websocket.send_str(request.json())
         self._logger.debug("Sent message: %s", request.json())
@@ -105,28 +112,31 @@ class WebsocketClient(Base):
                 return await future
             finally:
                 self._responses.pop(request.id)
-        return Response(
+        return Response[None](
             id=request.id,
             data=None,
             type=None,
         )
 
-    async def get_status(self) -> Response:
+    async def get_status(self) -> Status:
         """Get status from GoXLR"""
         self._logger.info("Getting status from GoXLR")
-        return await self._send_message(
+        response: Response[Status] = await self._send_message(
             Request(data=REQUEST_TYPE_GET_STATUS),
             wait_for_response=True,
             response_type=RESPONSE_TYPE_STATUS,
         )
+        if response.data is None:
+            raise BadMessageException("Message data is missing")
+        return response.data
 
     async def listen(
         self,
-        callback: Optional[Callable[[Response], Awaitable[None]]] = None,
+        patch_callback: Optional[Callable[[Response[Patch]], Awaitable[None]]] = None,
     ) -> None:
-        """Listen for messages and map to modules"""
+        """Listen for patches from GoXLR"""
 
-        async def _callback_message(message: dict) -> None:
+        async def _message_callback(message: dict) -> None:
             """Message callback"""
             self._logger.debug("New message")
 
@@ -143,19 +153,19 @@ class WebsocketClient(Base):
             self._logger.debug("Message ID: %s", message_id)
             self._logger.debug("Message type: %s", message_type)
 
-            response = Response(
-                id=message_id,
-                data=message_data.get(message_type),
-                type=message_type,
-            )
-
-            if response.data is None:
-                raise BadMessageException("Message data is missing")
-
             # Find model from module
             if (model := MODEL_MAP.get(message_type)) is None:
                 self._logger.warning("Unknown model: %s", message_type)
             else:
+                response = Response[Any](
+                    id=message_id,
+                    data=message_data.get(message_type),
+                    type=message_type,
+                )
+
+                if response.data is None:
+                    raise BadMessageException("Message data is missing")
+
                 try:
                     if isinstance(response.data, list):
                         response.data = [model(**item) for item in response.data]
@@ -166,40 +176,40 @@ class WebsocketClient(Base):
                         f"Failed to create model '{message_type}' with data:\n{response.data}"
                     ) from error
 
-                if callback is not None:
-                    await callback(response)
+                self._logger.info(
+                    "Response: %s",
+                    response.json(
+                        include={
+                            KEY_ID,
+                            KEY_TYPE,
+                        },
+                        exclude_unset=True,
+                    ),
+                )
 
-            self._logger.info(
-                "Response: %s",
-                response.json(
-                    include={
-                        KEY_ID,
-                        KEY_TYPE,
-                    },
-                    exclude_unset=True,
-                ),
-            )
-
-            if message_id is not None:
-                response_tuple = self._responses.get(message_id)
-                if response_tuple is not None:
-                    future, response_type = response_tuple
-                    if response_type is not None and response_type != message_type:
-                        self._logger.info(
-                            "Response type '%s' does not match requested type '%s'.",
-                            message_type,
-                            response_type,
-                        )
-                    else:
-                        try:
-                            future.set_result(response)
-                        except asyncio.InvalidStateError:
-                            self._logger.debug(
-                                "Future already set for response ID: %s",
-                                message_id,
+                if message_id is not None:
+                    response_tuple = self._responses.get(message_id)
+                    if response_tuple is not None:
+                        future, response_type = response_tuple
+                        if response_type is not None and response_type != message_type:
+                            self._logger.info(
+                                "Response type '%s' does not match requested type '%s'.",
+                                message_type,
+                                response_type,
                             )
+                        else:
+                            try:
+                                future.set_result(response)
+                            except asyncio.InvalidStateError:
+                                self._logger.debug(
+                                    "Future already set for response ID: %s",
+                                    message_id,
+                                )
 
-        await self._listen_for_messages(callback=_callback_message)
+                if patch_callback is not None and message_type == RESPONSE_TYPE_PATCH:
+                    await patch_callback(Response[Patch](**response.dict()))
+
+        await self._listen_for_messages(callback=_message_callback)
 
     async def _listen_for_messages(
         self,

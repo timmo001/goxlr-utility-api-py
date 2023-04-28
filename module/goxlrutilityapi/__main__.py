@@ -8,13 +8,16 @@ from typing import Optional
 import typer
 
 from ._version import __version__
+from .const import KEY_DATA, KEY_ID, KEY_TYPE
 from .exceptions import (
     BadMessageException,
     ConnectionClosedException,
     ConnectionErrorException,
 )
 from .logger import setup_logger
+from .models.patch import Patch
 from .models.response import Response
+from .models.status import Status
 from .websocket_client import WebsocketClient
 
 app = typer.Typer()
@@ -43,9 +46,16 @@ def setup_websocket(
         loop.stop()
 
 
-async def message_callback(data: Response) -> None:
-    """Message callback function"""
-    typer.secho(data.json(), fg=typer.colors.GREEN)
+async def patch_callback(response: Response[Patch]) -> None:
+    """Response callback function"""
+    typer.secho(response.json(
+        include={
+            KEY_ID,
+            KEY_TYPE,
+            KEY_DATA,
+        },
+        exclude_unset=True,
+    ), fg=typer.colors.GREEN)
 
 
 @app.command(name="get_status", short_help="Get Status of GoXLR")
@@ -55,14 +65,14 @@ def get_status(debug: bool = False) -> None:
         setup_logger("DEBUG")
     setup_websocket()
     try:
-        response: Response = loop.run_until_complete(websocket_client.get_status())
+        status: Status = loop.run_until_complete(websocket_client.get_status())
     except BadMessageException as error:
         typer.secho(
             f"Failed to get status from GoXLR: {error}",
             fg=typer.colors.RED,
         )
         return
-    typer.secho(response.json(), fg=typer.colors.GREEN)
+    typer.secho(status.json(), fg=typer.colors.GREEN)
 
 
 @app.command(name="listen_for_messages", short_help="Listen for messages")
@@ -70,7 +80,7 @@ def listen_for_messages(debug: bool = False) -> None:
     """Listen for messages"""
     if debug:
         setup_logger("DEBUG")
-    setup_websocket(message_callback)
+    setup_websocket(patch_callback)
     typer.secho("Listening for messages...", fg=typer.colors.GREEN)
     loop.run_forever()
 
