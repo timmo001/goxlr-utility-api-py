@@ -39,10 +39,7 @@ def setup_websocket(
         ConnectionClosedException,
         ConnectionErrorException,
     ) as error:
-        typer.secho(
-            f"Error: {error}",
-            fg=typer.colors.RED,
-        )
+        typer.secho(f"Error: {error}", fg=typer.colors.RED)
         loop.stop()
 
 
