@@ -28,22 +28,22 @@ class Versions(DefaultBaseModel):
 class UsbDevice(DefaultBaseModel):
     """USB Device Model"""
 
-    manufacturer_name: Optional[str] = Field(None, alias="ManufacturerName")
-    product_name: Optional[str] = Field(None, alias="ProductName")
-    version: Optional[list[int]] = Field(None, alias="Version")
-    bus_number: Optional[int] = Field(None, alias="BusNumber")
-    address: Optional[int] = Field(None, alias="Address")
-    identifier: Optional[str] = Field(None, alias="Identifier")
+    manufacturer_name: str = Field(None, alias="ManufacturerName")
+    product_name: str = Field(None, alias="ProductName")
+    version: list[int] = Field(None, alias="Version")
+    bus_number: int = Field(None, alias="BusNumber")
+    address: int = Field(None, alias="Address")
+    identifier: str = Field(None, alias="Identifier")
 
 
 class Hardware(DefaultBaseModel):
     """Hardware Model"""
 
-    versions: Optional[Versions] = Field(None, alias="Versions")
-    serial_number: Optional[str] = Field(None, alias="SerialNumber")
-    manufactured_date: Optional[str] = Field(None, alias="ManufacturedDate")
-    device_type: Optional[str] = Field(None, alias="DeviceType")
-    usb_device: Optional[UsbDevice] = Field(None, alias="USBDevice")
+    versions: Versions
+    serial_number: str
+    manufactured_date: str
+    device_type: str
+    usb_device: UsbDevice
 
 
 class FaderStatus(DefaultBaseModel):
@@ -345,7 +345,7 @@ class ButtonDown(DefaultBaseModel):
 class Mixer(DefaultBaseModel):
     """Mixer Model"""
 
-    hardware: Optional[Hardware]
+    hardware: Hardware
     shutdown_commands: Optional[list]
     fader_status: Optional[FaderStatuses]
     mic_status: Optional[MicStatus]
