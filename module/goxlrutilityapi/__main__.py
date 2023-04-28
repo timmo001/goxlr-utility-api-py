@@ -11,8 +11,6 @@ from .logger import setup_logger
 from .models.response import Response
 from .websocket_client import WebsocketClient
 
-logger = setup_logger("DEBUG")
-
 app = typer.Typer()
 
 
@@ -38,7 +36,7 @@ class WebsocketThread(Thread):
         """Stop listening for messages"""
         self._loop.stop()
 
-    def get_status(self)-> Response:
+    def get_status(self) -> Response:
         """Get Status of GoXLR"""
         return self._loop.run_until_complete(self.websocket_client.get_status())
 
@@ -51,8 +49,10 @@ def setup_websocket() -> WebsocketThread:
 
 
 @app.command(name="get_status", short_help="Get Status of GoXLR")
-def get_status() -> None:
+def get_status(debug: bool = False) -> None:
     """Get Status of GoXLR"""
+    if debug:
+        setup_logger("DEBUG")
     websocket_thread = setup_websocket()
     response = websocket_thread.get_status()
     websocket_thread.stop()
