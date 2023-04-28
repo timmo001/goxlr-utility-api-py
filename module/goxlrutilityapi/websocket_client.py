@@ -163,6 +163,7 @@ class WebsocketClient(Base):
                     raise BadMessageException(
                         f"Failed to create model '{message_type}' with data:\n{response.data}"
                     ) from error
+
                 if callback is not None:
                     await callback(response)
 
