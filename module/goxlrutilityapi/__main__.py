@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import asyncio
-from threading import Thread
 
 import typer
 
@@ -13,39 +12,18 @@ from .websocket_client import WebsocketClient
 
 app = typer.Typer()
 
-
-class WebsocketThread(Thread):
-    """Websocket Listener Thread"""
-
-    def __init__(self) -> None:
-        """Initialize Websocket Listener Thread"""
-        super().__init__()
-        self._loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(self._loop)
-        self.websocket_client = WebsocketClient()
-
-    def start(self) -> None:
-        """Connect and start listening for messages"""
-        self._loop.run_until_complete(self.websocket_client.connect())
-        self._loop.create_task(
-            self.websocket_client.listen(),
-            name="Websocket Listener",
-        )
-
-    def stop(self) -> None:
-        """Stop listening for messages"""
-        self._loop.stop()
-
-    def get_status(self) -> Response:
-        """Get Status of GoXLR"""
-        return self._loop.run_until_complete(self.websocket_client.get_status())
+loop = asyncio.new_event_loop()
+asyncio.set_event_loop(loop)
+websocket_client = WebsocketClient()
 
 
-def setup_websocket() -> WebsocketThread:
+def setup_websocket() -> None:
     """Listen for messages on another thread"""
-    websocket_thread = WebsocketThread()
-    websocket_thread.start()
-    return websocket_thread
+    loop.run_until_complete(websocket_client.connect())
+    loop.create_task(
+        websocket_client.listen(),
+        name="Websocket Listener",
+    )
 
 
 @app.command(name="get_status", short_help="Get Status of GoXLR")
@@ -53,9 +31,8 @@ def get_status(debug: bool = False) -> None:
     """Get Status of GoXLR"""
     if debug:
         setup_logger("DEBUG")
-    websocket_thread = setup_websocket()
-    response = websocket_thread.get_status()
-    websocket_thread.stop()
+    setup_websocket()
+    response: Response = loop.run_until_complete(websocket_client.get_status())
     typer.secho(response.json(), fg=typer.colors.GREEN)
 
 
@@ -67,3 +44,4 @@ def version() -> None:
 
 if __name__ == "__main__":
     app()
+    loop.stop()
