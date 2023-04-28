@@ -78,7 +78,10 @@ def get_status(debug: bool = False) -> None:
     typer.secho(status.json(), fg=typer.colors.GREEN)
 
 
-@app.command(name="listen_for_messages", short_help="Listen for patch messages from GoXLR")
+@app.command(
+    name="listen_for_messages",
+    short_help="Listen for patch messages from GoXLR",
+)
 def listen_for_messages(debug: bool = False) -> None:
     """Listen for patch messages from GoXLR"""
     if debug:
