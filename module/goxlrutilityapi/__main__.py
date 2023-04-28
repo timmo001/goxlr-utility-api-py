@@ -46,8 +46,8 @@ def setup_websocket(
         loop.stop()
 
 
-async def callback(data: Response) -> None:
-    """Callback function"""
+async def message_callback(data: Response) -> None:
+    """Message callback function"""
     typer.secho(data.json(), fg=typer.colors.GREEN)
 
 
@@ -73,7 +73,7 @@ def listen_for_messages(debug: bool = False) -> None:
     """Listen for messages"""
     if debug:
         setup_logger("DEBUG")
-    setup_websocket(callback)
+    setup_websocket(message_callback)
     typer.secho("Listening for messages...", fg=typer.colors.GREEN)
     loop.run_forever()
 
