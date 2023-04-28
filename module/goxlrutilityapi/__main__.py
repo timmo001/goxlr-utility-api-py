@@ -28,13 +28,13 @@ websocket_client = WebsocketClient()
 
 
 def setup_websocket(
-    patch_callback: Optional[Callable[[Response[Patch]], Awaitable[None]]] = None
+    callback: Optional[Callable[[Response[Patch]], Awaitable[None]]] = None
 ) -> None:
     """Listen for messages on another thread"""
     try:
         loop.run_until_complete(websocket_client.connect())
         loop.create_task(
-            websocket_client.listen(patch_callback),
+            websocket_client.listen(callback),
             name="Websocket Listener",
         )
     except (
