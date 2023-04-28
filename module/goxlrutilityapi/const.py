@@ -8,6 +8,10 @@ from .models.request import Request
 from .models.response import Response
 from .models.status import Status
 
+# General
+DEFAULT_HOST: Final[str] = "localhost"
+DEFAULT_PORT: Final[int] = 14564
+
 # API
 KEY_DATA: Final[str] = "data"
 KEY_ID: Final[str] = "id"

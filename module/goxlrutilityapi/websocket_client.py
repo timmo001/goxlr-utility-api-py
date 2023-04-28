@@ -10,6 +10,8 @@ import aiohttp
 
 from .base import Base
 from .const import (
+    DEFAULT_HOST,
+    DEFAULT_PORT,
     KEY_DATA,
     KEY_ID,
     KEY_TYPE,
@@ -50,8 +52,8 @@ class WebsocketClient(Base):
 
     async def connect(
         self,
-        host: str = "localhost",
-        port: int = 14564,
+        host: str = DEFAULT_HOST,
+        port: int = DEFAULT_PORT,
         session: Optional[aiohttp.ClientSession] = None,
     ) -> None:
         """Connect to server"""
