@@ -133,6 +133,7 @@ class WebsocketClient(Base):
         )
         if response.data is None:
             raise BadMessageException("Message data is missing")
+        self._logger.debug("Status: %s", response.data)
         return response.data
 
     async def listen(
@@ -213,7 +214,9 @@ class WebsocketClient(Base):
 
                 if patch_callback is not None and message_type == RESPONSE_TYPE_PATCH:
                     try:
-                        await patch_callback(Response[Patch](**response.dict()))
+                        patch_response = Response[Patch](**response.dict())
+                        self._logger.debug("Patch response: %s", patch_response)
+                        await patch_callback(patch_response)
                     except (TypeError, ValidationError) as error:
                         raise BadMessageException(
                             f"Failed to create model patch response with data:\n{response.data}"

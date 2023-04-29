@@ -2,7 +2,6 @@
 
 from typing import Any, Final
 
-from .models import DefaultBaseModel
 from .models.patch import Patch
 from .models.request import Request
 from .models.response import Response
@@ -13,7 +12,7 @@ DEFAULT_HOST: Final[str] = "localhost"
 DEFAULT_PORT: Final[int] = 14564
 
 # Mixer
-VOLUME_MAX: Final[int] = 254
+VOLUME_MAX: Final[int] = 255
 
 # Request/Response Keys
 KEY_DATA: Final[str] = "data"
@@ -31,7 +30,7 @@ MODEL_REQUEST: type[Request] = Request
 MODEL_RESPONSE: type[Response[Any]] = Response
 MODEL_STATUS: type[Status] = Status
 
-MODEL_MAP: Final[dict[str, type[DefaultBaseModel]]] = {
+MODEL_MAP: Final[dict[str, Any]] = {
     RESPONSE_TYPE_PATCH: MODEL_PATCH,
     RESPONSE_TYPE_STATUS: MODEL_STATUS,
 }

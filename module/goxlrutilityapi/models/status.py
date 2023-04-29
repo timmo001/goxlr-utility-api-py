@@ -11,29 +11,29 @@ from . import DefaultBaseModel
 class Config(DefaultBaseModel):
     """Config Model"""
 
-    daemon_version: Optional[str] = Field(None, alias="DaemonVersion")
-    autostart_enabled: Optional[bool] = Field(None, alias="AutostartEnabled")
-    show_tray_icon: Optional[bool] = Field(None, alias="ShowTrayIcon")
-    tts_enabled: Optional[bool] = Field(None, alias="TTSEnabled")
+    daemon_version: Optional[str] = Field(None)
+    autostart_enabled: Optional[bool] = Field(None)
+    show_tray_icon: Optional[bool] = Field(None)
+    tts_enabled: Optional[bool] = Field(None)
 
 
 class Versions(DefaultBaseModel):
     """Versions Model"""
 
-    firmware: Optional[list[int]] = Field(None, alias="Firmware")
-    fpga_count: Optional[int] = Field(None, alias="FPGACount")
-    dice: Optional[list[int]] = Field(None, alias="DICE")
+    firmware: Optional[list[int]] = Field(None)
+    fpga_count: Optional[int] = Field(None)
+    dice: Optional[list[int]] = Field(None)
 
 
 class UsbDevice(DefaultBaseModel):
     """USB Device Model"""
 
-    manufacturer_name: str = Field(None, alias="ManufacturerName")
-    product_name: str = Field(None, alias="ProductName")
-    version: list[int] = Field(None, alias="Version")
-    bus_number: int = Field(None, alias="BusNumber")
-    address: int = Field(None, alias="Address")
-    identifier: str = Field(None, alias="Identifier")
+    manufacturer_name: str
+    product_name: str
+    version: list[int]
+    bus_number: int
+    address: int
+    identifier: str
 
 
 class Hardware(DefaultBaseModel):
@@ -105,8 +105,8 @@ class Frequency(DefaultBaseModel):
 class Equaliser(DefaultBaseModel):
     """Equaliser Model"""
 
-    gain: Optional[Gain] = Field(None, alias="Gain")
-    frequency: Optional[Frequency] = Field(None, alias="Frequency")
+    gain: Optional[Gain] = Field(None)
+    frequency: Optional[Frequency] = Field(None)
 
 
 class Gain1(DefaultBaseModel):
@@ -134,39 +134,39 @@ class Frequency1(DefaultBaseModel):
 class EqualiserMini(DefaultBaseModel):
     """Equaliser Mini Model"""
 
-    gain: Optional[Gain1] = Field(None, alias="Gain")
-    frequency: Optional[Frequency1] = Field(None, alias="Frequency")
+    gain: Optional[Gain1] = Field(None)
+    frequency: Optional[Frequency1] = Field(None)
 
 
 class NoiseGate(DefaultBaseModel):
     """Noise Gate Model"""
 
-    threshold: Optional[int] = Field(None, alias="Threshold")
-    attack: Optional[int] = Field(None, alias="Attack")
-    release: Optional[int] = Field(None, alias="Release")
-    enabled: Optional[bool] = Field(None, alias="Enabled")
-    attenuation: Optional[int] = Field(None, alias="Attenuation")
+    threshold: Optional[int] = Field(None)
+    attack: Optional[int] = Field(None)
+    release: Optional[int] = Field(None)
+    enabled: Optional[bool] = Field(None)
+    attenuation: Optional[int] = Field(None)
 
 
 class Compressor(DefaultBaseModel):
     """Compressor Model"""
 
-    threshold: Optional[int] = Field(None, alias="Threshold")
-    ratio: Optional[int] = Field(None, alias="Ratio")
-    attack: Optional[int] = Field(None, alias="Attack")
-    release: Optional[int] = Field(None, alias="Release")
-    makeup_gain: Optional[int] = Field(None, alias="MakeupGain")
+    threshold: Optional[int] = Field(None)
+    ratio: Optional[int] = Field(None)
+    attack: Optional[int] = Field(None)
+    release: Optional[int] = Field(None)
+    makeup_gain: Optional[int] = Field(None)
 
 
 class MicStatus(DefaultBaseModel):
     """Mic Status Model"""
 
-    mic_type: Optional[str] = Field(None, alias="MicType")
-    mic_gains: Optional[MicGains] = Field(None, alias="MicGains")
-    equaliser: Optional[Equaliser] = Field(None, alias="Equaliser")
-    equaliser_mini: Optional[EqualiserMini] = Field(None, alias="EqualiserMini")
-    noise_gate: Optional[NoiseGate] = Field(None, alias="NoiseGate")
-    compressor: Optional[Compressor] = Field(None, alias="Compressor")
+    mic_type: Optional[str] = Field(None)
+    mic_gains: Optional[MicGains] = Field(None)
+    equaliser: Optional[Equaliser] = Field(None)
+    equaliser_mini: Optional[EqualiserMini] = Field(None)
+    noise_gate: Optional[NoiseGate] = Field(None)
+    compressor: Optional[Compressor] = Field(None)
 
 
 class Volumes(DefaultBaseModel):
@@ -188,11 +188,11 @@ class Volumes(DefaultBaseModel):
 class Levels(DefaultBaseModel):
     """Levels Model"""
 
-    submix_supported: Optional[bool] = Field(None, alias="SubmixSupported")
-    volumes: Volumes = Field(None, alias="Volumes")
-    submix: Optional[Any] = Field(None, alias="Submix")
-    bleep: Optional[int] = Field(None, alias="Bleep")
-    deess: Optional[int] = Field(None, alias="Deess")
+    submix_supported: Optional[bool] = Field(None)
+    volumes: Volumes
+    submix: Optional[Any] = Field(None)
+    bleep: Optional[int] = Field(None)
+    deess: Optional[int] = Field(None)
 
 
 class RouterItem(DefaultBaseModel):
@@ -221,23 +221,23 @@ class Router(DefaultBaseModel):
 class CoughButton(DefaultBaseModel):
     """Cough Button Model"""
 
-    is_toggle: Optional[bool] = Field(None, alias="IsToggle")
-    mute_type: Optional[str] = Field(None, alias="MuteType")
-    state: Optional[str] = Field(None, alias="State")
+    is_toggle: Optional[bool] = Field(None)
+    mute_type: Optional[str] = Field(None)
+    state: Optional[str] = Field(None)
 
 
 class Colours(DefaultBaseModel):
     """Colours Model"""
 
-    colour_one: Optional[str] = Field(None, alias="ColourOne")
-    colour_two: Optional[str] = Field(None, alias="ColourTwo")
+    colour_one: Optional[str] = Field(None)
+    colour_two: Optional[str] = Field(None)
 
 
 class Fader(DefaultBaseModel):
     """Fader Model"""
 
-    style: Optional[str] = Field(None, alias="Style")
-    colours: Optional[Colours] = Field(None, alias="Colours")
+    style: Optional[str] = Field(None)
+    colours: Optional[Colours] = Field(None)
 
 
 class Faders(DefaultBaseModel):
@@ -316,30 +316,30 @@ class Settings(DefaultBaseModel):
 class ButtonDown(DefaultBaseModel):
     """Button Down Model"""
 
-    fader1_mute: Optional[bool] = Field(None, alias="Fader1Mute")
-    fader2_mute: Optional[bool] = Field(None, alias="Fader2Mute")
-    fader3_mute: Optional[bool] = Field(None, alias="Fader3Mute")
-    fader4_mute: Optional[bool] = Field(None, alias="Fader4Mute")
-    bleep: Optional[bool] = Field(None, alias="Bleep")
-    cough: Optional[bool] = Field(None, alias="Cough")
-    effect_select1: Optional[bool] = Field(None, alias="EffectSelect1")
-    effect_select2: Optional[bool] = Field(None, alias="EffectSelect2")
-    effect_select3: Optional[bool] = Field(None, alias="EffectSelect3")
-    effect_select4: Optional[bool] = Field(None, alias="EffectSelect4")
-    effect_select5: Optional[bool] = Field(None, alias="EffectSelect5")
-    effect_select6: Optional[bool] = Field(None, alias="EffectSelect6")
-    effect_fx: Optional[bool] = Field(None, alias="EffectFx")
-    effect_megaphone: Optional[bool] = Field(None, alias="EffectMegaphone")
-    effect_robot: Optional[bool] = Field(None, alias="EffectRobot")
-    effect_hard_tune: Optional[bool] = Field(None, alias="EffectHardTune")
-    sampler_select_a: Optional[bool] = Field(None, alias="SamplerSelectA")
-    sampler_select_b: Optional[bool] = Field(None, alias="SamplerSelectB")
-    sampler_select_c: Optional[bool] = Field(None, alias="SamplerSelectC")
-    sampler_top_left: Optional[bool] = Field(None, alias="SamplerTopLeft")
-    sampler_top_right: Optional[bool] = Field(None, alias="SamplerTopRight")
-    sampler_bottom_left: Optional[bool] = Field(None, alias="SamplerBottomLeft")
-    sampler_bottom_right: Optional[bool] = Field(None, alias="SamplerBottomRight")
-    sampler_clear: Optional[bool] = Field(None, alias="SamplerClear")
+    fader1_mute: Optional[bool] = Field(None)
+    fader2_mute: Optional[bool] = Field(None)
+    fader3_mute: Optional[bool] = Field(None)
+    fader4_mute: Optional[bool] = Field(None)
+    bleep: Optional[bool] = Field(None)
+    cough: Optional[bool] = Field(None)
+    effect_select1: Optional[bool] = Field(None)
+    effect_select2: Optional[bool] = Field(None)
+    effect_select3: Optional[bool] = Field(None)
+    effect_select4: Optional[bool] = Field(None)
+    effect_select5: Optional[bool] = Field(None)
+    effect_select6: Optional[bool] = Field(None)
+    effect_fx: Optional[bool] = Field(None)
+    effect_megaphone: Optional[bool] = Field(None)
+    effect_robot: Optional[bool] = Field(None)
+    effect_hard_tune: Optional[bool] = Field(None)
+    sampler_select_a: Optional[bool] = Field(None)
+    sampler_select_b: Optional[bool] = Field(None)
+    sampler_select_c: Optional[bool] = Field(None)
+    sampler_top_left: Optional[bool] = Field(None)
+    sampler_top_right: Optional[bool] = Field(None)
+    sampler_bottom_left: Optional[bool] = Field(None)
+    sampler_bottom_right: Optional[bool] = Field(None)
+    sampler_clear: Optional[bool] = Field(None)
 
 
 class Mixer(DefaultBaseModel):
