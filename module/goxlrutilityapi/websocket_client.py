@@ -7,6 +7,7 @@ from collections.abc import Awaitable, Callable
 from typing import Any, Optional
 
 import aiohttp
+import async_timeout
 
 from .base import Base
 from .const import (
@@ -109,7 +110,10 @@ class WebsocketClient(Base):
         self._logger.debug("Sent message: %s", request.json())
         if wait_for_response:
             try:
-                return await future
+                async with async_timeout.timeout(10):
+                    return await future
+            except asyncio.TimeoutError as error:
+                raise BadMessageException("Timeout waiting for response") from error
             finally:
                 self._responses.pop(request.id)
         return Response[None](
