@@ -49,19 +49,19 @@ class Hardware(DefaultBaseModel):
 class FaderStatus(DefaultBaseModel):
     """Fader Status Model"""
 
-    channel: Optional[str] = Field(None, alias="Channel")
-    mute_type: Optional[str] = Field(None, alias="MuteType")
+    channel: str = Field(..., alias="Channel")
+    mute_type: str = Field(..., alias="MuteType")
     scribble: Optional[Any] = Field(None, alias="Scribble")
-    mute_state: Optional[str] = Field(None, alias="MuteState")
+    mute_state: str = Field(..., alias="MuteState")
 
 
 class FaderStatuses(DefaultBaseModel):
     """Fader Statuses Model"""
 
-    a: Optional[FaderStatus] = Field(None, alias="A")
-    b: Optional[FaderStatus] = Field(None, alias="B")
-    c: Optional[FaderStatus] = Field(None, alias="C")
-    d: Optional[FaderStatus] = Field(None, alias="D")
+    a: FaderStatus = Field(..., alias="A")
+    b: FaderStatus = Field(..., alias="B")
+    c: FaderStatus = Field(..., alias="C")
+    d: FaderStatus = Field(..., alias="D")
 
 
 class MicGains(DefaultBaseModel):
@@ -172,24 +172,24 @@ class MicStatus(DefaultBaseModel):
 class Volumes(DefaultBaseModel):
     """Volumes Model"""
 
-    mic: Optional[int] = Field(None, alias="Mic")
-    line_in: Optional[int] = Field(None, alias="LineIn")
-    console: Optional[int] = Field(None, alias="Console")
-    system: Optional[int] = Field(None, alias="System")
-    game: Optional[int] = Field(None, alias="Game")
-    chat: Optional[int] = Field(None, alias="Chat")
-    sample: Optional[int] = Field(None, alias="Sample")
-    music: Optional[int] = Field(None, alias="Music")
-    headphones: Optional[int] = Field(None, alias="Headphones")
-    mic_monitor: Optional[int] = Field(None, alias="MicMonitor")
-    line_out: Optional[int] = Field(None, alias="LineOut")
+    mic: int = Field(..., alias="Mic")
+    line_in: int = Field(..., alias="LineIn")
+    console: int = Field(..., alias="Console")
+    system: int = Field(..., alias="System")
+    game: int = Field(..., alias="Game")
+    chat: int = Field(..., alias="Chat")
+    sample: int = Field(..., alias="Sample")
+    music: int = Field(..., alias="Music")
+    headphones: int = Field(..., alias="Headphones")
+    mic_monitor: int = Field(..., alias="MicMonitor")
+    line_out: int = Field(..., alias="LineOut")
 
 
 class Levels(DefaultBaseModel):
     """Levels Model"""
 
     submix_supported: Optional[bool] = Field(None, alias="SubmixSupported")
-    volumes: Optional[Volumes] = Field(None, alias="Volumes")
+    volumes: Volumes = Field(None, alias="Volumes")
     submix: Optional[Any] = Field(None, alias="Submix")
     bleep: Optional[int] = Field(None, alias="Bleep")
     deess: Optional[int] = Field(None, alias="Deess")
@@ -349,7 +349,7 @@ class Mixer(DefaultBaseModel):
     shutdown_commands: Optional[list]
     fader_status: Optional[FaderStatuses]
     mic_status: Optional[MicStatus]
-    levels: Optional[Levels]
+    levels: Levels
     router: Optional[Router]
     cough_button: Optional[CoughButton]
     lighting: Optional[Lighting]
