@@ -178,9 +178,7 @@ class WebsocketClient(Base):
                         response.data = model(**response.data)
                 except (TypeError, ValidationError) as error:
                     raise BadMessageException(
-                        "Failed to create model '%s' with data:\n%s",
-                        message_type,
-                        response.data,
+                        f"Failed to create model '{message_type}' with data:\n{response.data}"
                     ) from error
 
                 self._logger.info(
@@ -218,9 +216,7 @@ class WebsocketClient(Base):
                         await patch_callback(Response[Patch](**response.dict()))
                     except (TypeError, ValidationError) as error:
                         raise BadMessageException(
-                            "Failed to create patch response with data:\n%s",
-                            message_type,
-                            response.data,
+                            f"Failed to create model patch response with data:\n{response.data}"
                         ) from error
 
         await self._listen_for_messages(callback=_message_callback)
