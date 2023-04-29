@@ -15,7 +15,7 @@ async def get_mixer_from_status(status: Status) -> Optional[Mixer]:
 def get_volume_percentage(
     mixer: Mixer,
     key: str,
-) -> int | None:
+) -> Optional[int]:
     """Return the volume in percent."""
     if (value := getattr(mixer.levels.volumes, key, None)) is not None:
         return round(value / VOLUME_MAX * 100)
