@@ -214,7 +214,7 @@ class WebsocketClient(Base):
 
                 if patch_callback is not None and message_type == RESPONSE_TYPE_PATCH:
                     try:
-                        self._logger.debug("Patch response: %s", response)
+                        self._logger.debug("Patch callback: %s", response)
                         await patch_callback(response)
                     except (TypeError, ValidationError) as error:
                         raise BadMessageException(
