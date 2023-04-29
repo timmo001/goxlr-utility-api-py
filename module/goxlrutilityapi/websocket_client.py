@@ -8,6 +8,7 @@ from typing import Any, Optional
 
 import aiohttp
 import async_timeout
+from pydantic import ValidationError
 
 from .base import Base
 from .const import (
@@ -175,9 +176,11 @@ class WebsocketClient(Base):
                         response.data = [model(**item) for item in response.data]
                     else:
                         response.data = model(**response.data)
-                except TypeError as error:
+                except (TypeError, ValidationError) as error:
                     raise BadMessageException(
-                        f"Failed to create model '{message_type}' with data:\n{response.data}"
+                        "Failed to create model '%s' with data:\n%s",
+                        message_type,
+                        message_data,
                     ) from error
 
                 self._logger.info(
