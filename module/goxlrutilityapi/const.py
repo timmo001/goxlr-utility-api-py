@@ -13,6 +13,8 @@ DEFAULT_PORT: Final[int] = 14564
 
 # Mixer
 VOLUME_MAX: Final[int] = 255
+MUTED_STATE: Final[str] = "MutedToX"
+UNMUTED_STATE: Final[str] = "Unmuted"
 
 # Request/Response Keys
 KEY_DATA: Final[str] = "data"
