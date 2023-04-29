@@ -25,6 +25,7 @@ def get_volume_percentage(
         return round(value / VOLUME_MAX * 100)
     return None
 
+
 def get_attribute_names_from_patch(
     data: Mixer,
     patch: Patch,
@@ -39,19 +40,19 @@ def get_attribute_names_from_patch(
     current_path = ""
     attribute_names = []
     for path in paths[3:]:
-            alias = None
-            for field_name, field in current_attribute.__fields__.items():
-                if field.alias == path:
-                    alias = field_name
-                    break
-            _LOGGER.debug(
-                "Getting path for '%s' ('%s'): %s",
-                path,
-                alias,
-                type(current_attribute),
-            )
-            current_path = alias or path
-            current_attribute = getattr(current_attribute, current_path)
-            attribute_names.append(current_path)
+        alias = None
+        for field_name, field in current_attribute.__fields__.items():
+            if field.alias == path:
+                alias = field_name
+                break
+        _LOGGER.debug(
+            "Getting path for '%s' ('%s'): %s",
+            path,
+            alias,
+            type(current_attribute),
+        )
+        current_path = alias or path
+        current_attribute = getattr(current_attribute, current_path)
+        attribute_names.append(current_path)
 
     return attribute_names
