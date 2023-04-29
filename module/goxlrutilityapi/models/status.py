@@ -347,7 +347,7 @@ class Mixer(DefaultBaseModel):
 
     hardware: Hardware
     shutdown_commands: Optional[list]
-    fader_status: Optional[FaderStatuses]
+    fader_status: FaderStatuses
     mic_status: Optional[MicStatus]
     levels: Levels
     router: Optional[Router]
