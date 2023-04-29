@@ -49,10 +49,10 @@ class Hardware(DefaultBaseModel):
 class FaderStatus(DefaultBaseModel):
     """Fader Status Model"""
 
-    channel: str = Field(..., alias="Channel")
-    mute_type: str = Field(..., alias="MuteType")
-    scribble: Optional[Any] = Field(None, alias="Scribble")
-    mute_state: str = Field(..., alias="MuteState")
+    channel: str
+    mute_type: str
+    scribble: Optional[Any] = Field(None)
+    mute_state: str
 
 
 class FaderStatuses(DefaultBaseModel):

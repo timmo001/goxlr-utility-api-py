@@ -180,7 +180,7 @@ class WebsocketClient(Base):
                     raise BadMessageException(
                         "Failed to create model '%s' with data:\n%s",
                         message_type,
-                        message_data,
+                        response.data,
                     ) from error
 
                 self._logger.info(
