@@ -356,7 +356,7 @@ class Mixer(DefaultBaseModel):
     effects: Optional[Any]
     sampler: Optional[Any]
     settings: Optional[Settings]
-    button_down: Optional[ButtonDown]
+    button_down: ButtonDown
     profile_name: Optional[str]
     mic_profile_name: Optional[str]
 
