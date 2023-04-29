@@ -1,6 +1,8 @@
 """GoXLR Utility API: Patch Models"""
 from __future__ import annotations
 
+from typing import Any
+
 from pydantic import Field
 
 from . import DefaultBaseModel
@@ -11,7 +13,7 @@ class Patch(DefaultBaseModel):
 
     op: str
     path: str
-    value: int
+    value: Any
 
 
 class Data(DefaultBaseModel):
