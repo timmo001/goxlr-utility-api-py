@@ -79,6 +79,7 @@ def get_status(debug: bool = False) -> None:
             fg=typer.colors.RED,
         )
         return
+
     typer.secho(status.json(), fg=typer.colors.GREEN)
 
 
@@ -93,6 +94,49 @@ def listen_for_messages(debug: bool = False) -> None:
     setup_websocket(patch_callback)
     typer.secho("Listening for messages...", fg=typer.colors.GREEN)
     loop.run_forever()
+
+
+@app.command(name="set_button_color", short_help="Set Button Color")
+def set_button_color(
+    button: str = typer.Argument(..., help="Button Name"),
+    color_one: str = typer.Argument(..., help="Color 1 Hex Value (RRGGBB)"),
+    color_two: str = typer.Argument(..., help="Color 2 Hex Value (RRGGBB)"),
+    debug: bool = False,
+) -> None:
+    """Set Button Color"""
+    if debug:
+        setup_logger("DEBUG")
+    if setup_websocket() is False:
+        typer.secho("Failed to connect to GoXLR", fg=typer.colors.RED)
+        return
+    try:
+        loop.run_until_complete(websocket_client.get_status())
+    except BadMessageException as error:
+        typer.secho(
+            f"Failed to get status from GoXLR: {error}",
+            fg=typer.colors.RED,
+        )
+        return
+
+    try:
+        loop.run_until_complete(
+            websocket_client.set_button_color(
+                button,
+                color_one,
+                color_two,
+            )
+        )
+    except BadMessageException as error:
+        typer.secho(
+            f"Failed to set button color: {error}",
+            fg=typer.colors.RED,
+        )
+        return
+
+    typer.secho(
+        f"{button} color set to {color_one} and {color_two}",
+        fg=typer.colors.GREEN,
+    )
 
 
 @app.command(name="version", short_help="Module Version")

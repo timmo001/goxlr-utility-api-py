@@ -1,7 +1,7 @@
 """GoXLR Utility API: Request Model"""
 from __future__ import annotations
 
-from typing import Optional
+from typing import Any, Optional, Union
 
 from pydantic import Field
 
@@ -12,4 +12,4 @@ class Request(DefaultBaseModel):
     """Request Model"""
 
     id: Optional[int] = None
-    data: str = Field(..., description="Data")
+    data: Union[str, dict[str, Any]] = Field(..., description="Data")

@@ -12,13 +12,16 @@ from pydantic import ValidationError
 
 from .base import Base
 from .const import (
+    COMMAND_TYPE_SET_BUTTON_COLOURS,
     DEFAULT_HOST,
     DEFAULT_PORT,
     KEY_DATA,
     KEY_ID,
     KEY_TYPE,
     MODEL_MAP,
+    REQUEST_TYPE_COMMAND,
     REQUEST_TYPE_GET_STATUS,
+    RESPONSE_TYPE_OK,
     RESPONSE_TYPE_PATCH,
     RESPONSE_TYPE_STATUS,
 )
@@ -40,6 +43,7 @@ class WebsocketClient(Base):
         """Initialize Websocket Client"""
         super().__init__()
         self._current_id: int = 1
+        self._mixer_serial_number: Optional[str] = None
         self._responses: dict[
             int, tuple[asyncio.Future[Response[Any]], Optional[str]]
         ] = {}
@@ -129,7 +133,46 @@ class WebsocketClient(Base):
         if response.data is None:
             raise BadMessageException("Message data is missing")
         self._logger.debug("Status: %s", response.data)
+        self._mixer_serial_number = next(iter(response.data.mixers.keys()))
         return response.data
+
+    async def set_button_color(
+        self,
+        name: str,
+        color_one: str,
+        color_two: str,
+    ) -> None:
+        """Set button color"""
+        if self._mixer_serial_number is None:
+            raise BadMessageException(
+                "Mixer serial number is missing. Call get_status to set this."
+            )
+
+        self._logger.info(
+            "Setting button '%s' color to '%s' and '%s' for mixer '%s'",
+            name,
+            color_one,
+            color_two,
+            self._mixer_serial_number,
+        )
+        await self._send_message(
+            Request(
+                data={
+                    REQUEST_TYPE_COMMAND: [
+                        self._mixer_serial_number,
+                        {
+                            COMMAND_TYPE_SET_BUTTON_COLOURS: [
+                                name,
+                                color_one,
+                                color_two,
+                            ],
+                        },
+                    ]
+                }
+            ),
+            wait_for_response=False,
+            response_type=RESPONSE_TYPE_OK,
+        )
 
     async def listen(
         self,
