@@ -346,19 +346,19 @@ class Mixer(DefaultBaseModel):
     """Mixer Model"""
 
     hardware: Hardware
-    shutdown_commands: Optional[list]
+    shutdown_commands: list
     fader_status: FaderStatuses
-    mic_status: Optional[MicStatus]
+    mic_status: MicStatus
     levels: Levels
-    router: Optional[Router]
-    cough_button: Optional[CoughButton]
-    lighting: Optional[Lighting]
-    effects: Optional[Any]
-    sampler: Optional[Any]
-    settings: Optional[Settings]
+    router: Router
+    cough_button: CoughButton
+    lighting: Lighting
+    effects: Any
+    sampler: Any
+    settings: Settings
     button_down: ButtonDown
-    profile_name: Optional[str]
-    mic_profile_name: Optional[str]
+    profile_name: str
+    mic_profile_name: str
 
 
 class Paths(DefaultBaseModel):
