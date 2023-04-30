@@ -82,12 +82,7 @@ class WebsocketClient(Base):
             aiohttp.ClientConnectionError,
             socket.gaierror,
         ) as error:
-            self._logger.warning(
-                "Failed to connect to WebSocket: %s - %s",
-                error.__class__.__name__,
-                error,
-            )
-            raise ConnectionErrorException from error
+            raise ConnectionErrorException(error) from error
         self._logger.info("Connected to WebSocket")
 
     async def _send_message(
