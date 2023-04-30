@@ -96,6 +96,38 @@ def listen_for_messages(debug: bool = False) -> None:
     loop.run_forever()
 
 
+@app.command(name="set_accent_color", short_help="Set Accent Color")
+def set_accent_color(
+    color: str = typer.Argument(..., help="Color Hex Value (RRGGBB)"),
+    debug: bool = False,
+) -> None:
+    """Set Accent Color"""
+    if debug:
+        setup_logger("DEBUG")
+    if setup_websocket() is False:
+        typer.secho("Failed to connect to GoXLR", fg=typer.colors.RED)
+        return
+    try:
+        loop.run_until_complete(websocket_client.get_status())
+    except BadMessageException as error:
+        typer.secho(
+            f"Failed to get status from GoXLR: {error}",
+            fg=typer.colors.RED,
+        )
+        return
+
+    try:
+        loop.run_until_complete(websocket_client.set_accent_color(color))
+    except BadMessageException as error:
+        typer.secho(
+            f"Failed to set accent color: {error}",
+            fg=typer.colors.RED,
+        )
+        return
+
+    typer.secho(f"Accent color set to {color}", fg=typer.colors.GREEN)
+
+
 @app.command(name="set_button_color", short_help="Set Button Color")
 def set_button_color(
     button: str = typer.Argument(..., help="Button Name"),
