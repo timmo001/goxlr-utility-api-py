@@ -110,12 +110,6 @@ BUTTON_MAP: Final[dict[str, str]] = {
     "sampler_top_right": BUTTON_SAMPLER_TOP_RIGHT,
 }
 
-# Faders
-FADER_A: Final[str] = "A"
-FADER_B: Final[str] = "B"
-FADER_C: Final[str] = "C"
-FADER_D: Final[str] = "D"
-
 # Models
 MODEL_PATCH: type[Patch] = Patch
 MODEL_REQUEST: type[Request] = Request
@@ -128,10 +122,18 @@ MODEL_MAP: Final[dict[str, Any]] = {
 }
 
 NAME_MAP: Final[dict[str, MapItem]] = {
+    "a": MapItem(name="Fader 1", icon="mdi:tune-vertical-variant"),
+    "A": MapItem(name="Fader 1", icon="mdi:tune-vertical-variant"),
+    "b": MapItem(name="Fader 2", icon="mdi:tune-vertical-variant"),
+    "B": MapItem(name="Fader 2", icon="mdi:tune-vertical-variant"),
     "bleep": MapItem(name=BUTTON_BLEEP, icon="mdi:exclamation"),
+    "c": MapItem(name="Fader 3", icon="mdi:tune-vertical-variant"),
+    "C": MapItem(name="Fader 3", icon="mdi:tune-vertical-variant"),
     "chat": MapItem(name="Chat", icon="mdi:chat"),
     "console": MapItem(name="Console", icon="mdi:gamepad-variant"),
     "cough": MapItem(name=BUTTON_COUGH, icon="mdi:microphone-off"),
+    "d": MapItem(name="Fader 4", icon="mdi:tune-vertical-variant"),
+    "D": MapItem(name="Fader 4", icon="mdi:tune-vertical-variant"),
     "effect_fx": MapItem(name="Effect FX", icon="mdi:equalizer-outline"),
     "effect_hard_tune": MapItem(name="Effect Hard Tune", icon="mdi:knob"),
     "effect_megaphone": MapItem(name="Effect Megaphone", icon="mdi:bullhorn-outline"),
@@ -192,8 +194,4 @@ NAME_MAP: Final[dict[str, MapItem]] = {
     "sampler_top_right": MapItem(name="Sampler Top Right", icon="mdi:music-note"),
     "system": MapItem(name="System", icon="mdi:music-box-outline"),
     "System": MapItem(name="System", icon="mdi:music-box-outline"),
-    FADER_A: MapItem(name="Fader A", icon="mdi:tune-vertical-variant"),
-    FADER_B: MapItem(name="Fader B", icon="mdi:tune-vertical-variant"),
-    FADER_C: MapItem(name="Fader C", icon="mdi:tune-vertical-variant"),
-    FADER_D: MapItem(name="Fader D", icon="mdi:tune-vertical-variant"),
 }
