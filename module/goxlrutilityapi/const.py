@@ -22,10 +22,74 @@ KEY_DATA: Final[str] = "data"
 KEY_ID: Final[str] = "id"
 KEY_TYPE: Final[str] = "type"
 
-# Request/Response Types
+# Request Types (https://github.com/GoXLR-on-Linux/goxlr-utility/blob/c2c876dd83ddcd4681b1a674c5cb975796726dd8/ipc/src/lib.rs#L20)
+REQUEST_TYPE_COMMAND: Final[str] = "Command"
+REQUEST_TYPE_GET_HTTP_STATE: Final[str] = "GetHttpState"
 REQUEST_TYPE_GET_STATUS: Final[str] = "GetStatus"
+REQUEST_TYPE_OPEN_PATH: Final[str] = "OpenPath"
+REQUEST_TYPE_OPEN_UI: Final[str] = "OpenUi"
+REQUEST_TYPE_PING: Final[str] = "Ping"
+REQUEST_TYPE_RECOVER_DEFAULTS: Final[str] = "RecoverDefaults"
+REQUEST_TYPE_SET_AUTOSTART_ENABLED: Final[str] = "SetAutoStartEnabled"
+REQUEST_TYPE_SET_SHOW_TRAY_ICON: Final[str] = "SetShowTrayIcon"
+REQUEST_TYPE_SET_TTS_ENABLED: Final[str] = "SetTTSEnabled"
+REQUEST_TYPE_STOP_DAEMON: Final[str] = "StopDaemon"
+
+# Response Types (https://github.com/GoXLR-on-Linux/goxlr-utility/blob/c2c876dd83ddcd4681b1a674c5cb975796726dd8/ipc/src/lib.rs#L35)
+RESPONSE_TYPE_ERROR: Final[str] = "Error"
+RESPONSE_TYPE_HTTP_STATE: Final[str] = "HttpState"
+RESPONSE_TYPE_OK: Final[str] = "Ok"
 RESPONSE_TYPE_PATCH: Final[str] = "Patch"
 RESPONSE_TYPE_STATUS: Final[str] = "Status"
+
+# Command Types (https://github.com/GoXLR-on-Linux/goxlr-utility/blob/c2c876dd83ddcd4681b1a674c5cb975796726dd8/ipc/src/lib.rs#LL65C17-L65C17)
+COMMAND_TYPE_SET_ALL_FADER_COLOURS: Final[str] = "SetAllFaderColours"
+COMMAND_TYPE_SET_ALL_FADER_DISPLAY_STYLE: Final[str] = "SetAllFaderDisplayStyle"
+COMMAND_TYPE_SET_BUTTON_COLOURS: Final[str] = "SetButtonColours"
+COMMAND_TYPE_SET_BUTTON_GROUP_COLOURS: Final[str] = "SetButtonGroupColours"
+COMMAND_TYPE_SET_BUTTON_GROUP_OFF_STYLE: Final[str] = "SetButtonGroupOffStyle"
+COMMAND_TYPE_SET_BUTTON_OFF_STYLE: Final[str] = "SetButtonOffStyle"
+COMMAND_TYPE_SET_ENCODER_COLOUR: Final[str] = "SetEncoderColour"
+COMMAND_TYPE_SET_FADER_COLOURS: Final[str] = "SetFaderColours"
+COMMAND_TYPE_SET_FADER_DISPLAY_STYLE: Final[str] = "SetFaderDisplayStyle"
+COMMAND_TYPE_SET_SAMPLE_COLOUR: Final[str] = "SetSampleColour"
+COMMAND_TYPE_SET_SAMPLE_OFF_STYLE: Final[str] = "SetSampleOffStyle"
+COMMAND_TYPE_SET_SIMPLE_COLOUR: Final[str] = "SetSimpleColour"
+
+# Buttons
+# pub enum Button {
+#     // These are all the buttons from the GoXLR Mini.
+#     Fader1Mute,
+#     Fader2Mute,
+#     Fader3Mute,
+#     Fader4Mute,
+#     Bleep,
+#     Cough,
+
+#     // The rest are GoXLR Full Buttons. On the mini, they will simply be ignored.
+#     EffectSelect1,
+#     EffectSelect2,
+#     EffectSelect3,
+#     EffectSelect4,
+#     EffectSelect5,
+#     EffectSelect6,
+
+#     // FX Button labelled as 'fxClear' in config?
+#     EffectFx,
+#     EffectMegaphone,
+#     EffectRobot,
+#     EffectHardTune,
+
+#     SamplerSelectA,
+#     SamplerSelectB,
+#     SamplerSelectC,
+
+#     SamplerTopLeft,
+#     SamplerTopRight,
+#     SamplerBottomLeft,
+#     SamplerBottomRight,
+#     SamplerClear,
+# }
 
 # Models
 MODEL_PATCH: type[Patch] = Patch
