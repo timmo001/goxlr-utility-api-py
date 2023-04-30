@@ -127,6 +127,7 @@ def set_accent_color(
 
     typer.secho(f"Accent color set to {color}", fg=typer.colors.GREEN)
 
+
 @app.command(name="set_fader_color", short_help="Set Fader Color")
 def set_fader_color(
     fader: str = typer.Argument(..., help="Fader Name"),
@@ -168,6 +169,7 @@ def set_fader_color(
         f"Fader {fader} color set to {color_top} and {color_bottom}",
         fg=typer.colors.GREEN,
     )
+
 
 @app.command(name="set_button_color", short_help="Set Button Color")
 def set_button_color(
