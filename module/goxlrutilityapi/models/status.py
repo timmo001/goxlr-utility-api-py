@@ -237,34 +237,34 @@ class Fader(DefaultBaseModel):
     """Fader Model"""
 
     style: Optional[str] = Field(None)
-    colours: Optional[Colours] = Field(None)
+    colours: Colours = Field(None)
 
 
 class Faders(DefaultBaseModel):
     """Faders Model"""
 
-    a: Optional[Fader] = Field(None, alias="A")
-    b: Optional[Fader] = Field(None, alias="B")
-    c: Optional[Fader] = Field(None, alias="C")
-    d: Optional[Fader] = Field(None, alias="D")
+    a: Fader = Field(..., alias="A")
+    b: Fader = Field(..., alias="B")
+    c: Fader = Field(..., alias="C")
+    d: Fader = Field(..., alias="D")
 
 
 class Button(DefaultBaseModel):
     """Button Model"""
 
     off_style: Optional[str]
-    colours: Optional[Colours]
+    colours: Colours
 
 
 class Buttons(DefaultBaseModel):
     """Buttons Model"""
 
-    bleep: Optional[Button] = Field(None, alias="Bleep")
-    fader1_mute: Optional[Button] = Field(None, alias="Fader1Mute")
-    fader2_mute: Optional[Button] = Field(None, alias="Fader2Mute")
-    fader3_mute: Optional[Button] = Field(None, alias="Fader3Mute")
-    fader4_mute: Optional[Button] = Field(None, alias="Fader4Mute")
-    cough: Optional[Button] = Field(None, alias="Cough")
+    bleep: Button = Field(..., alias="Bleep")
+    cough: Button = Field(..., alias="Cough")
+    fader1_mute: Button = Field(..., alias="Fader1Mute")
+    fader2_mute: Button = Field(..., alias="Fader2Mute")
+    fader3_mute: Button = Field(..., alias="Fader3Mute")
+    fader4_mute: Button = Field(..., alias="Fader4Mute")
 
 
 class Global(DefaultBaseModel):
@@ -289,9 +289,9 @@ class Simple(DefaultBaseModel):
 class Lighting(DefaultBaseModel):
     """Lighting Model"""
 
-    faders: Optional[Faders]
-    buttons: Optional[Buttons]
-    simple: Optional[Simple]
+    faders: Faders
+    buttons: Buttons
+    simple: Simple
     sampler: Optional[dict[str, Any]]
     encoders: Optional[dict[str, Any]]
 
