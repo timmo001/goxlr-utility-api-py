@@ -318,7 +318,7 @@ class ButtonDown(DefaultBaseModel):
 
     bleep: Optional[bool] = Field(None, alias="Bleep")
     cough: Optional[bool] = Field(None, alias="Cough")
-    effect_fx: Optional[bool] = Field(None, alias="EffectFX")
+    effect_fx: Optional[bool] = Field(None, alias="EffectFx")
     effect_hard_tune: Optional[bool] = Field(None, alias="EffectHardTune")
     effect_megaphone: Optional[bool] = Field(None, alias="EffectMegaphone")
     effect_robot: Optional[bool] = Field(None, alias="EffectRobot")
