@@ -1,4 +1,4 @@
-"""GoXLR Utility API: Map Models"""
+"""GoXLR Utility API: Map Model"""
 from __future__ import annotations
 
 from typing import Optional
@@ -13,9 +13,3 @@ class MapItem(DefaultBaseModel):
 
     name: Optional[str] = Field(None)
     icon: Optional[str] = Field(None)
-
-
-class Map(DefaultBaseModel):
-    """Map Model"""
-
-    __root__: dict[str, MapItem]
