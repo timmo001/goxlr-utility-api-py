@@ -83,9 +83,30 @@ BUTTON_SAMPLER_SELECT_C: Final[str] = "SamplerSelectC"
 BUTTON_SAMPLER_TOP_LEFT: Final[str] = "SamplerTopLeft"
 BUTTON_SAMPLER_TOP_RIGHT: Final[str] = "SamplerTopRight"
 
-BUTTON_MAP: Final[dict[str, str]] = {
+# Faders
+FADER_A: Final[str] = "A"
+FADER_B: Final[str] = "B"
+FADER_C: Final[str] = "C"
+FADER_D: Final[str] = "D"
+
+# Models
+MODEL_PATCH: type[Patch] = Patch
+MODEL_REQUEST: type[Request] = Request
+MODEL_RESPONSE: type[Response[Any]] = Response
+MODEL_STATUS: type[Status] = Status
+
+MODEL_MAP: Final[dict[str, Any]] = {
+    RESPONSE_TYPE_PATCH: MODEL_PATCH,
+    RESPONSE_TYPE_STATUS: MODEL_STATUS,
+}
+
+KEY_MAP: Final[dict[str, str]] = {
+    "a": FADER_A,
+    "b": FADER_B,
     "bleep": BUTTON_BLEEP,
+    "c": FADER_C,
     "cough": BUTTON_COUGH,
+    "d": FADER_D,
     "effect_fx": BUTTON_EFFECT_FX,
     "effect_hard_tune": BUTTON_EFFECT_HARD_TUNE,
     "effect_megaphone": BUTTON_EFFECT_MEGAPHONE,
@@ -108,17 +129,6 @@ BUTTON_MAP: Final[dict[str, str]] = {
     "sampler_select_c": BUTTON_SAMPLER_SELECT_C,
     "sampler_top_left": BUTTON_SAMPLER_TOP_LEFT,
     "sampler_top_right": BUTTON_SAMPLER_TOP_RIGHT,
-}
-
-# Models
-MODEL_PATCH: type[Patch] = Patch
-MODEL_REQUEST: type[Request] = Request
-MODEL_RESPONSE: type[Response[Any]] = Response
-MODEL_STATUS: type[Status] = Status
-
-MODEL_MAP: Final[dict[str, Any]] = {
-    RESPONSE_TYPE_PATCH: MODEL_PATCH,
-    RESPONSE_TYPE_STATUS: MODEL_STATUS,
 }
 
 NAME_MAP: Final[dict[str, MapItem]] = {
