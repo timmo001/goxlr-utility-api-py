@@ -127,6 +127,47 @@ def set_accent_color(
 
     typer.secho(f"Accent color set to {color}", fg=typer.colors.GREEN)
 
+@app.command(name="set_fader_color", short_help="Set Fader Color")
+def set_fader_color(
+    fader: str = typer.Argument(..., help="Fader Name"),
+    color_top: str = typer.Argument(..., help="Color 1 Hex Value (RRGGBB)"),
+    color_bottom: str = typer.Argument(..., help="Color 2 Hex Value (RRGGBB)"),
+    debug: bool = False,
+) -> None:
+    """Set Fader Color"""
+    if debug:
+        setup_logger("DEBUG")
+    if setup_websocket() is False:
+        typer.secho("Failed to connect to GoXLR", fg=typer.colors.RED)
+        return
+    try:
+        loop.run_until_complete(websocket_client.get_status())
+    except BadMessageException as error:
+        typer.secho(
+            f"Failed to get status from GoXLR: {error}",
+            fg=typer.colors.RED,
+        )
+        return
+
+    try:
+        loop.run_until_complete(
+            websocket_client.set_fader_color(
+                fader,
+                color_top,
+                color_bottom,
+            )
+        )
+    except BadMessageException as error:
+        typer.secho(
+            f"Failed to set fader color: {error}",
+            fg=typer.colors.RED,
+        )
+        return
+
+    typer.secho(
+        f"Fader {fader} color set to {color_top} and {color_bottom}",
+        fg=typer.colors.GREEN,
+    )
 
 @app.command(name="set_button_color", short_help="Set Button Color")
 def set_button_color(

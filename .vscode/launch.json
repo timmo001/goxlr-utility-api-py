@@ -42,6 +42,16 @@
       "args": ["set_button_color", "Bleep", "0000FF", "000000", "--debug"]
     },
     {
+      "name": "Set Fader Color",
+      "type": "python",
+      "request": "launch",
+      "module": "goxlrutilityapi",
+      "preLaunchTask": "Module: pip install",
+      "cwd": "${workspaceFolder}/module",
+      "justMyCode": false,
+      "args": ["set_fader_color", "D", "000000", "0000FF", "--debug"]
+    },
+    {
       "name": "Version",
       "type": "python",
       "request": "launch",
