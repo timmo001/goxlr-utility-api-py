@@ -39,10 +39,10 @@ MODEL_MAP: Final[dict[str, Any]] = {
 }
 
 NAME_MAP: Final[dict[str, MapItem]] = {
-    "bleep": MapItem(name="Bleep", icon="bleep"),
+    "bleep": MapItem(name="Bleep", icon="mdi:exclamation"),
     "chat": MapItem(name="Chat", icon="mdi:chat"),
     "console": MapItem(name="Console", icon="mdi:gamepad-variant"),
-    "cough": MapItem(name="Cough", icon="mdi:exclamation"),
+    "cough": MapItem(name="Cough", icon="mdi:microphone-off"),
     "effect_fx": MapItem(name="Effect FX", icon="mdi:equalizer-outline"),
     "effect_hard_tune": MapItem(name="Effect Hard Tune", icon="mdi:knob"),
     "effect_megaphone": MapItem(name="Effect Megaphone", icon="mdi:bullhorn-outline"),
