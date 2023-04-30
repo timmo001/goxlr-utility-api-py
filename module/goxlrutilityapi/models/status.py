@@ -283,7 +283,7 @@ class Simple(DefaultBaseModel):
     """Simple Model"""
 
     global_: Optional[Global] = Field(None, alias="Global")
-    accent: Optional[Accent] = Field(None, alias="Accent")
+    accent: Accent = Field(None, alias="Accent")
 
 
 class Lighting(DefaultBaseModel):
