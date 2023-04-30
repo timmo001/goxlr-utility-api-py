@@ -67,6 +67,7 @@ NAME_MAP: Final[dict[str, MapItem]] = {
     "Mic": MapItem(name="Microphone", icon="mdi:microphone"),
     "MicMonitor": MapItem(name="Microphone Monitor", icon="mdi:microphone-outline"),
     "music": MapItem(name="Music", icon="mdi:music"),
+    "Music": MapItem(name="Music", icon="mdi:music"),
     "mute_all": MapItem(name="Mute All", icon="mdi:microphone-off"),
     "mute_chat": MapItem(name="Mute Chat", icon="mdi:microphone-off"),
     "mute_console": MapItem(name="Mute Console", icon="mdi:microphone-off"),
@@ -87,4 +88,5 @@ NAME_MAP: Final[dict[str, MapItem]] = {
     "sampler_top_left": MapItem(name="Sampler Top Left", icon="mdi:music-note"),
     "sampler_top_right": MapItem(name="Sampler Top Right", icon="mdi:music-note"),
     "system": MapItem(name="System", icon="mdi:music-box-outline"),
+    "System": MapItem(name="System", icon="mdi:music-box-outline"),
 }
