@@ -46,7 +46,9 @@ NAME_MAP: Final[Map] = Map(
         "cough": MapItem(name="Cough", icon="mdi:exclamation"),
         "effect_fx": MapItem(name="Effect FX", icon="mdi:equalizer-outline"),
         "effect_hard_tune": MapItem(name="Effect Hard Tune", icon="mdi:knob"),
-        "effect_megaphone": MapItem(name="Effect Megaphone", icon="mdi:bullhorn-outline"),
+        "effect_megaphone": MapItem(
+            name="Effect Megaphone", icon="mdi:bullhorn-outline"
+        ),
         "effect_robot": MapItem(name="Effect Robot", icon="mdi:robot-outline"),
         "effect_select1": MapItem(name="Effect Select 1", icon="mdi:sawtooth-wave"),
         "effect_select2": MapItem(name="Effect Select 2", icon="mdi:sawtooth-wave"),
