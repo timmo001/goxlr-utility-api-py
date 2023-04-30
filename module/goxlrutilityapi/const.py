@@ -13,9 +13,10 @@ DEFAULT_HOST: Final[str] = "localhost"
 DEFAULT_PORT: Final[int] = 14564
 
 # Mixer
-VOLUME_MAX: Final[int] = 255
+ACCENT: Final[str] = "Accent"
 MUTED_STATE: Final[str] = "MutedToX"
 UNMUTED_STATE: Final[str] = "Unmuted"
+VOLUME_MAX: Final[int] = 255
 
 # Request/Response Keys
 KEY_DATA: Final[str] = "data"

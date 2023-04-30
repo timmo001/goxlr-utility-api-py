@@ -12,7 +12,9 @@ from pydantic import ValidationError
 
 from .base import Base
 from .const import (
+    ACCENT,
     COMMAND_TYPE_SET_BUTTON_COLOURS,
+    COMMAND_TYPE_SET_SIMPLE_COLOUR,
     DEFAULT_HOST,
     DEFAULT_PORT,
     KEY_DATA,
@@ -135,6 +137,39 @@ class WebsocketClient(Base):
         self._logger.debug("Status: %s", response.data)
         self._mixer_serial_number = next(iter(response.data.mixers.keys()))
         return response.data
+
+    async def set_accent_color(
+        self,
+        color: str,
+    ) -> None:
+        """Set accent color"""
+        if self._mixer_serial_number is None:
+            raise BadMessageException(
+                "Mixer serial number is missing. Call get_status to set this."
+            )
+
+        self._logger.info(
+            "Setting accent color to '%s' for mixer '%s'",
+            color,
+            self._mixer_serial_number,
+        )
+        await self._send_message(
+            Request(
+                data={
+                    REQUEST_TYPE_COMMAND: [
+                        self._mixer_serial_number,
+                        {
+                            COMMAND_TYPE_SET_SIMPLE_COLOUR: [
+                                ACCENT,
+                                color,
+                            ],
+                        },
+                    ]
+                }
+            ),
+            wait_for_response=False,
+            response_type=RESPONSE_TYPE_OK,
+        )
 
     async def set_button_color(
         self,

@@ -22,6 +22,16 @@
       "args": ["listen_for_messages", "--debug"]
     },
     {
+      "name": "Set Accent Color",
+      "type": "python",
+      "request": "launch",
+      "module": "goxlrutilityapi",
+      "preLaunchTask": "Module: pip install",
+      "cwd": "${workspaceFolder}/module",
+      "justMyCode": false,
+      "args": ["set_accent_color", "0000FF", "--debug"]
+    },
+    {
       "name": "Set Button Color",
       "type": "python",
       "request": "launch",
@@ -30,6 +40,16 @@
       "cwd": "${workspaceFolder}/module",
       "justMyCode": false,
       "args": ["set_button_color", "Bleep", "0000FF", "000000", "--debug"]
+    },
+    {
+      "name": "Version",
+      "type": "python",
+      "request": "launch",
+      "module": "goxlrutilityapi",
+      "preLaunchTask": "Module: pip install",
+      "cwd": "${workspaceFolder}/module",
+      "justMyCode": false,
+      "args": ["version"]
     }
   ]
 }
