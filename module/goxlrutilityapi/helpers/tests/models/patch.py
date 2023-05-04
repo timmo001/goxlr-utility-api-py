@@ -2,7 +2,7 @@
 from polyfactory.factories.pydantic_factory import ModelFactory
 from polyfactory.pytest_plugin import register_fixture
 
-from ...models.patch import Patch
+from ....models.patch import Patch
 
 
 @register_fixture
@@ -14,6 +14,7 @@ class PatchFactory(ModelFactory[Patch]):
     op = "op"
     path = "path"
     value = "value"
+
 
 def test_patch() -> None:
     """Test Patch"""

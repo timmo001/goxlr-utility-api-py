@@ -3,7 +3,7 @@ from polyfactory import Fixture
 from polyfactory.factories.pydantic_factory import ModelFactory
 from polyfactory.pytest_plugin import register_fixture
 
-from ...models.status import Config, Files, Mixer, Paths, Status
+from ....models.status import Config, Files, Mixer, Paths, Status
 
 
 @register_fixture
@@ -16,6 +16,7 @@ class StatusFactory(ModelFactory[Status]):
     mixers = Fixture(dict[str, Mixer])
     paths = Fixture(Paths)
     files = Fixture(Files)
+
 
 def test_status() -> None:
     """Test Status"""

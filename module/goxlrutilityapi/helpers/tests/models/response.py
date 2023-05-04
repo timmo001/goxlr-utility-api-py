@@ -2,7 +2,7 @@
 from polyfactory.factories.pydantic_factory import ModelFactory
 from polyfactory.pytest_plugin import register_fixture
 
-from ...models.response import Response
+from ....models.response import Response
 
 
 @register_fixture
@@ -14,6 +14,7 @@ class ResponseFactory(ModelFactory[Response]):
     id = 1
     type = "type"
     data = {"key": "value"}
+
 
 def test_response() -> None:
     """Test Response"""

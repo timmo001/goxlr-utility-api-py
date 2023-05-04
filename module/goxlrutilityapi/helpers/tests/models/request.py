@@ -2,7 +2,7 @@
 from polyfactory.factories.pydantic_factory import ModelFactory
 from polyfactory.pytest_plugin import register_fixture
 
-from ...models.request import Request
+from ....models.request import Request
 
 
 @register_fixture

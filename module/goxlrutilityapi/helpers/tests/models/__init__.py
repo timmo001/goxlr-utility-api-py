@@ -2,7 +2,7 @@
 from polyfactory.factories.pydantic_factory import ModelFactory
 from polyfactory.pytest_plugin import register_fixture
 
-from ...models import DefaultBaseModel
+from ....models import DefaultBaseModel
 
 
 @register_fixture

@@ -2,7 +2,7 @@
 from polyfactory.factories.pydantic_factory import ModelFactory
 from polyfactory.pytest_plugin import register_fixture
 
-from ...models.map_item import MapItem
+from ....models.map_item import MapItem
 
 
 @register_fixture
@@ -13,6 +13,7 @@ class MapItemFactory(ModelFactory[MapItem]):
 
     name = "Name"
     icon = "mdi:icon"
+
 
 def test_map_item() -> None:
     """Test MapItem"""
