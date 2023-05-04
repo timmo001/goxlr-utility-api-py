@@ -1,12 +1,12 @@
-"""GoXLR Utility API: Helper"""
+"""GoXLR Utility API: Helpers"""
 from __future__ import annotations
 
 import logging
 from typing import Optional
 
-from .const import VOLUME_MAX
-from .models.patch import Patch
-from .models.status import Mixer, Status
+from ..const import VOLUME_MAX
+from ..models.patch import Patch
+from ..models.status import Mixer, Status
 
 _LOGGER = logging.getLogger(__name__)
 
