@@ -1,1 +1,1 @@
-"""GoXLR Utility API: Tests"""
+"""GoXLR Utility API: Tests helpers"""

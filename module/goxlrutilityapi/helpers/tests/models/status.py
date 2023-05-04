@@ -1,4 +1,4 @@
-"""GoXLR Utility API: Tests - Status Models"""
+"""GoXLR Utility API: Tests helpers - Status Models"""
 from polyfactory import Fixture
 from polyfactory.factories.pydantic_factory import ModelFactory
 from polyfactory.pytest_plugin import register_fixture

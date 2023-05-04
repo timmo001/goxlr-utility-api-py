@@ -1,4 +1,4 @@
-"""GoXLR Utility API: Tests - MapItem Models"""
+"""GoXLR Utility API: Tests helpers - MapItem Models"""
 from polyfactory.factories.pydantic_factory import ModelFactory
 from polyfactory.pytest_plugin import register_fixture
 
