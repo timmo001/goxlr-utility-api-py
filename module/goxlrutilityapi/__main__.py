@@ -30,7 +30,7 @@ websocket_client = WebsocketClient()
 def setup_websocket(
     callback: Optional[Callable[[Response[Patch]], Awaitable[None]]] = None
 ) -> bool:
-    """Listen for messages on another thread"""
+    """Listen for messages in the background"""
     try:
         loop.run_until_complete(websocket_client.connect())
         loop.create_task(
