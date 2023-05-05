@@ -10,6 +10,7 @@ FIXTURE_SERIAL: Final[str] = "abc123"
 FIXTURE_MANUFACTURER_NAME: Final[str] = "Name of the manufacturer"
 FIXTURE_NAME: Final[str] = "Name of the device"
 
+
 class UsbDeviceFactory(ModelFactory[UsbDevice]):
     """USB Device Factory"""
 
