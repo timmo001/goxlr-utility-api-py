@@ -255,6 +255,45 @@ def set_volume(
     )
 
 
+@app.command(name="load_profile", short_help="Load Profile")
+def load_profile(
+    profile: str = typer.Argument(..., help="Profile Name"),
+    debug: bool = False,
+) -> None:
+    """Load Profile"""
+    if debug:
+        setup_logger("DEBUG")
+    if setup_websocket() is False:
+        typer.secho("Failed to connect to GoXLR", fg=typer.colors.RED)
+        return
+    try:
+        loop.run_until_complete(websocket_client.get_status())
+    except BadMessageException as error:
+        typer.secho(
+            f"Failed to get status from GoXLR: {error}",
+            fg=typer.colors.RED,
+        )
+        return
+
+    try:
+        loop.run_until_complete(
+            websocket_client.load_profile(
+                profile,
+            )
+        )
+    except BadMessageException as error:
+        typer.secho(
+            f"Failed to load profile: {error}",
+            fg=typer.colors.RED,
+        )
+        return
+
+    typer.secho(
+        f"Profile {profile} loaded",
+        fg=typer.colors.GREEN,
+    )
+
+
 @app.command(name="version", short_help="Module Version")
 def version() -> None:
     """Module Version"""
