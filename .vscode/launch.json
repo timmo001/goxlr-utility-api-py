@@ -52,6 +52,16 @@
       "args": ["set_fader_color", "D", "000000", "0000FF", "--debug"]
     },
     {
+      "name": "Set Volume",
+      "type": "python",
+      "request": "launch",
+      "module": "goxlrutilityapi",
+      "preLaunchTask": "Module: pip install",
+      "cwd": "${workspaceFolder}/module",
+      "justMyCode": false,
+      "args": ["set_volume", "System", "128", "--debug"]
+    },
+    {
       "name": "Version",
       "type": "python",
       "request": "launch",

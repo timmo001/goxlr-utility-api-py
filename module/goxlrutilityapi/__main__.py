@@ -214,6 +214,47 @@ def set_button_color(
     )
 
 
+@app.command(name="set_volume", short_help="Set Volume of Channel")
+def set_volume(
+    channel: str = typer.Argument(..., help="Channel Name"),
+    volume: int = typer.Argument(..., help="Volume (0-100)"),
+    debug: bool = False,
+) -> None:
+    """Set Volume of Channel"""
+    if debug:
+        setup_logger("DEBUG")
+    if setup_websocket() is False:
+        typer.secho("Failed to connect to GoXLR", fg=typer.colors.RED)
+        return
+    try:
+        loop.run_until_complete(websocket_client.get_status())
+    except BadMessageException as error:
+        typer.secho(
+            f"Failed to get status from GoXLR: {error}",
+            fg=typer.colors.RED,
+        )
+        return
+
+    try:
+        loop.run_until_complete(
+            websocket_client.set_volume(
+                channel,
+                volume,
+            )
+        )
+    except BadMessageException as error:
+        typer.secho(
+            f"Failed to set volume: {error}",
+            fg=typer.colors.RED,
+        )
+        return
+
+    typer.secho(
+        f"{channel} volume set to {volume}",
+        fg=typer.colors.GREEN,
+    )
+
+
 @app.command(name="version", short_help="Module Version")
 def version() -> None:
     """Module Version"""

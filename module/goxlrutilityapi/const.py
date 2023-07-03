@@ -56,6 +56,7 @@ COMMAND_TYPE_SET_FADER_DISPLAY_STYLE: Final[str] = "SetFaderDisplayStyle"
 COMMAND_TYPE_SET_SAMPLE_COLOUR: Final[str] = "SetSampleColour"
 COMMAND_TYPE_SET_SAMPLE_OFF_STYLE: Final[str] = "SetSampleOffStyle"
 COMMAND_TYPE_SET_SIMPLE_COLOUR: Final[str] = "SetSimpleColour"
+COMMAND_TYPE_SET_VOLUME: Final[str] = "SetVolume"
 
 # Buttons
 BUTTON_BLEEP: Final[str] = "Bleep"

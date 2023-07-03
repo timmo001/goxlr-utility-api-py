@@ -16,6 +16,7 @@ from .const import (
     COMMAND_TYPE_SET_BUTTON_COLOURS,
     COMMAND_TYPE_SET_FADER_COLOURS,
     COMMAND_TYPE_SET_SIMPLE_COLOUR,
+    COMMAND_TYPE_SET_VOLUME,
     DEFAULT_HOST,
     DEFAULT_PORT,
     KEY_DATA,
@@ -239,6 +240,41 @@ class WebsocketClient(Base):
                                 name,
                                 color_top,
                                 color_bottom,
+                            ],
+                        },
+                    ]
+                }
+            ),
+            wait_for_response=False,
+            response_type=RESPONSE_TYPE_OK,
+        )
+
+    async def set_volume(
+        self,
+        channel: str,
+        volume: int,
+    ) -> None:
+        """Set volume of channel"""
+        if self._mixer_serial_number is None:
+            raise BadMessageException(
+                "Mixer serial number is missing. Call get_status to set this."
+            )
+
+        self._logger.info(
+            "Setting volume of '%s' to '%s' for mixer '%s'",
+            channel,
+            volume,
+            self._mixer_serial_number,
+        )
+        await self._send_message(
+            Request(
+                data={
+                    REQUEST_TYPE_COMMAND: [
+                        self._mixer_serial_number,
+                        {
+                            COMMAND_TYPE_SET_VOLUME: [
+                                channel,
+                                volume,
                             ],
                         },
                     ]
