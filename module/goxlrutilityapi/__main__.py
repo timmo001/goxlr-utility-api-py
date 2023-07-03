@@ -214,6 +214,47 @@ def set_button_color(
     )
 
 
+@app.command(name="set_muted", short_help="Set Muted of Channel")
+def set_muted(
+    channel: str = typer.Argument(..., help="Channel Name"),
+    muted: bool = typer.Argument(..., help="Muted (True/False)"),
+    debug: bool = False,
+) -> None:
+    """Set Muted of Channel"""
+    if debug:
+        setup_logger("DEBUG")
+    if setup_websocket() is False:
+        typer.secho("Failed to connect to GoXLR", fg=typer.colors.RED)
+        return
+    try:
+        loop.run_until_complete(websocket_client.get_status())
+    except BadMessageException as error:
+        typer.secho(
+            f"Failed to get status from GoXLR: {error}",
+            fg=typer.colors.RED,
+        )
+        return
+
+    try:
+        loop.run_until_complete(
+            websocket_client.set_muted(
+                channel,
+                muted,
+            )
+        )
+    except BadMessageException as error:
+        typer.secho(
+            f"Failed to set muted: {error}",
+            fg=typer.colors.RED,
+        )
+        return
+
+    typer.secho(
+        f"{channel} muted set to {muted}",
+        fg=typer.colors.GREEN,
+    )
+
+
 @app.command(name="set_volume", short_help="Set Volume of Channel")
 def set_volume(
     channel: str = typer.Argument(..., help="Channel Name"),

@@ -17,6 +17,7 @@ from .const import (
     COMMAND_TYPE_LOAD_PROFILE_COLOURS,
     COMMAND_TYPE_SET_BUTTON_COLOURS,
     COMMAND_TYPE_SET_FADER_COLOURS,
+    COMMAND_TYPE_SET_MUTE_STATE,
     COMMAND_TYPE_SET_SIMPLE_COLOUR,
     COMMAND_TYPE_SET_VOLUME,
     DEFAULT_HOST,
@@ -25,11 +26,13 @@ from .const import (
     KEY_ID,
     KEY_TYPE,
     MODEL_MAP,
+    MUTED_STATE,
     REQUEST_TYPE_COMMAND,
     REQUEST_TYPE_GET_STATUS,
     RESPONSE_TYPE_OK,
     RESPONSE_TYPE_PATCH,
     RESPONSE_TYPE_STATUS,
+    UNMUTED_STATE,
 )
 from .exceptions import (
     BadMessageException,
@@ -242,6 +245,41 @@ class WebsocketClient(Base):
                                 name,
                                 color_top,
                                 color_bottom,
+                            ],
+                        },
+                    ]
+                }
+            ),
+            wait_for_response=False,
+            response_type=RESPONSE_TYPE_OK,
+        )
+
+    async def set_muted(
+        self,
+        channel: str,
+        muted: bool,
+    ) -> None:
+        """Set muted state of channel"""
+        if self._mixer_serial_number is None:
+            raise BadMessageException(
+                "Mixer serial number is missing. Call get_status to set this."
+            )
+
+        self._logger.info(
+            "Setting muted state of '%s' to '%s' for mixer '%s'",
+            channel,
+            muted,
+            self._mixer_serial_number,
+        )
+        await self._send_message(
+            Request(
+                data={
+                    REQUEST_TYPE_COMMAND: [
+                        self._mixer_serial_number,
+                        {
+                            COMMAND_TYPE_SET_MUTE_STATE: [
+                                channel,
+                                MUTED_STATE if muted else UNMUTED_STATE,
                             ],
                         },
                     ]
