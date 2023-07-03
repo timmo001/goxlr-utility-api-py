@@ -229,13 +229,13 @@ NAME_MAP: Final[dict[str, MapItem]] = {
         key="LineIn", name="Line In", icon="mdi:audio-input-stereo-minijack"
     ),
     "line_out": MapItem(
-        key="LineOut", name="Line In", icon="mdi:audio-input-stereo-minijack"
+        key="LineOut", name="Line Out", icon="mdi:audio-input-stereo-minijack"
     ),
     "LineIn": MapItem(
         key="LineIn", name="Line In", icon="mdi:audio-input-stereo-minijack"
     ),
     "LineOut": MapItem(
-        key="LineOut", name="Line In", icon="mdi:audio-input-stereo-minijack"
+        key="LineOut", name="Line Out", icon="mdi:audio-input-stereo-minijack"
     ),
     "mic_monitor": MapItem(
         key="MicMonitor", name="Microphone Monitor", icon="mdi:microphone-outline"
