@@ -15,6 +15,8 @@ class Config(DefaultBaseModel):
     autostart_enabled: Optional[bool] = Field(None)
     show_tray_icon: Optional[bool] = Field(None)
     tts_enabled: Optional[bool] = Field(None)
+    allow_network_access: Optional[bool] = Field(None)
+    log_level: Optional[str] = Field(None)
 
 
 class Versions(DefaultBaseModel):
@@ -188,7 +190,8 @@ class Volumes(DefaultBaseModel):
 class Levels(DefaultBaseModel):
     """Levels Model"""
 
-    submix_supported: Optional[bool] = Field(None)
+    submix_supported: bool = Field(None)
+    output_monitor: str
     volumes: Volumes
     submix: Optional[Any] = Field(None)
     bleep: Optional[int] = Field(None)
@@ -240,6 +243,16 @@ class Fader(DefaultBaseModel):
     colours: Colours = Field(None)
 
 
+class Animation(DefaultBaseModel):
+    """Animation Model"""
+
+    supported: Optional[bool] = Field(None)
+    mode: Optional[str] = Field(None)
+    mod1: Optional[int] = Field(None)
+    mod2: Optional[int] = Field(None)
+    waterfall_direction: Optional[str] = Field(None)
+
+
 class Faders(DefaultBaseModel):
     """Faders Model"""
 
@@ -289,6 +302,7 @@ class Simple(DefaultBaseModel):
 class Lighting(DefaultBaseModel):
     """Lighting Model"""
 
+    animation: Animation
     faders: Faders
     buttons: Buttons
     simple: Simple
@@ -374,11 +388,11 @@ class Paths(DefaultBaseModel):
 class Files(DefaultBaseModel):
     """Files Model"""
 
-    profiles: Optional[list[str]]
-    mic_profiles: Optional[list[str]]
-    presets: Optional[list[str]]
-    samples: Optional[dict[str, Any]]
-    icons: Optional[list[str]]
+    profiles: list[str]
+    mic_profiles: list[str]
+    presets: list[str]
+    samples: dict[str, Any]
+    icons: list[str]
 
 
 class Status(DefaultBaseModel):
