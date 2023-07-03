@@ -59,7 +59,7 @@
       "preLaunchTask": "Module: pip install",
       "cwd": "${workspaceFolder}/module",
       "justMyCode": false,
-      "args": ["set_volume", "System", "128", "--debug"]
+      "args": ["set_volume", "System", "255", "--debug"]
     },
     {
       "name": "Version",
