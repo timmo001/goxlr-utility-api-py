@@ -293,6 +293,7 @@ def load_profile(
         fg=typer.colors.GREEN,
     )
 
+
 @app.command(name="load_profile_colours", short_help="Load Profile Colours")
 def load_profile_colours(
     profile: str = typer.Argument(..., help="Profile Name"),
@@ -330,6 +331,7 @@ def load_profile_colours(
         f"Profile colours {profile} loaded",
         fg=typer.colors.GREEN,
     )
+
 
 @app.command(name="version", short_help="Module Version")
 def version() -> None:
