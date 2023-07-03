@@ -4,7 +4,7 @@
     {
       "type": "shell",
       "label": "Module: pip install",
-      "command": "pip install .",
+      "command": "pip3 install .",
       "dependsOn": [],
       "options": {
         "cwd": "module"
