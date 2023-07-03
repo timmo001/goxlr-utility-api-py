@@ -14,6 +14,7 @@ from .base import Base
 from .const import (
     ACCENT,
     COMMAND_TYPE_LOAD_PROFILE,
+    COMMAND_TYPE_LOAD_PROFILE_COLOURS,
     COMMAND_TYPE_SET_BUTTON_COLOURS,
     COMMAND_TYPE_SET_FADER_COLOURS,
     COMMAND_TYPE_SET_SIMPLE_COLOUR,
@@ -310,6 +311,36 @@ class WebsocketClient(Base):
                                 profile,
                                 False,
                             ],
+                        },
+                    ]
+                }
+            ),
+            wait_for_response=False,
+            response_type=RESPONSE_TYPE_OK,
+        )
+
+    async def load_profile_colours(
+        self,
+        profile: str,
+    ) -> None:
+        """Load profile colours"""
+        if self._mixer_serial_number is None:
+            raise BadMessageException(
+                "Mixer serial number is missing. Call get_status to set this."
+            )
+
+        self._logger.info(
+            "Loading profile colours '%s' for mixer '%s'",
+            profile,
+            self._mixer_serial_number,
+        )
+        await self._send_message(
+            Request(
+                data={
+                    REQUEST_TYPE_COMMAND: [
+                        self._mixer_serial_number,
+                        {
+                            COMMAND_TYPE_LOAD_PROFILE_COLOURS: profile,
                         },
                     ]
                 }

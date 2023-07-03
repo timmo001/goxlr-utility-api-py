@@ -294,6 +294,45 @@ def load_profile(
     )
 
 
+@app.command(name="load_profile_colours", short_help="Load Profile Colours")
+def load_profile_colours(
+    profile: str = typer.Argument(..., help="Profile Name"),
+    debug: bool = False,
+) -> None:
+    """Load Profile Colours"""
+    if debug:
+        setup_logger("DEBUG")
+    if setup_websocket() is False:
+        typer.secho("Failed to connect to GoXLR", fg=typer.colors.RED)
+        return
+    try:
+        loop.run_until_complete(websocket_client.get_status())
+    except BadMessageException as error:
+        typer.secho(
+            f"Failed to get status from GoXLR: {error}",
+            fg=typer.colors.RED,
+        )
+        return
+
+    try:
+        loop.run_until_complete(
+            websocket_client.load_profile_colours(
+                profile,
+            )
+        )
+    except BadMessageException as error:
+        typer.secho(
+            f"Failed to load profile colours: {error}",
+            fg=typer.colors.RED,
+        )
+        return
+
+    typer.secho(
+        f"Profile colours {profile} loaded",
+        fg=typer.colors.GREEN,
+    )
+
+
 @app.command(name="version", short_help="Module Version")
 def version() -> None:
     """Module Version"""
