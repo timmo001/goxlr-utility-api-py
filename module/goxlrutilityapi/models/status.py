@@ -190,7 +190,8 @@ class Volumes(DefaultBaseModel):
 class Levels(DefaultBaseModel):
     """Levels Model"""
 
-    submix_supported: Optional[bool] = Field(None)
+    submix_supported: bool = Field(None)
+    output_monitor: str
     volumes: Volumes
     submix: Optional[Any] = Field(None)
     bleep: Optional[int] = Field(None)
