@@ -387,11 +387,11 @@ class Paths(DefaultBaseModel):
 class Files(DefaultBaseModel):
     """Files Model"""
 
-    profiles: Optional[list[str]]
-    mic_profiles: Optional[list[str]]
-    presets: Optional[list[str]]
-    samples: Optional[dict[str, Any]]
-    icons: Optional[list[str]]
+    profiles: list[str]
+    mic_profiles: list[str]
+    presets: list[str]
+    samples: dict[str, Any]
+    icons: list[str]
 
 
 class Status(DefaultBaseModel):
