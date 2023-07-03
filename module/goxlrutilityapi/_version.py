@@ -7,5 +7,5 @@ Provides goxlrutilityapi version information.
 
 from incremental import Version
 
-__version__ = Version("goxlrutilityapi", 1, 2, 1)
+__version__ = Version("goxlrutilityapi", 1, 2, 2)
 __all__ = ["__version__"]
