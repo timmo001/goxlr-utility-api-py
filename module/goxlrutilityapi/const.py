@@ -45,6 +45,7 @@ RESPONSE_TYPE_STATUS: Final[str] = "Status"
 
 # Command Types (https://github.com/GoXLR-on-Linux/goxlr-utility/blob/c2c876dd83ddcd4681b1a674c5cb975796726dd8/ipc/src/lib.rs#LL65C17-L65C17)
 COMMAND_TYPE_SET_ALL_FADER_COLOURS: Final[str] = "SetAllFaderColours"
+COMMAND_TYPE_LOAD_PROFILE: Final[str] = "LoadProfile"
 COMMAND_TYPE_SET_ALL_FADER_DISPLAY_STYLE: Final[str] = "SetAllFaderDisplayStyle"
 COMMAND_TYPE_SET_BUTTON_COLOURS: Final[str] = "SetButtonColours"
 COMMAND_TYPE_SET_BUTTON_GROUP_COLOURS: Final[str] = "SetButtonGroupColours"

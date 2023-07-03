@@ -62,6 +62,16 @@
       "args": ["set_volume", "System", "255", "--debug"]
     },
     {
+      "name": "Load Profile",
+      "type": "python",
+      "request": "launch",
+      "module": "goxlrutilityapi",
+      "preLaunchTask": "Module: pip install",
+      "cwd": "${workspaceFolder}/module",
+      "justMyCode": false,
+      "args": ["load_profile", "Timmo", "--debug"]
+    },
+    {
       "name": "Version",
       "type": "python",
       "request": "launch",
