@@ -15,6 +15,8 @@ class Config(DefaultBaseModel):
     autostart_enabled: Optional[bool] = Field(None)
     show_tray_icon: Optional[bool] = Field(None)
     tts_enabled: Optional[bool] = Field(None)
+    allow_network_access: Optional[bool] = Field(None)
+    log_level: Optional[str] = Field(None)
 
 
 class Versions(DefaultBaseModel):
@@ -240,6 +242,16 @@ class Fader(DefaultBaseModel):
     colours: Colours = Field(None)
 
 
+class Animation(DefaultBaseModel):
+    """Animation Model"""
+
+    supported: Optional[bool] = Field(None)
+    mode: Optional[str] = Field(None)
+    mod1: Optional[int] = Field(None)
+    mod2: Optional[int] = Field(None)
+    waterfall_direction: Optional[str] = Field(None)
+
+
 class Faders(DefaultBaseModel):
     """Faders Model"""
 
@@ -289,6 +301,7 @@ class Simple(DefaultBaseModel):
 class Lighting(DefaultBaseModel):
     """Lighting Model"""
 
+    animation: Animation
     faders: Faders
     buttons: Buttons
     simple: Simple
