@@ -16,7 +16,7 @@ setup(
     description="GoXLR Utility API",
     keywords="GoXLR Utility API",
     author="Aidan Timson (Timmo)",
-    author_email="contact@timmo.xyz",
+    author_email="aidan@timmo.dev",
     license="MIT",
     url="https://github.com/timmo001/goxlr-utility-api-py",
     packages=find_packages(exclude=["tests", "generator"]),
