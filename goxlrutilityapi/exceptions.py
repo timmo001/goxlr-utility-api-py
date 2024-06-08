@@ -1,4 +1,4 @@
-"""GoXLR Utility API: Exceptions"""
+"""GoXLR Utility API: Exceptions."""
 
 
 class ConnectionClosedException(BaseException):

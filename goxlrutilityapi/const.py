@@ -1,4 +1,4 @@
-"""GoXLR Utility API: Constants"""
+"""GoXLR Utility API: Constants."""
 
 from typing import Any, Final
 
