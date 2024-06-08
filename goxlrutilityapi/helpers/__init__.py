@@ -1,4 +1,4 @@
-"""GoXLR Utility API: Helpers"""
+"""GoXLR Utility API: Helpers."""
 from __future__ import annotations
 
 import logging
@@ -12,7 +12,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 def get_mixer_from_status(status: Status) -> Optional[Mixer]:
-    """Get first mixer from status"""
+    """Get first mixer from status."""
     return next(iter(status.mixers.values()), None)
 
 
@@ -30,7 +30,7 @@ def get_attribute_names_from_patch(
     data: Mixer,
     patch: Patch,
 ) -> list[str]:
-    """Get attribute names from patch"""
+    """Get attribute names from patch."""
     paths = patch.path.split("/")
     if len(paths) <= 3 or paths[1] != "mixers":
         _LOGGER.debug("Unused patch received: %s: %s", paths, patch.value)
