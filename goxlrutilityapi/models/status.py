@@ -1,4 +1,4 @@
-"""GoXLR Utility API: Status Models"""
+"""GoXLR Utility API: Status Models."""
 from __future__ import annotations
 
 from typing import Any, Optional
@@ -9,7 +9,7 @@ from . import DefaultBaseModel
 
 
 class Config(DefaultBaseModel):
-    """Config Model"""
+    """Config Model."""
 
     daemon_version: Optional[str] = Field(None)
     autostart_enabled: Optional[bool] = Field(None)
@@ -20,7 +20,7 @@ class Config(DefaultBaseModel):
 
 
 class Versions(DefaultBaseModel):
-    """Versions Model"""
+    """Versions Model."""
 
     firmware: Optional[list[int]] = Field(None)
     fpga_count: Optional[int] = Field(None)
@@ -28,7 +28,7 @@ class Versions(DefaultBaseModel):
 
 
 class UsbDevice(DefaultBaseModel):
-    """USB Device Model"""
+    """USB Device Model."""
 
     manufacturer_name: str
     product_name: str
@@ -39,7 +39,7 @@ class UsbDevice(DefaultBaseModel):
 
 
 class Hardware(DefaultBaseModel):
-    """Hardware Model"""
+    """Hardware Model."""
 
     versions: Versions
     serial_number: str
@@ -49,7 +49,7 @@ class Hardware(DefaultBaseModel):
 
 
 class FaderStatus(DefaultBaseModel):
-    """Fader Status Model"""
+    """Fader Status Model."""
 
     channel: str
     mute_type: str
@@ -58,7 +58,7 @@ class FaderStatus(DefaultBaseModel):
 
 
 class FaderStatuses(DefaultBaseModel):
-    """Fader Statuses Model"""
+    """Fader Statuses Model."""
 
     a: FaderStatus = Field(..., alias="A")
     b: FaderStatus = Field(..., alias="B")
@@ -67,7 +67,7 @@ class FaderStatuses(DefaultBaseModel):
 
 
 class MicGains(DefaultBaseModel):
-    """Mic Gains Model"""
+    """Mic Gains Model."""
 
     dynamic: Optional[int] = Field(None, alias="Dynamic")
     condenser: Optional[int] = Field(None, alias="Condenser")
@@ -75,7 +75,7 @@ class MicGains(DefaultBaseModel):
 
 
 class Gain(DefaultBaseModel):
-    """Gain Model"""
+    """Gain Model."""
 
     equalizer4_k_hz: Optional[int] = Field(None, alias="Equalizer4KHz")
     equalizer16_k_hz: Optional[int] = Field(None, alias="Equalizer16KHz")
@@ -90,7 +90,7 @@ class Gain(DefaultBaseModel):
 
 
 class Frequency(DefaultBaseModel):
-    """Frequency Model"""
+    """Frequency Model."""
 
     equalizer16_k_hz: Optional[int] = Field(None, alias="Equalizer16KHz")
     equalizer500_hz: Optional[int] = Field(None, alias="Equalizer500Hz")
@@ -105,14 +105,14 @@ class Frequency(DefaultBaseModel):
 
 
 class Equaliser(DefaultBaseModel):
-    """Equaliser Model"""
+    """Equaliser Model."""
 
     gain: Optional[Gain] = Field(None)
     frequency: Optional[Frequency] = Field(None)
 
 
 class Gain1(DefaultBaseModel):
-    """Gain1 Model"""
+    """Gain1 Model."""
 
     equalizer90_hz: Optional[int] = Field(None, alias="Equalizer90Hz")
     equalizer250_hz: Optional[int] = Field(None, alias="Equalizer250Hz")
@@ -123,7 +123,7 @@ class Gain1(DefaultBaseModel):
 
 
 class Frequency1(DefaultBaseModel):
-    """Frequency1 Model"""
+    """Frequency1 Model."""
 
     equalizer3_k_hz: Optional[int] = Field(None, alias="Equalizer3KHz")
     equalizer1_k_hz: Optional[int] = Field(None, alias="Equalizer1KHz")
@@ -134,14 +134,14 @@ class Frequency1(DefaultBaseModel):
 
 
 class EqualiserMini(DefaultBaseModel):
-    """Equaliser Mini Model"""
+    """Equaliser Mini Model."""
 
     gain: Optional[Gain1] = Field(None)
     frequency: Optional[Frequency1] = Field(None)
 
 
 class NoiseGate(DefaultBaseModel):
-    """Noise Gate Model"""
+    """Noise Gate Model."""
 
     threshold: Optional[int] = Field(None)
     attack: Optional[int] = Field(None)
@@ -151,7 +151,7 @@ class NoiseGate(DefaultBaseModel):
 
 
 class Compressor(DefaultBaseModel):
-    """Compressor Model"""
+    """Compressor Model."""
 
     threshold: Optional[int] = Field(None)
     ratio: Optional[int] = Field(None)
@@ -161,7 +161,7 @@ class Compressor(DefaultBaseModel):
 
 
 class MicStatus(DefaultBaseModel):
-    """Mic Status Model"""
+    """Mic Status Model."""
 
     mic_type: Optional[str] = Field(None)
     mic_gains: Optional[MicGains] = Field(None)
@@ -172,7 +172,7 @@ class MicStatus(DefaultBaseModel):
 
 
 class Volumes(DefaultBaseModel):
-    """Volumes Model"""
+    """Volumes Model."""
 
     mic: int = Field(..., alias="Mic")
     line_in: int = Field(..., alias="LineIn")
@@ -188,7 +188,7 @@ class Volumes(DefaultBaseModel):
 
 
 class Levels(DefaultBaseModel):
-    """Levels Model"""
+    """Levels Model."""
 
     submix_supported: bool = Field(None)
     output_monitor: str
@@ -199,7 +199,7 @@ class Levels(DefaultBaseModel):
 
 
 class RouterItem(DefaultBaseModel):
-    """Router Item Model"""
+    """Router Item Model."""
 
     headphones: Optional[bool] = Field(None, alias="Headphones")
     broadcast_mix: Optional[bool] = Field(None, alias="BroadcastMix")
@@ -209,7 +209,7 @@ class RouterItem(DefaultBaseModel):
 
 
 class Router(DefaultBaseModel):
-    """Router Model"""
+    """Router Model."""
 
     microphone: Optional[RouterItem] = Field(None, alias="Microphone")
     chat: Optional[RouterItem] = Field(None, alias="Chat")
@@ -222,7 +222,7 @@ class Router(DefaultBaseModel):
 
 
 class CoughButton(DefaultBaseModel):
-    """Cough Button Model"""
+    """Cough Button Model."""
 
     is_toggle: Optional[bool] = Field(None)
     mute_type: Optional[str] = Field(None)
@@ -230,21 +230,21 @@ class CoughButton(DefaultBaseModel):
 
 
 class Colours(DefaultBaseModel):
-    """Colours Model"""
+    """Colours Model."""
 
     colour_one: Optional[str] = Field(None)
     colour_two: Optional[str] = Field(None)
 
 
 class Fader(DefaultBaseModel):
-    """Fader Model"""
+    """Fader Model."""
 
     style: Optional[str] = Field(None)
     colours: Colours = Field(None)
 
 
 class Animation(DefaultBaseModel):
-    """Animation Model"""
+    """Animation Model."""
 
     supported: Optional[bool] = Field(None)
     mode: Optional[str] = Field(None)
@@ -254,7 +254,7 @@ class Animation(DefaultBaseModel):
 
 
 class Faders(DefaultBaseModel):
-    """Faders Model"""
+    """Faders Model."""
 
     a: Fader = Field(..., alias="A")
     b: Fader = Field(..., alias="B")
@@ -263,14 +263,14 @@ class Faders(DefaultBaseModel):
 
 
 class Button(DefaultBaseModel):
-    """Button Model"""
+    """Button Model."""
 
     off_style: Optional[str]
     colours: Colours
 
 
 class Buttons(DefaultBaseModel):
-    """Buttons Model"""
+    """Buttons Model."""
 
     bleep: Button = Field(..., alias="Bleep")
     cough: Button = Field(..., alias="Cough")
@@ -281,26 +281,26 @@ class Buttons(DefaultBaseModel):
 
 
 class Global(DefaultBaseModel):
-    """Global Model"""
+    """Global Model."""
 
     colour_one: Optional[str]
 
 
 class Accent(DefaultBaseModel):
-    """Accent Model"""
+    """Accent Model."""
 
     colour_one: Optional[str]
 
 
 class Simple(DefaultBaseModel):
-    """Simple Model"""
+    """Simple Model."""
 
     global_: Optional[Global] = Field(None, alias="Global")
     accent: Accent = Field(None, alias="Accent")
 
 
 class Lighting(DefaultBaseModel):
-    """Lighting Model"""
+    """Lighting Model."""
 
     animation: Animation
     faders: Faders
@@ -311,7 +311,7 @@ class Lighting(DefaultBaseModel):
 
 
 class Display(DefaultBaseModel):
-    """Display Model"""
+    """Display Model."""
 
     gate: Optional[str]
     compressor: Optional[str]
@@ -320,7 +320,7 @@ class Display(DefaultBaseModel):
 
 
 class Settings(DefaultBaseModel):
-    """Settings Model"""
+    """Settings Model."""
 
     display: Optional[Display]
     mute_hold_duration: Optional[int]
@@ -328,7 +328,7 @@ class Settings(DefaultBaseModel):
 
 
 class ButtonDown(DefaultBaseModel):
-    """Button Down Model"""
+    """Button Down Model."""
 
     bleep: Optional[bool] = Field(None, alias="Bleep")
     cough: Optional[bool] = Field(None, alias="Cough")
@@ -357,7 +357,7 @@ class ButtonDown(DefaultBaseModel):
 
 
 class Mixer(DefaultBaseModel):
-    """Mixer Model"""
+    """Mixer Model."""
 
     hardware: Hardware
     shutdown_commands: list
@@ -376,7 +376,7 @@ class Mixer(DefaultBaseModel):
 
 
 class Paths(DefaultBaseModel):
-    """Paths Model"""
+    """Paths Model."""
 
     profile_directory: Optional[str]
     mic_profile_directory: Optional[str]
@@ -386,7 +386,7 @@ class Paths(DefaultBaseModel):
 
 
 class Files(DefaultBaseModel):
-    """Files Model"""
+    """Files Model."""
 
     profiles: list[str]
     mic_profiles: list[str]
@@ -396,7 +396,7 @@ class Files(DefaultBaseModel):
 
 
 class Status(DefaultBaseModel):
-    """Status Model"""
+    """Status Model."""
 
     config: Config
     mixers: dict[str, Mixer]
@@ -405,6 +405,6 @@ class Status(DefaultBaseModel):
 
 
 class Data(DefaultBaseModel):
-    """Data Model"""
+    """Data Model."""
 
     status: Status = Field(..., alias="Status")

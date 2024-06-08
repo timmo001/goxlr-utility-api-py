@@ -1,4 +1,4 @@
-"""GoXLR Utility API: Main"""
+"""GoXLR Utility API: Main."""
 from __future__ import annotations
 
 import asyncio
@@ -30,7 +30,7 @@ websocket_client = WebsocketClient()
 def setup_websocket(
     callback: Optional[Callable[[Response[Patch]], Awaitable[None]]] = None
 ) -> bool:
-    """Listen for messages in the background"""
+    """Listen for messages in the background."""
     try:
         loop.run_until_complete(websocket_client.connect())
         loop.create_task(
@@ -49,7 +49,7 @@ def setup_websocket(
 
 
 async def patch_callback(response: Response[Patch]) -> None:
-    """Patch response callback function"""
+    """Patch response callback function."""
     typer.secho(
         response.json(
             include={
@@ -65,7 +65,7 @@ async def patch_callback(response: Response[Patch]) -> None:
 
 @app.command(name="get_status", short_help="Get Status of GoXLR")
 def get_status(debug: bool = False) -> None:
-    """Get Status of GoXLR"""
+    """Get Status of GoXLR."""
     if debug:
         setup_logger("DEBUG")
     if setup_websocket() is False:
@@ -88,7 +88,7 @@ def get_status(debug: bool = False) -> None:
     short_help="Listen for patch messages from GoXLR",
 )
 def listen_for_messages(debug: bool = False) -> None:
-    """Listen for patch messages from GoXLR"""
+    """Listen for patch messages from GoXLR."""
     if debug:
         setup_logger("DEBUG")
     setup_websocket(patch_callback)
@@ -101,7 +101,7 @@ def set_accent_color(
     color: str = typer.Argument(..., help="Color Hex Value (RRGGBB)"),
     debug: bool = False,
 ) -> None:
-    """Set Accent Color"""
+    """Set Accent Color."""
     if debug:
         setup_logger("DEBUG")
     if setup_websocket() is False:
@@ -135,7 +135,7 @@ def set_fader_color(
     color_bottom: str = typer.Argument(..., help="Color 2 Hex Value (RRGGBB)"),
     debug: bool = False,
 ) -> None:
-    """Set Fader Color"""
+    """Set Fader Color."""
     if debug:
         setup_logger("DEBUG")
     if setup_websocket() is False:
@@ -178,7 +178,7 @@ def set_button_color(
     color_two: str = typer.Argument(..., help="Color 2 Hex Value (RRGGBB)"),
     debug: bool = False,
 ) -> None:
-    """Set Button Color"""
+    """Set Button Color."""
     if debug:
         setup_logger("DEBUG")
     if setup_websocket() is False:
@@ -220,7 +220,7 @@ def set_muted(
     muted: bool = typer.Argument(..., help="Muted (True/False)"),
     debug: bool = False,
 ) -> None:
-    """Set Muted of Channel"""
+    """Set Muted of Channel."""
     if debug:
         setup_logger("DEBUG")
     if setup_websocket() is False:
@@ -261,7 +261,7 @@ def set_volume(
     volume: int = typer.Argument(..., help="Volume (0-100)"),
     debug: bool = False,
 ) -> None:
-    """Set Volume of Channel"""
+    """Set Volume of Channel."""
     if debug:
         setup_logger("DEBUG")
     if setup_websocket() is False:
@@ -301,7 +301,7 @@ def load_profile(
     profile: str = typer.Argument(..., help="Profile Name"),
     debug: bool = False,
 ) -> None:
-    """Load Profile"""
+    """Load Profile."""
     if debug:
         setup_logger("DEBUG")
     if setup_websocket() is False:
@@ -340,7 +340,7 @@ def load_profile_colours(
     profile: str = typer.Argument(..., help="Profile Name"),
     debug: bool = False,
 ) -> None:
-    """Load Profile Colours"""
+    """Load Profile Colours."""
     if debug:
         setup_logger("DEBUG")
     if setup_websocket() is False:
@@ -376,7 +376,7 @@ def load_profile_colours(
 
 @app.command(name="version", short_help="Module Version")
 def version() -> None:
-    """Module Version"""
+    """Get Module Version."""
     typer.secho(__version__.public(), fg=typer.colors.CYAN)
 
 

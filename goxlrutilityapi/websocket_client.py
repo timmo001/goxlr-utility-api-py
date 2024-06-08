@@ -1,9 +1,9 @@
-"""GoXLR Utility API: Websocket Client"""
+"""GoXLR Utility API: Websocket Client."""
 from __future__ import annotations
 
 import asyncio
-import socket
 from collections.abc import Awaitable, Callable
+import socket
 from typing import Any, Optional
 
 import aiohttp
@@ -46,10 +46,10 @@ from .models.status import Status
 
 
 class WebsocketClient(Base):
-    """Websocket Client"""
+    """Websocket Client."""
 
     def __init__(self) -> None:
-        """Initialize Websocket Client"""
+        """Initialize Websocket Client."""
         super().__init__()
         self._current_id: int = 1
         self._mixer_serial_number: Optional[str] = None
@@ -65,7 +65,7 @@ class WebsocketClient(Base):
         return self._websocket is not None and not self._websocket.closed
 
     async def disconnect(self) -> None:
-        """Disconnect from server"""
+        """Disconnect from server."""
         self._logger.info("Disconnecting from WebSocket")
         if self._websocket is not None:
             await self._websocket.close()
@@ -76,7 +76,7 @@ class WebsocketClient(Base):
         port: int = DEFAULT_PORT,
         session: Optional[aiohttp.ClientSession] = None,
     ) -> None:
-        """Connect to server"""
+        """Connect to server."""
         if session:
             self._session = session
         else:
@@ -104,7 +104,7 @@ class WebsocketClient(Base):
         wait_for_response: bool = True,
         response_type: Optional[str] = None,
     ) -> Response[Any]:
-        """Send a message to the WebSocket"""
+        """Send a message to the WebSocket."""
         if not self.connected or self._websocket is None:
             raise ConnectionClosedException("Connection is closed")
 
@@ -132,7 +132,7 @@ class WebsocketClient(Base):
         )
 
     async def get_status(self) -> Status:
-        """Get status from GoXLR"""
+        """Get status from GoXLR."""
         self._logger.info("Getting status from GoXLR")
         response: Response[Status] = await self._send_message(
             Request(data=REQUEST_TYPE_GET_STATUS),
@@ -149,7 +149,7 @@ class WebsocketClient(Base):
         self,
         color: str,
     ) -> None:
-        """Set accent color"""
+        """Set accent color."""
         if self._mixer_serial_number is None:
             raise BadMessageException(
                 "Mixer serial number is missing. Call get_status to set this."
@@ -184,7 +184,7 @@ class WebsocketClient(Base):
         color_one: str,
         color_two: str,
     ) -> None:
-        """Set button color"""
+        """Set button color."""
         if self._mixer_serial_number is None:
             raise BadMessageException(
                 "Mixer serial number is missing. Call get_status to set this."
@@ -222,7 +222,7 @@ class WebsocketClient(Base):
         color_top: str,
         color_bottom: str,
     ) -> None:
-        """Set fader color"""
+        """Set fader color."""
         if self._mixer_serial_number is None:
             raise BadMessageException(
                 "Mixer serial number is missing. Call get_status to set this."
@@ -259,7 +259,7 @@ class WebsocketClient(Base):
         channel: str,
         muted: bool,
     ) -> None:
-        """Set muted state of channel"""
+        """Set muted state of channel."""
         if self._mixer_serial_number is None:
             raise BadMessageException(
                 "Mixer serial number is missing. Call get_status to set this."
@@ -294,7 +294,7 @@ class WebsocketClient(Base):
         channel: str,
         volume: int,
     ) -> None:
-        """Set volume of channel"""
+        """Set volume of channel."""
         if self._mixer_serial_number is None:
             raise BadMessageException(
                 "Mixer serial number is missing. Call get_status to set this."
@@ -328,7 +328,7 @@ class WebsocketClient(Base):
         self,
         profile: str,
     ) -> None:
-        """Load profile"""
+        """Load profile."""
         if self._mixer_serial_number is None:
             raise BadMessageException(
                 "Mixer serial number is missing. Call get_status to set this."
@@ -361,7 +361,7 @@ class WebsocketClient(Base):
         self,
         profile: str,
     ) -> None:
-        """Load profile colours"""
+        """Load profile colours."""
         if self._mixer_serial_number is None:
             raise BadMessageException(
                 "Mixer serial number is missing. Call get_status to set this."
@@ -391,10 +391,10 @@ class WebsocketClient(Base):
         self,
         patch_callback: Optional[Callable[[Response[Patch]], Awaitable[None]]] = None,
     ) -> None:
-        """Listen for patches from GoXLR"""
+        """Listen for patches from GoXLR."""
 
         async def _message_callback(message: dict) -> None:
-            """Message callback"""
+            """Message callback."""
             self._logger.debug("New message")
 
             # Get message ID
@@ -484,7 +484,7 @@ class WebsocketClient(Base):
         self,
         callback: Callable[[dict[Any, Any]], Awaitable[None]],
     ) -> None:
-        """Listen for messages"""
+        """Listen for messages."""
         if not self.connected:
             raise ConnectionClosedException("Connection is closed")
 
@@ -496,7 +496,7 @@ class WebsocketClient(Base):
                     await callback(message)
 
     async def receive_message(self) -> Optional[dict]:
-        """Receive message"""
+        """Receive message."""
         if not self.connected or self._websocket is None:
             raise ConnectionClosedException("Connection is closed")
 

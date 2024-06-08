@@ -1,4 +1,4 @@
-"""GoXLR Utility API: Response Model"""
+"""GoXLR Utility API: Response Model."""
 from __future__ import annotations
 
 from typing import Generic, Optional, TypeVar
@@ -11,7 +11,7 @@ T = TypeVar("T")
 
 
 class Response(DefaultBaseModel, Generic[T]):
-    """Response Model"""
+    """Response Model."""
 
     id: Optional[int] = Field(None, description="Message ID")
     type: Optional[str] = Field(None, description="Type of Response")

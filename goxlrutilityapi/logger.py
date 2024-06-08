@@ -1,4 +1,4 @@
-"""GoXLR Utility API: Logger"""
+"""GoXLR Utility API: Logger."""
 import logging
 from typing import Final
 
@@ -9,7 +9,7 @@ FORMAT: Final[str] = "%(asctime)s %(levelname)s (%(threadName)s) [%(name)s] %(me
 def setup_logger(
     log_level: str = "INFO",
 ) -> logging.Logger:
-    """Set up logging"""
+    """Set up logging."""
 
     logging.basicConfig(
         datefmt=DATE_FORMAT,

@@ -1,1 +1,1 @@
-"""GoXLR Utility API"""
+"""GoXLR Utility API."""

@@ -1,4 +1,4 @@
-"""GoXLR Utility API: Patch Models"""
+"""GoXLR Utility API: Patch Models."""
 from __future__ import annotations
 
 from typing import Any
@@ -9,7 +9,7 @@ from . import DefaultBaseModel
 
 
 class Patch(DefaultBaseModel):
-    """Patch Model"""
+    """Patch Model."""
 
     op: str
     path: str
@@ -17,6 +17,6 @@ class Patch(DefaultBaseModel):
 
 
 class Data(DefaultBaseModel):
-    """Data Model"""
+    """Data Model."""
 
     patch: list[Patch] = Field(..., alias="Patch")
