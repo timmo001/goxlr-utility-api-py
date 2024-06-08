@@ -1,6 +1,4 @@
 """GoXLR Utility API: Main."""
-from __future__ import annotations
-
 import asyncio
 from collections.abc import Awaitable, Callable
 from typing import Optional
@@ -33,7 +31,7 @@ def setup_websocket(
     """Listen for messages in the background."""
     try:
         loop.run_until_complete(websocket_client.connect())
-        loop.create_task(
+        loop.create_task(  # noqa: RUF006
             websocket_client.listen(callback),
             name="Websocket Listener",
         )

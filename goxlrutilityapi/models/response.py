@@ -1,18 +1,14 @@
 """GoXLR Utility API: Response Model."""
-from __future__ import annotations
-
-from typing import Generic, Optional, TypeVar
-
-from pydantic import Field
-
-from . import DefaultBaseModel
+from dataclasses import dataclass
+from typing import Generic, TypeVar
 
 T = TypeVar("T")
 
 
-class Response(DefaultBaseModel, Generic[T]):
+@dataclass
+class Response(Generic[T]):
     """Response Model."""
 
-    id: Optional[int] = Field(None, description="Message ID")
-    type: Optional[str] = Field(None, description="Type of Response")
-    data: T = Field(None, description="Data")
+    id: int | None = None
+    type: str | None = None
+    data: T | None = None

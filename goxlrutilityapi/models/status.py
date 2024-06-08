@@ -1,33 +1,31 @@
 """GoXLR Utility API: Status Models."""
-from __future__ import annotations
-
-from typing import Any, Optional
-
-from pydantic import Field
-
-from . import DefaultBaseModel
+from dataclasses import dataclass
+from typing import Any
 
 
-class Config(DefaultBaseModel):
+@dataclass
+class Config:
     """Config Model."""
 
-    daemon_version: Optional[str] = Field(None)
-    autostart_enabled: Optional[bool] = Field(None)
-    show_tray_icon: Optional[bool] = Field(None)
-    tts_enabled: Optional[bool] = Field(None)
-    allow_network_access: Optional[bool] = Field(None)
-    log_level: Optional[str] = Field(None)
+    daemon_version: str | None = None
+    autostart_enabled: bool | None = None
+    show_tray_icon: bool | None = None
+    tts_enabled: bool | None = None
+    allow_network_access: bool | None = None
+    log_level: str | None = None
 
 
-class Versions(DefaultBaseModel):
+@dataclass
+class Versions:
     """Versions Model."""
 
-    firmware: Optional[list[int]] = Field(None)
-    fpga_count: Optional[int] = Field(None)
-    dice: Optional[list[int]] = Field(None)
+    firmware: list[int] | None = None
+    fpga_count: int | None = None
+    dice: list[int] | None = None
 
 
-class UsbDevice(DefaultBaseModel):
+@dataclass
+class UsbDevice:
     """USB Device Model."""
 
     manufacturer_name: str
@@ -38,7 +36,8 @@ class UsbDevice(DefaultBaseModel):
     identifier: str
 
 
-class Hardware(DefaultBaseModel):
+@dataclass
+class Hardware:
     """Hardware Model."""
 
     versions: Versions
@@ -48,16 +47,18 @@ class Hardware(DefaultBaseModel):
     usb_device: UsbDevice
 
 
-class FaderStatus(DefaultBaseModel):
+@dataclass
+class FaderStatus:
     """Fader Status Model."""
 
     channel: str
     mute_type: str
-    scribble: Optional[Any] = Field(None)
     mute_state: str
+    scribble: Any | None = None
 
 
-class FaderStatuses(DefaultBaseModel):
+@dataclass
+class FaderStatuses:
     """Fader Statuses Model."""
 
     a: FaderStatus = Field(..., alias="A")
@@ -66,297 +67,404 @@ class FaderStatuses(DefaultBaseModel):
     d: FaderStatus = Field(..., alias="D")
 
 
-class MicGains(DefaultBaseModel):
+@dataclass
+class MicGains:
     """Mic Gains Model."""
 
-    dynamic: Optional[int] = Field(None, alias="Dynamic")
-    condenser: Optional[int] = Field(None, alias="Condenser")
-    jack: Optional[int] = Field(None, alias="Jack")
+    dynamic: int | None = None = Field(None, alias="Dynamic")
+    condenser: int | None = None = Field(None, alias="Condenser")
+    jack: int | None = None = Field(None, alias="Jack")
 
 
-class Gain(DefaultBaseModel):
+@dataclass
+class Gain:
     """Gain Model."""
 
-    equalizer4_k_hz: Optional[int] = Field(None, alias="Equalizer4KHz")
-    equalizer16_k_hz: Optional[int] = Field(None, alias="Equalizer16KHz")
-    equalizer1_k_hz: Optional[int] = Field(None, alias="Equalizer1KHz")
-    equalizer2_k_hz: Optional[int] = Field(None, alias="Equalizer2KHz")
-    equalizer125_hz: Optional[int] = Field(None, alias="Equalizer125Hz")
-    equalizer500_hz: Optional[int] = Field(None, alias="Equalizer500Hz")
-    equalizer31_hz: Optional[int] = Field(None, alias="Equalizer31Hz")
-    equalizer63_hz: Optional[int] = Field(None, alias="Equalizer63Hz")
-    equalizer8_k_hz: Optional[int] = Field(None, alias="Equalizer8KHz")
-    equalizer250_hz: Optional[int] = Field(None, alias="Equalizer250Hz")
+    equalizer4_k_hz: int | None = None = Field(None, alias="Equalizer4KHz")
+    equalizer16_k_hz: int | None = None = Field(None, alias="Equalizer16KHz")
+    equalizer1_k_hz: int | None = None = Field(None, alias="Equalizer1KHz")
+    equalizer2_k_hz: int | None = None = Field(None, alias="Equalizer2KHz")
+    equalizer125_hz: int | None = None = Field(None, alias="Equalizer125Hz")
+    equalizer500_hz: int | None = None = Field(None, alias="Equalizer500Hz")
+    equalizer31_hz: int | None = None = Field(None, alias="Equalizer31Hz")
+    equalizer63_hz: int | None = None = Field(None, alias="Equalizer63Hz")
+    equalizer8_k_hz: int | None = None = Field(None, alias="Equalizer8KHz")
+    equalizer250_hz: int | None = None = Field(None, alias="Equalizer250Hz")
 
 
-class Frequency(DefaultBaseModel):
+@dataclass
+class Frequency:
     """Frequency Model."""
 
-    equalizer16_k_hz: Optional[int] = Field(None, alias="Equalizer16KHz")
-    equalizer500_hz: Optional[int] = Field(None, alias="Equalizer500Hz")
-    equalizer125_hz: Optional[int] = Field(None, alias="Equalizer125Hz")
-    equalizer4_k_hz: Optional[int] = Field(None, alias="Equalizer4KHz")
-    equalizer250_hz: Optional[int] = Field(None, alias="Equalizer250Hz")
-    equalizer8_k_hz: Optional[int] = Field(None, alias="Equalizer8KHz")
-    equalizer2_k_hz: Optional[int] = Field(None, alias="Equalizer2KHz")
+    equalizer16_k_hz: int | None = None = Field(None, alias="Equalizer16KHz")
+    equalizer500_hz: int | None = None = Field(None, alias="Equalizer500Hz")
+    equalizer125_hz: int | None = None = Field(None, alias="Equalizer125Hz")
+    equalizer4_k_hz: int | None = None = Field(None, alias="Equalizer4KHz")
+    equalizer250_hz: int | None = None = Field(None, alias="Equalizer250Hz")
+    equalizer8_k_hz: int | None = None = Field(None, alias="Equalizer8KHz")
+    equalizer2_k_hz: int | None = None = Field(None, alias="Equalizer2KHz")
     equalizer31_hz: Optional[float] = Field(None, alias="Equalizer31Hz")
-    equalizer1_k_hz: Optional[int] = Field(None, alias="Equalizer1KHz")
-    equalizer63_hz: Optional[int] = Field(None, alias="Equalizer63Hz")
+    equalizer1_k_hz: int | None = None = Field(None, alias="Equalizer1KHz")
+    equalizer63_hz: int | None = None = Field(None, alias="Equalizer63Hz")
 
 
-class Equaliser(DefaultBaseModel):
+@dataclass
+class Equaliser:
     """Equaliser Model."""
 
-    gain: Optional[Gain] = Field(None)
-    frequency: Optional[Frequency] = Field(None)
+    gain: Gain | None = None
+    frequency: Frequency | None = None
 
 
-class Gain1(DefaultBaseModel):
-    """Gain1 Model."""
+@dataclass
+class FrequencyGain:
+    """Frequency Gain Model."""
 
-    equalizer90_hz: Optional[int] = Field(None, alias="Equalizer90Hz")
-    equalizer250_hz: Optional[int] = Field(None, alias="Equalizer250Hz")
-    equalizer1_k_hz: Optional[int] = Field(None, alias="Equalizer1KHz")
-    equalizer3_k_hz: Optional[int] = Field(None, alias="Equalizer3KHz")
-    equalizer8_k_hz: Optional[int] = Field(None, alias="Equalizer8KHz")
-    equalizer500_hz: Optional[int] = Field(None, alias="Equalizer500Hz")
+    equalizer_1khz: int | None = None
+    equalizer_90hz: int | None = None
+    equalizer_250hz: int | None = None
+    equalizer_500hz: int | None = None
+    equalizer_3khz: int | None = None
+    equalizer_8khz: int | None = None
 
-
-class Frequency1(DefaultBaseModel):
-    """Frequency1 Model."""
-
-    equalizer3_k_hz: Optional[int] = Field(None, alias="Equalizer3KHz")
-    equalizer1_k_hz: Optional[int] = Field(None, alias="Equalizer1KHz")
-    equalizer90_hz: Optional[int] = Field(None, alias="Equalizer90Hz")
-    equalizer250_hz: Optional[int] = Field(None, alias="Equalizer250Hz")
-    equalizer8_k_hz: Optional[int] = Field(None, alias="Equalizer8KHz")
-    equalizer500_hz: Optional[int] = Field(None, alias="Equalizer500Hz")
-
-
-class EqualiserMini(DefaultBaseModel):
-    """Equaliser Mini Model."""
-
-    gain: Optional[Gain1] = Field(None)
-    frequency: Optional[Frequency1] = Field(None)
+    def __post_init__(self):
+        """Post Init Method."""
+        if isinstance(self, dict) and hasattr(self, "Equalizer3KHz") and hasattr(self, "Equalizer1KHz") and hasattr(self, "Equalizer90Hz") and hasattr(self, "Equalizer250Hz") and hasattr(self, "Equalizer8KHz") and hasattr(self, "Equalizer500Hz"):
+            self.equalizer_1khz = int(self["Equalizer1KHz"])
+            self.equalizer_90hz = int(self["Equalizer90Hz"])
+            self.equalizer_250hz = int(self["Equalizer250Hz"])
+            self.equalizer_500hz = int(self["Equalizer500Hz"])
+            self.equalizer_3khz = int(self["Equalizer3KHz"])
+            self.equalizer_8khz = int(self["Equalizer8KHz"])
 
 
-class NoiseGate(DefaultBaseModel):
+@dataclass
+class NoiseGate:
     """Noise Gate Model."""
 
-    threshold: Optional[int] = Field(None)
-    attack: Optional[int] = Field(None)
-    release: Optional[int] = Field(None)
-    enabled: Optional[bool] = Field(None)
-    attenuation: Optional[int] = Field(None)
+    threshold: int | None = None
+    attack: int | None = None
+    release: int | None = None
+    enabled: bool | None = None
+    attenuation: int | None = None
 
 
-class Compressor(DefaultBaseModel):
+@dataclass
+class Compressor:
     """Compressor Model."""
 
-    threshold: Optional[int] = Field(None)
-    ratio: Optional[int] = Field(None)
-    attack: Optional[int] = Field(None)
-    release: Optional[int] = Field(None)
-    makeup_gain: Optional[int] = Field(None)
+    threshold: int | None = None
+    ratio: int | None = None
+    attack: int | None = None
+    release: int | None = None
+    makeup_gain: int | None = None
 
 
-class MicStatus(DefaultBaseModel):
+@dataclass
+class MicStatus:
     """Mic Status Model."""
 
-    mic_type: Optional[str] = Field(None)
-    mic_gains: Optional[MicGains] = Field(None)
-    equaliser: Optional[Equaliser] = Field(None)
-    equaliser_mini: Optional[EqualiserMini] = Field(None)
-    noise_gate: Optional[NoiseGate] = Field(None)
-    compressor: Optional[Compressor] = Field(None)
+    mic_type: str | None = None
+    mic_gains: MicGains | None = None
+    equaliser: Equaliser | None = None
+    equaliser_mini: Equaliser | None = None
+    noise_gate: NoiseGate | None = None
+    compressor: Compressor | None = None
 
 
-class Volumes(DefaultBaseModel):
+@dataclass
+class Volumes:
     """Volumes Model."""
 
-    mic: int = Field(..., alias="Mic")
-    line_in: int = Field(..., alias="LineIn")
-    console: int = Field(..., alias="Console")
-    system: int = Field(..., alias="System")
-    game: int = Field(..., alias="Game")
-    chat: int = Field(..., alias="Chat")
-    sample: int = Field(..., alias="Sample")
-    music: int = Field(..., alias="Music")
-    headphones: int = Field(..., alias="Headphones")
-    mic_monitor: int = Field(..., alias="MicMonitor")
-    line_out: int = Field(..., alias="LineOut")
+    mic: int
+    line_in: int
+    console: int
+    system: int
+    game: int
+    chat: int
+    sample: int
+    music: int
+    headphones: int
+    mic_monitor: int
+    line_out: int
+
+    def __post_init__(self):
+        """Post Init Method."""
+        if isinstance(self, dict) and hasattr(self, "Mic") and hasattr(self, "LineIn") and hasattr(self, "Console") and hasattr(self, "System") and hasattr(self, "Game") and hasattr(self, "Chat") and hasattr(self, "Sample") and hasattr(self, "Music") and hasattr(self, "Headphones") and hasattr(self, "MicMonitor") and hasattr(self, "LineOut"):
+            self.mic = int(self["Mic"])
+            self.line_in = int(self["LineIn"])
+            self.console = int(self["Console"])
+            self.system = int(self["System"])
+            self.game = int(self["Game"])
+            self.chat = int(self["Chat"])
+            self.sample = int(self["Sample"])
+            self.music = int(self["Music"])
+            self.headphones = int(self["Headphones"])
+            self.mic_monitor = int(self["MicMonitor"])
+            self.line_out = int(self["LineOut"])
 
 
-class Levels(DefaultBaseModel):
+@dataclass
+class Levels:
     """Levels Model."""
 
-    submix_supported: bool = Field(None)
     output_monitor: str
     volumes: Volumes
-    submix: Optional[Any] = Field(None)
-    bleep: Optional[int] = Field(None)
-    deess: Optional[int] = Field(None)
+    submix_supported: bool | None = None
+    submix: Any | None = None
+    bleep: int | None = None
+    deess: int | None = None
 
 
-class RouterItem(DefaultBaseModel):
+@dataclass
+class RouterItem:
     """Router Item Model."""
 
-    headphones: Optional[bool] = Field(None, alias="Headphones")
-    broadcast_mix: Optional[bool] = Field(None, alias="BroadcastMix")
-    chat_mic: Optional[bool] = Field(None, alias="ChatMic")
-    sampler: Optional[bool] = Field(None, alias="Sampler")
-    line_out: Optional[bool] = Field(None, alias="LineOut")
+    headphones: bool | None = None
+    broadcast_mix: bool | None = None
+    chat_mic: bool | None = None
+    sampler: bool | None = None
+    line_out: bool | None = None
+
+    def __post_init__(self):
+        """Post Init Method."""
+        if isinstance(self, dict) and hasattr(self, "Headphones") and hasattr(self, "BroadcastMix") and hasattr(self, "ChatMic") and hasattr(self, "Sampler") and hasattr(self, "LineOut"):
+            self.headphones = bool(self["Headphones"])
+            self.broadcast_mix = bool(self["BroadcastMix"])
+            self.chat_mic = bool(self["ChatMic"])
+            self.sampler = bool(self["Sampler"])
+            self.line_out = bool(self["LineOut"])
 
 
-class Router(DefaultBaseModel):
+@dataclass
+class Router:
     """Router Model."""
 
-    microphone: Optional[RouterItem] = Field(None, alias="Microphone")
-    chat: Optional[RouterItem] = Field(None, alias="Chat")
-    music: Optional[RouterItem] = Field(None, alias="Music")
-    game: Optional[RouterItem] = Field(None, alias="Game")
-    console: Optional[RouterItem] = Field(None, alias="Console")
-    line_in: Optional[RouterItem] = Field(None, alias="LineIn")
-    system: Optional[RouterItem] = Field(None, alias="System")
-    samples: Optional[RouterItem] = Field(None, alias="Samples")
+    microphone: RouterItem | None = None
+    chat: RouterItem | None = None
+    music: RouterItem | None = None
+    game: RouterItem | None = None
+    console: RouterItem | None = None
+    line_in: RouterItem | None = None
+    system: RouterItem | None = None
+    samples: RouterItem | None = None
+
+    def __post_init__(self):
+        """Post Init Method."""
+        if isinstance(self, dict) and hasattr(self, "Microphone") and hasattr(self, "Chat") and hasattr(self, "Music") and hasattr(self, "Game") and hasattr(self, "Console") and hasattr(self, "LineIn") and hasattr(self, "System") and hasattr(self, "Samples"):
+            self.microphone = RouterItem(**self["Microphone"])
+            self.chat = RouterItem(**self["Chat"])
+            self.music = RouterItem(**self["Music"])
+            self.game = RouterItem(**self["Game"])
+            self.console = RouterItem(**self["Console"])
+            self.line_in = RouterItem(**self["LineIn"])
+            self.system = RouterItem(**self["System"])
+            self.samples = RouterItem(**self["Samples"])
 
 
-class CoughButton(DefaultBaseModel):
+@dataclass
+class CoughButton:
     """Cough Button Model."""
 
-    is_toggle: Optional[bool] = Field(None)
-    mute_type: Optional[str] = Field(None)
-    state: Optional[str] = Field(None)
+    is_toggle: bool | None = None
+    mute_type: str | None = None
+    state: str | None = None
 
 
-class Colours(DefaultBaseModel):
+@dataclass
+class Colours:
     """Colours Model."""
 
-    colour_one: Optional[str] = Field(None)
-    colour_two: Optional[str] = Field(None)
+    colour_one: str | None = None
+    colour_two: str | None = None
 
 
-class Fader(DefaultBaseModel):
+@dataclass
+class Fader:
     """Fader Model."""
 
-    style: Optional[str] = Field(None)
-    colours: Colours = Field(None)
+    style: str | None = None
+    colours: Colours | None = None
 
 
-class Animation(DefaultBaseModel):
+@dataclass
+class Animation:
     """Animation Model."""
 
-    supported: Optional[bool] = Field(None)
-    mode: Optional[str] = Field(None)
-    mod1: Optional[int] = Field(None)
-    mod2: Optional[int] = Field(None)
-    waterfall_direction: Optional[str] = Field(None)
+    supported: bool | None = None
+    mode: str | None = None
+    mod1: int | None = None
+    mod2: int | None = None
+    waterfall_direction: str | None = None
 
 
-class Faders(DefaultBaseModel):
+@dataclass
+class Faders:
     """Faders Model."""
 
-    a: Fader = Field(..., alias="A")
-    b: Fader = Field(..., alias="B")
-    c: Fader = Field(..., alias="C")
-    d: Fader = Field(..., alias="D")
+    a: Fader
+    b: Fader
+    c: Fader
+    d: Fader
+
+    def __post_init__(self):
+        """Post Init Method."""
+        if isinstance(self, dict) and hasattr(self, "A") and hasattr(self, "B") and hasattr(self, "C") and hasattr(self, "D"):
+            self["A"] = Fader(**self["A"])
+            self["B"] = Fader(**self["B"])
+            self["C"] = Fader(**self["C"])
+            self["D"] = Fader(**self["D"])
 
 
-class Button(DefaultBaseModel):
+@dataclass
+class Button:
     """Button Model."""
 
-    off_style: Optional[str]
     colours: Colours
+    off_style: str | None = None
 
 
-class Buttons(DefaultBaseModel):
+@dataclass
+class Buttons:
     """Buttons Model."""
 
-    bleep: Button = Field(..., alias="Bleep")
-    cough: Button = Field(..., alias="Cough")
-    fader1_mute: Button = Field(..., alias="Fader1Mute")
-    fader2_mute: Button = Field(..., alias="Fader2Mute")
-    fader3_mute: Button = Field(..., alias="Fader3Mute")
-    fader4_mute: Button = Field(..., alias="Fader4Mute")
+    bleep: Button
+    cough: Button
+    fader1_mute: Button
+    fader2_mute: Button
+    fader3_mute: Button
+    fader4_mute: Button
+
+    def __post_init__(self):
+        """Post Init Method."""
+        if isinstance(self, dict) and hasattr(self, "Bleep") and hasattr(self, "Cough") and hasattr(self, "Fader1Mute") and hasattr(self, "Fader2Mute") and hasattr(self, "Fader3Mute") and hasattr(self, "Fader4Mute"):
+            self["Bleep"] = Button(**self["Bleep"])
+            self["Cough"] = Button(**self["Cough"])
+            self["Fader1Mute"] = Button(**self["Fader1Mute"])
+            self["Fader2Mute"] = Button(**self["Fader2Mute"])
+            self["Fader3Mute"] = Button(**self["Fader3Mute"])
+            self["Fader4Mute"] = Button(**self["Fader4Mute"])
 
 
-class Global(DefaultBaseModel):
+@dataclass
+class Global:
     """Global Model."""
 
-    colour_one: Optional[str]
+    colour_one: str | None = None
 
 
-class Accent(DefaultBaseModel):
+@dataclass
+class Accent:
     """Accent Model."""
 
-    colour_one: Optional[str]
+    colour_one: str | None = None
 
 
-class Simple(DefaultBaseModel):
+@dataclass
+class Simple:
     """Simple Model."""
 
-    global_: Optional[Global] = Field(None, alias="Global")
-    accent: Accent = Field(None, alias="Accent")
+    accent: Accent
+    global_: Global | None = None
+
+    def __post_init__(self):
+        """Post Init Method."""
+        if isinstance(self, dict) and hasattr(self, "Accent") and hasattr(self, "Global"):
+            self["Accent"] = Accent(**self["Accent"])
+            self["Global"] = Global(**self["Global"])
 
 
-class Lighting(DefaultBaseModel):
+@dataclass
+class Lighting:
     """Lighting Model."""
 
     animation: Animation
     faders: Faders
     buttons: Buttons
     simple: Simple
-    sampler: Optional[dict[str, Any]]
-    encoders: Optional[dict[str, Any]]
+    sampler: dict[str, Any] | None = None
+    encoders: dict[str, Any] | None = None
 
 
-class Display(DefaultBaseModel):
+@dataclass
+class Display:
     """Display Model."""
 
-    gate: Optional[str]
-    compressor: Optional[str]
-    equaliser: Optional[str]
-    equaliser_fine: Optional[str]
+    gate: str | None = None
+    compressor: str | None = None
+    equaliser: str | None = None
+    equaliser_fine: str | None = None
 
 
-class Settings(DefaultBaseModel):
+@dataclass
+class Settings:
     """Settings Model."""
 
-    display: Optional[Display]
-    mute_hold_duration: Optional[int]
-    vc_mute_also_mute_cm: Optional[bool]
+    display: Display | None = None
+    mute_hold_duration: int | None = None
+    vc_mute_also_mute_cm: bool | None = None
 
 
-class ButtonDown(DefaultBaseModel):
+@dataclass
+class ButtonDown:
     """Button Down Model."""
 
-    bleep: Optional[bool] = Field(None, alias="Bleep")
-    cough: Optional[bool] = Field(None, alias="Cough")
-    effect_fx: Optional[bool] = Field(None, alias="EffectFx")
-    effect_hard_tune: Optional[bool] = Field(None, alias="EffectHardTune")
-    effect_megaphone: Optional[bool] = Field(None, alias="EffectMegaphone")
-    effect_robot: Optional[bool] = Field(None, alias="EffectRobot")
-    effect_select1: Optional[bool] = Field(None, alias="EffectSelect1")
-    effect_select2: Optional[bool] = Field(None, alias="EffectSelect2")
-    effect_select3: Optional[bool] = Field(None, alias="EffectSelect3")
-    effect_select4: Optional[bool] = Field(None, alias="EffectSelect4")
-    effect_select5: Optional[bool] = Field(None, alias="EffectSelect5")
-    effect_select6: Optional[bool] = Field(None, alias="EffectSelect6")
-    fader1_mute: Optional[bool] = Field(None, alias="Fader1Mute")
-    fader2_mute: Optional[bool] = Field(None, alias="Fader2Mute")
-    fader3_mute: Optional[bool] = Field(None, alias="Fader3Mute")
-    fader4_mute: Optional[bool] = Field(None, alias="Fader4Mute")
-    sampler_bottom_left: Optional[bool] = Field(None, alias="SamplerBottomLeft")
-    sampler_bottom_right: Optional[bool] = Field(None, alias="SamplerBottomRight")
-    sampler_clear: Optional[bool] = Field(None, alias="SamplerClear")
-    sampler_select_a: Optional[bool] = Field(None, alias="SamplerSelectA")
-    sampler_select_b: Optional[bool] = Field(None, alias="SamplerSelectB")
-    sampler_select_c: Optional[bool] = Field(None, alias="SamplerSelectC")
-    sampler_top_left: Optional[bool] = Field(None, alias="SamplerTopLeft")
-    sampler_top_right: Optional[bool] = Field(None, alias="SamplerTopRight")
+    bleep: bool | None = None
+    cough: bool | None = None
+    effect_fx: bool | None = None
+    effect_hard_tune: bool | None = None
+    effect_megaphone: bool | None = None
+    effect_robot: bool | None = None
+    effect_select1: bool | None = None
+    effect_select2: bool | None = None
+    effect_select3: bool | None = None
+    effect_select4: bool | None = None
+    effect_select5: bool | None = None
+    effect_select6: bool | None = None
+    fader1_mute: bool | None = None
+    fader2_mute: bool | None = None
+    fader3_mute: bool | None = None
+    fader4_mute: bool | None = None
+    sampler_bottom_left: bool | None = None
+    sampler_bottom_right: bool | None = None
+    sampler_clear: bool | None = None
+    sampler_select_a: bool | None = None
+    sampler_select_b: bool | None = None
+    sampler_select_c: bool | None = None
+    sampler_top_left: bool | None = None
+    sampler_top_right: bool | None = None
+
+    def __post_init__(self):
+        """Post Init Method."""
+        if isinstance(self, dict) and hasattr(self, "Bleep") and hasattr(self, "Cough") and hasattr(self, "EffectFx") and hasattr(self, "EffectHardTune") and hasattr(self, "EffectMegaphone") and hasattr(self, "EffectRobot") and hasattr(self, "EffectSelect1") and hasattr(self, "EffectSelect2") and hasattr(self, "EffectSelect3") and hasattr(self, "EffectSelect4") and hasattr(self, "EffectSelect5") and hasattr(self, "EffectSelect6") and hasattr(self, "Fader1Mute") and hasattr(self, "Fader2Mute") and hasattr(self, "Fader3Mute") and hasattr(self, "Fader4Mute") and hasattr(self, "SamplerBottomLeft") and hasattr(self, "SamplerBottomRight") and hasattr(self, "SamplerClear") and hasattr(self, "SamplerSelectA") and hasattr(self, "SamplerSelectB") and hasattr(self, "SamplerSelectC") and hasattr(self, "SamplerTopLeft") and hasattr(self, "SamplerTopRight"):
+            self["Bleep"] = bool(self["Bleep"])
+            self["Cough"] = bool(self["Cough"])
+            self["EffectFx"] = bool(self["EffectFx"])
+            self["EffectHardTune"] = bool(self["EffectHardTune"])
+            self["EffectMegaphone"] = bool(self["EffectMegaphone"])
+            self["EffectRobot"] = bool(self["EffectRobot"])
+            self["EffectSelect1"] = bool(self["EffectSelect1"])
+            self["EffectSelect2"] = bool(self["EffectSelect2"])
+            self["EffectSelect3"] = bool(self["EffectSelect3"])
+            self["EffectSelect4"] = bool(self["EffectSelect4"])
+            self["EffectSelect5"] = bool(self["EffectSelect5"])
+            self["EffectSelect6"] = bool(self["EffectSelect6"])
+            self["Fader1Mute"] = bool(self["Fader1Mute"])
+            self["Fader2Mute"] = bool(self["Fader2Mute"])
+            self["Fader3Mute"] = bool(self["Fader3Mute"])
+            self["Fader4Mute"] = bool(self["Fader4Mute"])
+            self["SamplerBottomLeft"] = bool(self["SamplerBottomLeft"])
+            self["SamplerBottomRight"] = bool(self["SamplerBottomRight"])
+            self["SamplerClear"] = bool(self["SamplerClear"])
+            self["SamplerSelectA"] = bool(self["SamplerSelectA"])
+            self["SamplerSelectB"] = bool(self["SamplerSelectB"])
+            self["SamplerSelectC"] = bool(self["SamplerSelectC"])
+            self["SamplerTopLeft"] = bool(self["SamplerTopLeft"])
+            self["SamplerTopRight"] = bool(self["SamplerTopRight"])
 
 
-class Mixer(DefaultBaseModel):
+@dataclass
+class Mixer:
     """Mixer Model."""
 
     hardware: Hardware
@@ -375,17 +483,19 @@ class Mixer(DefaultBaseModel):
     mic_profile_name: str
 
 
-class Paths(DefaultBaseModel):
+@dataclass
+class Paths:
     """Paths Model."""
 
-    profile_directory: Optional[str]
-    mic_profile_directory: Optional[str]
-    samples_directory: Optional[str]
-    presets_directory: Optional[str]
-    icons_directory: Optional[str]
+    profile_directory: str | None = None
+    mic_profile_directory: str | None = None
+    samples_directory: str | None = None
+    presets_directory: str | None = None
+    icons_directory: str | None = None
 
 
-class Files(DefaultBaseModel):
+@dataclass
+class Files:
     """Files Model."""
 
     profiles: list[str]
@@ -395,7 +505,8 @@ class Files(DefaultBaseModel):
     icons: list[str]
 
 
-class Status(DefaultBaseModel):
+@dataclass
+class Status:
     """Status Model."""
 
     config: Config
@@ -404,7 +515,13 @@ class Status(DefaultBaseModel):
     files: Files
 
 
-class Data(DefaultBaseModel):
+@dataclass
+class Data:
     """Data Model."""
 
-    status: Status = Field(..., alias="Status")
+    status: Status
+
+    def __post_init__(self):
+        """Post Init Method."""
+        if isinstance(self, dict) and hasattr(self, "Status"):
+            self["Status"] = Status(**self["Status"])

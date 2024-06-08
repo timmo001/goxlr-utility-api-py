@@ -1,10 +1,9 @@
 """GoXLR Utility API: Map Model."""
-from __future__ import annotations
-
-from . import DefaultBaseModel
+from dataclasses import dataclass
 
 
-class MapItem(DefaultBaseModel):
+@dataclass
+class MapItem:
     """MapItem Model."""
 
     key: str

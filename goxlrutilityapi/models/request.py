@@ -1,15 +1,11 @@
 """GoXLR Utility API: Request Model."""
-from __future__ import annotations
-
-from typing import Any, Optional, Union
-
-from pydantic import Field
-
-from . import DefaultBaseModel
+from dataclasses import dataclass, field
+from typing import Any
 
 
-class Request(DefaultBaseModel):
+@dataclass
+class Request:
     """Request Model."""
 
-    id: Optional[int] = None
-    data: Union[str, dict[str, Any]] = Field(..., description="Data")
+    id: int | None = None
+    data: str | dict[str, Any] = field(default_factory=dict)

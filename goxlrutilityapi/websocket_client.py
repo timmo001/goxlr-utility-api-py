@@ -1,14 +1,10 @@
 """GoXLR Utility API: Websocket Client."""
-from __future__ import annotations
-
 import asyncio
 from collections.abc import Awaitable, Callable
 import socket
 from typing import Any, Optional
 
 import aiohttp
-import async_timeout
-from pydantic import ValidationError
 
 from .base import Base
 from .const import (
@@ -119,10 +115,11 @@ class WebsocketClient(Base):
         self._logger.debug("Sent message: %s", request.json())
         if wait_for_response:
             try:
-                async with async_timeout.timeout(10):
+                async with asyncio.timeout(10):
                     return await future
             except asyncio.TimeoutError as error:
-                raise BadMessageException("Timeout waiting for response") from error
+                raise BadMessageException(
+                    "Timeout waiting for response") from error
             finally:
                 self._responses.pop(request.id)
         return Response[None](
@@ -389,7 +386,8 @@ class WebsocketClient(Base):
 
     async def listen(
         self,
-        patch_callback: Optional[Callable[[Response[Patch]], Awaitable[None]]] = None,
+        patch_callback: Optional[Callable[[
+            Response[Patch]], Awaitable[None]]] = None,
     ) -> None:
         """Listen for patches from GoXLR."""
 
@@ -425,12 +423,14 @@ class WebsocketClient(Base):
 
                 try:
                     if isinstance(response.data, list):
-                        response.data = [model(**item) for item in response.data]
+                        response.data = [model(**item)
+                                         for item in response.data]
                     else:
                         response.data = model(**response.data)
                 except (TypeError, ValidationError) as error:
                     raise BadMessageException(
-                        f"Failed to create model '{message_type}' with data:\n{response.data}"
+                        f"Failed to create model '{
+                            message_type}' with data:\n{response.data}"
                     ) from error
 
                 self._logger.info(
@@ -471,11 +471,13 @@ class WebsocketClient(Base):
                                 type=response.type,
                                 data=item,
                             )
-                            self._logger.debug("Patch callback: %s", patch_response)
+                            self._logger.debug(
+                                "Patch callback: %s", patch_response)
                             await patch_callback(patch_response)
                     except (TypeError, ValidationError) as error:
                         raise BadMessageException(
-                            f"Failed to create model patch response with data:\n{response.data}"
+                            f"Failed to create model patch response with data:\n{
+                                response.data}"
                         ) from error
 
         await self._listen_for_messages(callback=_message_callback)

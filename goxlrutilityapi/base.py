@@ -1,6 +1,4 @@
 """GoXLR Utility API: Base."""
-from __future__ import annotations
-
 import logging
 
 

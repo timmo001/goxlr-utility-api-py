@@ -1,14 +1,10 @@
 """GoXLR Utility API: Patch Models."""
-from __future__ import annotations
-
+from dataclasses import dataclass
 from typing import Any
 
-from pydantic import Field
 
-from . import DefaultBaseModel
-
-
-class Patch(DefaultBaseModel):
+@dataclass
+class Patch:
     """Patch Model."""
 
     op: str
@@ -16,7 +12,8 @@ class Patch(DefaultBaseModel):
     value: Any
 
 
-class Data(DefaultBaseModel):
+@dataclass
+class Data:
     """Data Model."""
 
     patch: list[Patch] = Field(..., alias="Patch")
