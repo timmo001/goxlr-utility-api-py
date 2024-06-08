@@ -219,16 +219,7 @@ fixture-parentheses = false
 
 [tool.ruff.isort]
 force-sort-within-sections = true
-known-first-party = [
-    "systembridgebackend",
-    "systembridgecli",
-    "systembridgeconnector",
-    "systembridgefrontend",
-    "systembridgegui",
-    "systembridgemodels",
-    "systembridgeshared",
-    "systembridgewindowssensors",
-]
+known-first-party = []
 combine-as-imports = true
 split-on-trailing-comma = false
 
