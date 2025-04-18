@@ -1,10 +1,20 @@
 """GoXLR Utility API: Models"""
 
-from pydantic import BaseModel  # pylint: disable=no-name-in-module
+from dataclasses import dataclass, field
+from typing import Any, Dict
 
 
-class DefaultBaseModel(BaseModel):
+@dataclass
+class DefaultBaseModel:
     """Default Base Model"""
 
-    class Config:  # pylint: disable=missing-class-docstring
-        extra = "allow"
+    _extra: Dict[str, Any] = field(default_factory=dict)
+
+    def __post_init__(self):
+        """Handle extra fields"""
+        for key, value in self.__dict__.items():
+            if key.startswith("_"):
+                continue
+            if not hasattr(self, key):
+                self._extra[key] = value
+                delattr(self, key)

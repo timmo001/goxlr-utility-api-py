@@ -1,43 +1,46 @@
 """GoXLR Utility API: Status Models"""
 from __future__ import annotations
 
-from typing import Any, Optional
-
-from pydantic import Field
+from dataclasses import dataclass, field
+from typing import Any, Dict, List, Optional
 
 from . import DefaultBaseModel
 
 
+@dataclass
 class Config(DefaultBaseModel):
     """Config Model"""
 
-    daemon_version: Optional[str] = Field(None)
-    autostart_enabled: Optional[bool] = Field(None)
-    show_tray_icon: Optional[bool] = Field(None)
-    tts_enabled: Optional[bool] = Field(None)
-    allow_network_access: Optional[bool] = Field(None)
-    log_level: Optional[str] = Field(None)
+    daemon_version: Optional[str] = field(default=None)
+    autostart_enabled: Optional[bool] = field(default=None)
+    show_tray_icon: Optional[bool] = field(default=None)
+    tts_enabled: Optional[bool] = field(default=None)
+    allow_network_access: Optional[bool] = field(default=None)
+    log_level: Optional[str] = field(default=None)
 
 
+@dataclass
 class Versions(DefaultBaseModel):
     """Versions Model"""
 
-    firmware: Optional[list[int]] = Field(None)
-    fpga_count: Optional[int] = Field(None)
-    dice: Optional[list[int]] = Field(None)
+    firmware: Optional[List[int]] = field(default=None)
+    fpga_count: Optional[int] = field(default=None)
+    dice: Optional[List[int]] = field(default=None)
 
 
+@dataclass
 class UsbDevice(DefaultBaseModel):
     """USB Device Model"""
 
     manufacturer_name: str
     product_name: str
-    version: list[int]
+    version: List[int]
     bus_number: int
     address: int
     identifier: str
 
 
+@dataclass
 class Hardware(DefaultBaseModel):
     """Hardware Model"""
 
@@ -48,220 +51,310 @@ class Hardware(DefaultBaseModel):
     usb_device: UsbDevice
 
 
+@dataclass
 class FaderStatus(DefaultBaseModel):
     """Fader Status Model"""
 
     channel: str
     mute_type: str
-    scribble: Optional[Any] = Field(None)
     mute_state: str
+    scribble: Optional[Any] = field(default=None)
 
 
+@dataclass
 class FaderStatuses(DefaultBaseModel):
     """Fader Statuses Model"""
 
-    a: FaderStatus = Field(..., alias="A")
-    b: FaderStatus = Field(..., alias="B")
-    c: FaderStatus = Field(..., alias="C")
-    d: FaderStatus = Field(..., alias="D")
+    a: FaderStatus = field(metadata={"alias": "A"})
+    b: FaderStatus = field(metadata={"alias": "B"})
+    c: FaderStatus = field(metadata={"alias": "C"})
+    d: FaderStatus = field(metadata={"alias": "D"})
 
 
+@dataclass
 class MicGains(DefaultBaseModel):
     """Mic Gains Model"""
 
-    dynamic: Optional[int] = Field(None, alias="Dynamic")
-    condenser: Optional[int] = Field(None, alias="Condenser")
-    jack: Optional[int] = Field(None, alias="Jack")
+    dynamic: Optional[int] = field(default=None, metadata={"alias": "Dynamic"})
+    condenser: Optional[int] = field(default=None, metadata={"alias": "Condenser"})
+    jack: Optional[int] = field(default=None, metadata={"alias": "Jack"})
 
 
+@dataclass
 class Gain(DefaultBaseModel):
     """Gain Model"""
 
-    equalizer4_k_hz: Optional[int] = Field(None, alias="Equalizer4KHz")
-    equalizer16_k_hz: Optional[int] = Field(None, alias="Equalizer16KHz")
-    equalizer1_k_hz: Optional[int] = Field(None, alias="Equalizer1KHz")
-    equalizer2_k_hz: Optional[int] = Field(None, alias="Equalizer2KHz")
-    equalizer125_hz: Optional[int] = Field(None, alias="Equalizer125Hz")
-    equalizer500_hz: Optional[int] = Field(None, alias="Equalizer500Hz")
-    equalizer31_hz: Optional[int] = Field(None, alias="Equalizer31Hz")
-    equalizer63_hz: Optional[int] = Field(None, alias="Equalizer63Hz")
-    equalizer8_k_hz: Optional[int] = Field(None, alias="Equalizer8KHz")
-    equalizer250_hz: Optional[int] = Field(None, alias="Equalizer250Hz")
+    equalizer4_k_hz: Optional[int] = field(
+        default=None, metadata={"alias": "Equalizer4KHz"}
+    )
+    equalizer16_k_hz: Optional[int] = field(
+        default=None, metadata={"alias": "Equalizer16KHz"}
+    )
+    equalizer1_k_hz: Optional[int] = field(
+        default=None, metadata={"alias": "Equalizer1KHz"}
+    )
+    equalizer2_k_hz: Optional[int] = field(
+        default=None, metadata={"alias": "Equalizer2KHz"}
+    )
+    equalizer125_hz: Optional[int] = field(
+        default=None, metadata={"alias": "Equalizer125Hz"}
+    )
+    equalizer500_hz: Optional[int] = field(
+        default=None, metadata={"alias": "Equalizer500Hz"}
+    )
+    equalizer31_hz: Optional[int] = field(
+        default=None, metadata={"alias": "Equalizer31Hz"}
+    )
+    equalizer63_hz: Optional[int] = field(
+        default=None, metadata={"alias": "Equalizer63Hz"}
+    )
+    equalizer8_k_hz: Optional[int] = field(
+        default=None, metadata={"alias": "Equalizer8KHz"}
+    )
+    equalizer250_hz: Optional[int] = field(
+        default=None, metadata={"alias": "Equalizer250Hz"}
+    )
 
 
+@dataclass
 class Frequency(DefaultBaseModel):
     """Frequency Model"""
 
-    equalizer16_k_hz: Optional[int] = Field(None, alias="Equalizer16KHz")
-    equalizer500_hz: Optional[int] = Field(None, alias="Equalizer500Hz")
-    equalizer125_hz: Optional[int] = Field(None, alias="Equalizer125Hz")
-    equalizer4_k_hz: Optional[int] = Field(None, alias="Equalizer4KHz")
-    equalizer250_hz: Optional[int] = Field(None, alias="Equalizer250Hz")
-    equalizer8_k_hz: Optional[int] = Field(None, alias="Equalizer8KHz")
-    equalizer2_k_hz: Optional[int] = Field(None, alias="Equalizer2KHz")
-    equalizer31_hz: Optional[float] = Field(None, alias="Equalizer31Hz")
-    equalizer1_k_hz: Optional[int] = Field(None, alias="Equalizer1KHz")
-    equalizer63_hz: Optional[int] = Field(None, alias="Equalizer63Hz")
+    equalizer16_k_hz: Optional[int] = field(
+        default=None, metadata={"alias": "Equalizer16KHz"}
+    )
+    equalizer500_hz: Optional[int] = field(
+        default=None, metadata={"alias": "Equalizer500Hz"}
+    )
+    equalizer125_hz: Optional[int] = field(
+        default=None, metadata={"alias": "Equalizer125Hz"}
+    )
+    equalizer4_k_hz: Optional[int] = field(
+        default=None, metadata={"alias": "Equalizer4KHz"}
+    )
+    equalizer250_hz: Optional[int] = field(
+        default=None, metadata={"alias": "Equalizer250Hz"}
+    )
+    equalizer8_k_hz: Optional[int] = field(
+        default=None, metadata={"alias": "Equalizer8KHz"}
+    )
+    equalizer2_k_hz: Optional[int] = field(
+        default=None, metadata={"alias": "Equalizer2KHz"}
+    )
+    equalizer31_hz: Optional[float] = field(
+        default=None, metadata={"alias": "Equalizer31Hz"}
+    )
+    equalizer1_k_hz: Optional[int] = field(
+        default=None, metadata={"alias": "Equalizer1KHz"}
+    )
+    equalizer63_hz: Optional[int] = field(
+        default=None, metadata={"alias": "Equalizer63Hz"}
+    )
 
 
+@dataclass
 class Equaliser(DefaultBaseModel):
     """Equaliser Model"""
 
-    gain: Optional[Gain] = Field(None)
-    frequency: Optional[Frequency] = Field(None)
+    gain: Optional[Gain] = field(default=None)
+    frequency: Optional[Frequency] = field(default=None)
 
 
+@dataclass
 class Gain1(DefaultBaseModel):
     """Gain1 Model"""
 
-    equalizer90_hz: Optional[int] = Field(None, alias="Equalizer90Hz")
-    equalizer250_hz: Optional[int] = Field(None, alias="Equalizer250Hz")
-    equalizer1_k_hz: Optional[int] = Field(None, alias="Equalizer1KHz")
-    equalizer3_k_hz: Optional[int] = Field(None, alias="Equalizer3KHz")
-    equalizer8_k_hz: Optional[int] = Field(None, alias="Equalizer8KHz")
-    equalizer500_hz: Optional[int] = Field(None, alias="Equalizer500Hz")
+    equalizer90_hz: Optional[int] = field(
+        default=None, metadata={"alias": "Equalizer90Hz"}
+    )
+    equalizer250_hz: Optional[int] = field(
+        default=None, metadata={"alias": "Equalizer250Hz"}
+    )
+    equalizer1_k_hz: Optional[int] = field(
+        default=None, metadata={"alias": "Equalizer1KHz"}
+    )
+    equalizer3_k_hz: Optional[int] = field(
+        default=None, metadata={"alias": "Equalizer3KHz"}
+    )
+    equalizer8_k_hz: Optional[int] = field(
+        default=None, metadata={"alias": "Equalizer8KHz"}
+    )
+    equalizer500_hz: Optional[int] = field(
+        default=None, metadata={"alias": "Equalizer500Hz"}
+    )
 
 
+@dataclass
 class Frequency1(DefaultBaseModel):
     """Frequency1 Model"""
 
-    equalizer3_k_hz: Optional[int] = Field(None, alias="Equalizer3KHz")
-    equalizer1_k_hz: Optional[int] = Field(None, alias="Equalizer1KHz")
-    equalizer90_hz: Optional[int] = Field(None, alias="Equalizer90Hz")
-    equalizer250_hz: Optional[int] = Field(None, alias="Equalizer250Hz")
-    equalizer8_k_hz: Optional[int] = Field(None, alias="Equalizer8KHz")
-    equalizer500_hz: Optional[int] = Field(None, alias="Equalizer500Hz")
+    equalizer3_k_hz: Optional[int] = field(
+        default=None, metadata={"alias": "Equalizer3KHz"}
+    )
+    equalizer1_k_hz: Optional[int] = field(
+        default=None, metadata={"alias": "Equalizer1KHz"}
+    )
+    equalizer90_hz: Optional[int] = field(
+        default=None, metadata={"alias": "Equalizer90Hz"}
+    )
+    equalizer250_hz: Optional[int] = field(
+        default=None, metadata={"alias": "Equalizer250Hz"}
+    )
+    equalizer8_k_hz: Optional[int] = field(
+        default=None, metadata={"alias": "Equalizer8KHz"}
+    )
+    equalizer500_hz: Optional[int] = field(
+        default=None, metadata={"alias": "Equalizer500Hz"}
+    )
 
 
+@dataclass
 class EqualiserMini(DefaultBaseModel):
     """Equaliser Mini Model"""
 
-    gain: Optional[Gain1] = Field(None)
-    frequency: Optional[Frequency1] = Field(None)
+    gain: Optional[Gain1] = field(default=None)
+    frequency: Optional[Frequency1] = field(default=None)
 
 
+@dataclass
 class NoiseGate(DefaultBaseModel):
     """Noise Gate Model"""
 
-    threshold: Optional[int] = Field(None)
-    attack: Optional[int] = Field(None)
-    release: Optional[int] = Field(None)
-    enabled: Optional[bool] = Field(None)
-    attenuation: Optional[int] = Field(None)
+    threshold: Optional[int] = field(default=None)
+    attack: Optional[int] = field(default=None)
+    release: Optional[int] = field(default=None)
+    enabled: Optional[bool] = field(default=None)
+    attenuation: Optional[int] = field(default=None)
 
 
+@dataclass
 class Compressor(DefaultBaseModel):
     """Compressor Model"""
 
-    threshold: Optional[int] = Field(None)
-    ratio: Optional[int] = Field(None)
-    attack: Optional[int] = Field(None)
-    release: Optional[int] = Field(None)
-    makeup_gain: Optional[int] = Field(None)
+    threshold: Optional[int] = field(default=None)
+    ratio: Optional[int] = field(default=None)
+    attack: Optional[int] = field(default=None)
+    release: Optional[int] = field(default=None)
+    makeup_gain: Optional[int] = field(default=None)
 
 
+@dataclass
 class MicStatus(DefaultBaseModel):
     """Mic Status Model"""
 
-    mic_type: Optional[str] = Field(None)
-    mic_gains: Optional[MicGains] = Field(None)
-    equaliser: Optional[Equaliser] = Field(None)
-    equaliser_mini: Optional[EqualiserMini] = Field(None)
-    noise_gate: Optional[NoiseGate] = Field(None)
-    compressor: Optional[Compressor] = Field(None)
+    mic_type: Optional[str] = field(default=None)
+    mic_gains: Optional[MicGains] = field(default=None)
+    equaliser: Optional[Equaliser] = field(default=None)
+    equaliser_mini: Optional[EqualiserMini] = field(default=None)
+    noise_gate: Optional[NoiseGate] = field(default=None)
+    compressor: Optional[Compressor] = field(default=None)
 
 
+@dataclass
 class Volumes(DefaultBaseModel):
     """Volumes Model"""
 
-    mic: int = Field(..., alias="Mic")
-    line_in: int = Field(..., alias="LineIn")
-    console: int = Field(..., alias="Console")
-    system: int = Field(..., alias="System")
-    game: int = Field(..., alias="Game")
-    chat: int = Field(..., alias="Chat")
-    sample: int = Field(..., alias="Sample")
-    music: int = Field(..., alias="Music")
-    headphones: int = Field(..., alias="Headphones")
-    mic_monitor: int = Field(..., alias="MicMonitor")
-    line_out: int = Field(..., alias="LineOut")
+    mic: int = field(metadata={"alias": "Mic"})
+    line_in: int = field(metadata={"alias": "LineIn"})
+    console: int = field(metadata={"alias": "Console"})
+    system: int = field(metadata={"alias": "System"})
+    game: int = field(metadata={"alias": "Game"})
+    chat: int = field(metadata={"alias": "Chat"})
+    sample: int = field(metadata={"alias": "Sample"})
+    music: int = field(metadata={"alias": "Music"})
+    headphones: int = field(metadata={"alias": "Headphones"})
+    mic_monitor: int = field(metadata={"alias": "MicMonitor"})
+    line_out: int = field(metadata={"alias": "LineOut"})
 
 
+@dataclass
 class Levels(DefaultBaseModel):
     """Levels Model"""
 
-    submix_supported: bool = Field(None)
     output_monitor: str
     volumes: Volumes
-    submix: Optional[Any] = Field(None)
-    bleep: Optional[int] = Field(None)
-    deess: Optional[int] = Field(None)
+    submix_supported: bool = field(default=None)
+    submix: Optional[Any] = field(default=None)
+    bleep: Optional[int] = field(default=None)
+    deess: Optional[int] = field(default=None)
 
 
+@dataclass
 class RouterItem(DefaultBaseModel):
     """Router Item Model"""
 
-    headphones: Optional[bool] = Field(None, alias="Headphones")
-    broadcast_mix: Optional[bool] = Field(None, alias="BroadcastMix")
-    chat_mic: Optional[bool] = Field(None, alias="ChatMic")
-    sampler: Optional[bool] = Field(None, alias="Sampler")
-    line_out: Optional[bool] = Field(None, alias="LineOut")
+    headphones: Optional[bool] = field(default=None, metadata={"alias": "Headphones"})
+    broadcast_mix: Optional[bool] = field(
+        default=None, metadata={"alias": "BroadcastMix"}
+    )
+    chat_mic: Optional[bool] = field(default=None, metadata={"alias": "ChatMic"})
+    sampler: Optional[bool] = field(default=None, metadata={"alias": "Sampler"})
+    line_out: Optional[bool] = field(default=None, metadata={"alias": "LineOut"})
 
 
+@dataclass
 class Router(DefaultBaseModel):
     """Router Model"""
 
-    microphone: Optional[RouterItem] = Field(None, alias="Microphone")
-    chat: Optional[RouterItem] = Field(None, alias="Chat")
-    music: Optional[RouterItem] = Field(None, alias="Music")
-    game: Optional[RouterItem] = Field(None, alias="Game")
-    console: Optional[RouterItem] = Field(None, alias="Console")
-    line_in: Optional[RouterItem] = Field(None, alias="LineIn")
-    system: Optional[RouterItem] = Field(None, alias="System")
-    samples: Optional[RouterItem] = Field(None, alias="Samples")
+    microphone: Optional[RouterItem] = field(
+        default=None, metadata={"alias": "Microphone"}
+    )
+    chat: Optional[RouterItem] = field(default=None, metadata={"alias": "Chat"})
+    music: Optional[RouterItem] = field(default=None, metadata={"alias": "Music"})
+    game: Optional[RouterItem] = field(default=None, metadata={"alias": "Game"})
+    console: Optional[RouterItem] = field(default=None, metadata={"alias": "Console"})
+    line_in: Optional[RouterItem] = field(default=None, metadata={"alias": "LineIn"})
+    system: Optional[RouterItem] = field(default=None, metadata={"alias": "System"})
+    samples: Optional[RouterItem] = field(default=None, metadata={"alias": "Samples"})
 
 
+@dataclass
 class CoughButton(DefaultBaseModel):
     """Cough Button Model"""
 
-    is_toggle: Optional[bool] = Field(None)
-    mute_type: Optional[str] = Field(None)
-    state: Optional[str] = Field(None)
+    is_toggle: Optional[bool] = field(default=None)
+    mute_type: Optional[str] = field(default=None)
+    state: Optional[str] = field(default=None)
 
 
+@dataclass
 class Colours(DefaultBaseModel):
     """Colours Model"""
 
-    colour_one: Optional[str] = Field(None)
-    colour_two: Optional[str] = Field(None)
+    colour_one: Optional[str] = field(default=None)
+    colour_two: Optional[str] = field(default=None)
 
 
+@dataclass
 class Fader(DefaultBaseModel):
     """Fader Model"""
 
-    style: Optional[str] = Field(None)
-    colours: Colours = Field(None)
+    style: Optional[str] = field(default=None)
+    colours: Colours = field(default=None)
 
 
+@dataclass
 class Animation(DefaultBaseModel):
     """Animation Model"""
 
-    supported: Optional[bool] = Field(None)
-    mode: Optional[str] = Field(None)
-    mod1: Optional[int] = Field(None)
-    mod2: Optional[int] = Field(None)
-    waterfall_direction: Optional[str] = Field(None)
+    supported: Optional[bool] = field(default=None)
+    mode: Optional[str] = field(default=None)
+    mod1: Optional[int] = field(default=None)
+    mod2: Optional[int] = field(default=None)
+    waterfall_direction: Optional[str] = field(default=None)
 
 
+@dataclass
 class Faders(DefaultBaseModel):
     """Faders Model"""
 
-    a: Fader = Field(..., alias="A")
-    b: Fader = Field(..., alias="B")
-    c: Fader = Field(..., alias="C")
-    d: Fader = Field(..., alias="D")
+    a: Fader = field(metadata={"alias": "A"})
+    b: Fader = field(metadata={"alias": "B"})
+    c: Fader = field(metadata={"alias": "C"})
+    d: Fader = field(metadata={"alias": "D"})
 
 
+@dataclass
 class Button(DefaultBaseModel):
     """Button Model"""
 
@@ -269,36 +362,41 @@ class Button(DefaultBaseModel):
     colours: Colours
 
 
+@dataclass
 class Buttons(DefaultBaseModel):
     """Buttons Model"""
 
-    bleep: Button = Field(..., alias="Bleep")
-    cough: Button = Field(..., alias="Cough")
-    fader1_mute: Button = Field(..., alias="Fader1Mute")
-    fader2_mute: Button = Field(..., alias="Fader2Mute")
-    fader3_mute: Button = Field(..., alias="Fader3Mute")
-    fader4_mute: Button = Field(..., alias="Fader4Mute")
+    bleep: Button = field(metadata={"alias": "Bleep"})
+    cough: Button = field(metadata={"alias": "Cough"})
+    fader1_mute: Button = field(metadata={"alias": "Fader1Mute"})
+    fader2_mute: Button = field(metadata={"alias": "Fader2Mute"})
+    fader3_mute: Button = field(metadata={"alias": "Fader3Mute"})
+    fader4_mute: Button = field(metadata={"alias": "Fader4Mute"})
 
 
+@dataclass
 class Global(DefaultBaseModel):
     """Global Model"""
 
     colour_one: Optional[str]
 
 
+@dataclass
 class Accent(DefaultBaseModel):
     """Accent Model"""
 
     colour_one: Optional[str]
 
 
+@dataclass
 class Simple(DefaultBaseModel):
     """Simple Model"""
 
-    global_: Optional[Global] = Field(None, alias="Global")
-    accent: Accent = Field(None, alias="Accent")
+    global_: Optional[Global] = field(default=None, metadata={"alias": "Global"})
+    accent: Accent = field(default=None, metadata={"alias": "Accent"})
 
 
+@dataclass
 class Lighting(DefaultBaseModel):
     """Lighting Model"""
 
@@ -306,10 +404,11 @@ class Lighting(DefaultBaseModel):
     faders: Faders
     buttons: Buttons
     simple: Simple
-    sampler: Optional[dict[str, Any]]
-    encoders: Optional[dict[str, Any]]
+    sampler: Optional[Dict[str, Any]] = field(default=None)
+    encoders: Optional[Dict[str, Any]] = field(default=None)
 
 
+@dataclass
 class Display(DefaultBaseModel):
     """Display Model"""
 
@@ -319,6 +418,7 @@ class Display(DefaultBaseModel):
     equaliser_fine: Optional[str]
 
 
+@dataclass
 class Settings(DefaultBaseModel):
     """Settings Model"""
 
@@ -327,40 +427,76 @@ class Settings(DefaultBaseModel):
     vc_mute_also_mute_cm: Optional[bool]
 
 
+@dataclass
 class ButtonDown(DefaultBaseModel):
     """Button Down Model"""
 
-    bleep: Optional[bool] = Field(None, alias="Bleep")
-    cough: Optional[bool] = Field(None, alias="Cough")
-    effect_fx: Optional[bool] = Field(None, alias="EffectFx")
-    effect_hard_tune: Optional[bool] = Field(None, alias="EffectHardTune")
-    effect_megaphone: Optional[bool] = Field(None, alias="EffectMegaphone")
-    effect_robot: Optional[bool] = Field(None, alias="EffectRobot")
-    effect_select1: Optional[bool] = Field(None, alias="EffectSelect1")
-    effect_select2: Optional[bool] = Field(None, alias="EffectSelect2")
-    effect_select3: Optional[bool] = Field(None, alias="EffectSelect3")
-    effect_select4: Optional[bool] = Field(None, alias="EffectSelect4")
-    effect_select5: Optional[bool] = Field(None, alias="EffectSelect5")
-    effect_select6: Optional[bool] = Field(None, alias="EffectSelect6")
-    fader1_mute: Optional[bool] = Field(None, alias="Fader1Mute")
-    fader2_mute: Optional[bool] = Field(None, alias="Fader2Mute")
-    fader3_mute: Optional[bool] = Field(None, alias="Fader3Mute")
-    fader4_mute: Optional[bool] = Field(None, alias="Fader4Mute")
-    sampler_bottom_left: Optional[bool] = Field(None, alias="SamplerBottomLeft")
-    sampler_bottom_right: Optional[bool] = Field(None, alias="SamplerBottomRight")
-    sampler_clear: Optional[bool] = Field(None, alias="SamplerClear")
-    sampler_select_a: Optional[bool] = Field(None, alias="SamplerSelectA")
-    sampler_select_b: Optional[bool] = Field(None, alias="SamplerSelectB")
-    sampler_select_c: Optional[bool] = Field(None, alias="SamplerSelectC")
-    sampler_top_left: Optional[bool] = Field(None, alias="SamplerTopLeft")
-    sampler_top_right: Optional[bool] = Field(None, alias="SamplerTopRight")
+    bleep: Optional[bool] = field(default=None, metadata={"alias": "Bleep"})
+    cough: Optional[bool] = field(default=None, metadata={"alias": "Cough"})
+    effect_fx: Optional[bool] = field(default=None, metadata={"alias": "EffectFx"})
+    effect_hard_tune: Optional[bool] = field(
+        default=None, metadata={"alias": "EffectHardTune"}
+    )
+    effect_megaphone: Optional[bool] = field(
+        default=None, metadata={"alias": "EffectMegaphone"}
+    )
+    effect_robot: Optional[bool] = field(
+        default=None, metadata={"alias": "EffectRobot"}
+    )
+    effect_select1: Optional[bool] = field(
+        default=None, metadata={"alias": "EffectSelect1"}
+    )
+    effect_select2: Optional[bool] = field(
+        default=None, metadata={"alias": "EffectSelect2"}
+    )
+    effect_select3: Optional[bool] = field(
+        default=None, metadata={"alias": "EffectSelect3"}
+    )
+    effect_select4: Optional[bool] = field(
+        default=None, metadata={"alias": "EffectSelect4"}
+    )
+    effect_select5: Optional[bool] = field(
+        default=None, metadata={"alias": "EffectSelect5"}
+    )
+    effect_select6: Optional[bool] = field(
+        default=None, metadata={"alias": "EffectSelect6"}
+    )
+    fader1_mute: Optional[bool] = field(default=None, metadata={"alias": "Fader1Mute"})
+    fader2_mute: Optional[bool] = field(default=None, metadata={"alias": "Fader2Mute"})
+    fader3_mute: Optional[bool] = field(default=None, metadata={"alias": "Fader3Mute"})
+    fader4_mute: Optional[bool] = field(default=None, metadata={"alias": "Fader4Mute"})
+    sampler_bottom_left: Optional[bool] = field(
+        default=None, metadata={"alias": "SamplerBottomLeft"}
+    )
+    sampler_bottom_right: Optional[bool] = field(
+        default=None, metadata={"alias": "SamplerBottomRight"}
+    )
+    sampler_clear: Optional[bool] = field(
+        default=None, metadata={"alias": "SamplerClear"}
+    )
+    sampler_select_a: Optional[bool] = field(
+        default=None, metadata={"alias": "SamplerSelectA"}
+    )
+    sampler_select_b: Optional[bool] = field(
+        default=None, metadata={"alias": "SamplerSelectB"}
+    )
+    sampler_select_c: Optional[bool] = field(
+        default=None, metadata={"alias": "SamplerSelectC"}
+    )
+    sampler_top_left: Optional[bool] = field(
+        default=None, metadata={"alias": "SamplerTopLeft"}
+    )
+    sampler_top_right: Optional[bool] = field(
+        default=None, metadata={"alias": "SamplerTopRight"}
+    )
 
 
+@dataclass
 class Mixer(DefaultBaseModel):
     """Mixer Model"""
 
     hardware: Hardware
-    shutdown_commands: list
+    shutdown_commands: List[Any]
     fader_status: FaderStatuses
     mic_status: MicStatus
     levels: Levels
@@ -375,6 +511,7 @@ class Mixer(DefaultBaseModel):
     mic_profile_name: str
 
 
+@dataclass
 class Paths(DefaultBaseModel):
     """Paths Model"""
 
@@ -385,26 +522,29 @@ class Paths(DefaultBaseModel):
     icons_directory: Optional[str]
 
 
+@dataclass
 class Files(DefaultBaseModel):
     """Files Model"""
 
-    profiles: list[str]
-    mic_profiles: list[str]
-    presets: list[str]
-    samples: dict[str, Any]
-    icons: list[str]
+    profiles: List[str]
+    mic_profiles: List[str]
+    presets: List[str]
+    samples: Dict[str, Any]
+    icons: List[str]
 
 
+@dataclass
 class Status(DefaultBaseModel):
     """Status Model"""
 
     config: Config
-    mixers: dict[str, Mixer]
+    mixers: Dict[str, Mixer]
     paths: Paths
     files: Files
 
 
+@dataclass
 class Data(DefaultBaseModel):
     """Data Model"""
 
-    status: Status = Field(..., alias="Status")
+    status: Status = field(metadata={"alias": "Status"})

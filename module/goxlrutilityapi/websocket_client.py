@@ -8,7 +8,6 @@ from typing import Any, Optional
 
 import aiohttp
 import async_timeout
-from pydantic import ValidationError
 
 from .base import Base
 from .const import (
@@ -22,12 +21,9 @@ from .const import (
     COMMAND_TYPE_SET_VOLUME,
     DEFAULT_HOST,
     DEFAULT_PORT,
-    KEY_DATA,
     KEY_ID,
     KEY_TYPE,
-    MODEL_MAP,
     MUTED_STATE,
-    REQUEST_TYPE_COMMAND,
     REQUEST_TYPE_GET_STATUS,
     RESPONSE_TYPE_OK,
     RESPONSE_TYPE_PATCH,
@@ -49,26 +45,28 @@ class WebsocketClient(Base):
     """Websocket Client"""
 
     def __init__(self) -> None:
-        """Initialize Websocket Client"""
+        """Initialize."""
         super().__init__()
-        self._current_id: int = 1
-        self._mixer_serial_number: Optional[str] = None
-        self._responses: dict[
-            int, tuple[asyncio.Future[Response[Any]], Optional[str]]
-        ] = {}
         self._session: Optional[aiohttp.ClientSession] = None
         self._websocket: Optional[aiohttp.ClientWebSocketResponse] = None
+        self._message_id: int = 0
+        self._message_queue: asyncio.Queue[dict] = asyncio.Queue()
+        self._message_events: dict[int, asyncio.Event] = {}
+        self._message_responses: dict[int, Response[Any]] = {}
 
     @property
     def connected(self) -> bool:
-        """Get connection state."""
+        """Return if we are connected."""
         return self._websocket is not None and not self._websocket.closed
 
     async def disconnect(self) -> None:
-        """Disconnect from server"""
-        self._logger.info("Disconnecting from WebSocket")
+        """Disconnect."""
         if self._websocket is not None:
             await self._websocket.close()
+            self._websocket = None
+        if self._session is not None:
+            await self._session.close()
+            self._session = None
 
     async def connect(
         self,
@@ -76,27 +74,21 @@ class WebsocketClient(Base):
         port: int = DEFAULT_PORT,
         session: Optional[aiohttp.ClientSession] = None,
     ) -> None:
-        """Connect to server"""
-        if session:
-            self._session = session
-        else:
-            self._logger.info("Creating new aiohttp client session")
+        """Connect."""
+        if self.connected:
+            return
+
+        if session is None:
             self._session = aiohttp.ClientSession()
-        url = f"ws://{host}:{port}/api/websocket"
-        self._logger.info(
-            "Connecting to WebSocket: %s (aiohttp: %s)",
-            url,
-            aiohttp.__version__,
-        )
+        else:
+            self._session = session
+
         try:
-            self._websocket = await self._session.ws_connect(url=url, heartbeat=30)
-        except (
-            aiohttp.WSServerHandshakeError,
-            aiohttp.ClientConnectionError,
-            socket.gaierror,
-        ) as error:
-            raise ConnectionErrorException(error) from error
-        self._logger.info("Connected to WebSocket")
+            self._websocket = await self._session.ws_connect(
+                f"ws://{host}:{port}/api/websocket"
+            )
+        except (aiohttp.ClientError, socket.gaierror) as error:
+            raise ConnectionErrorException from error
 
     async def _send_message(
         self,
@@ -104,77 +96,56 @@ class WebsocketClient(Base):
         wait_for_response: bool = True,
         response_type: Optional[str] = None,
     ) -> Response[Any]:
-        """Send a message to the WebSocket"""
-        if not self.connected or self._websocket is None:
-            raise ConnectionClosedException("Connection is closed")
+        """Send a message."""
+        if not self.connected:
+            raise ConnectionClosedException
 
-        self._current_id += 1
-        request.id = self._current_id
+        self._message_id += 1
+        request.id = self._message_id
 
-        future: asyncio.Future[
-            Response[Any]
-        ] = asyncio.get_running_loop().create_future()
-        self._responses[request.id] = future, response_type
-        await self._websocket.send_str(request.json())
-        self._logger.debug("Sent message: %s", request.json())
         if wait_for_response:
-            try:
-                async with async_timeout.timeout(10):
-                    return await future
-            except asyncio.TimeoutError as error:
-                raise BadMessageException("Timeout waiting for response") from error
-            finally:
-                self._responses.pop(request.id)
-        return Response[None](
-            id=request.id,
-            data=None,
-            type=None,
-        )
+            self._message_events[request.id] = asyncio.Event()
+
+        await self._websocket.send_json(request.__dict__)
+
+        if not wait_for_response:
+            return Response(id=request.id, type=RESPONSE_TYPE_OK, data=None)
+
+        try:
+            async with async_timeout.timeout(10):
+                await self._message_events[request.id].wait()
+        except asyncio.TimeoutError as error:
+            raise ConnectionErrorException from error
+
+        response = self._message_responses.pop(request.id)
+        self._message_events.pop(request.id)
+
+        if response_type is not None and response.type != response_type:
+            raise BadMessageException(f"Expected {response_type}, got {response.type}")
+
+        return response
 
     async def get_status(self) -> Status:
-        """Get status from GoXLR"""
-        self._logger.info("Getting status from GoXLR")
-        response: Response[Status] = await self._send_message(
-            Request(data=REQUEST_TYPE_GET_STATUS),
-            wait_for_response=True,
+        """Get status."""
+        response = await self._send_message(
+            Request(id=None, data=REQUEST_TYPE_GET_STATUS),
             response_type=RESPONSE_TYPE_STATUS,
         )
-        if response.data is None:
-            raise BadMessageException("Message data is missing")
-        self._logger.debug("Status: %s", response.data)
-        self._mixer_serial_number = next(iter(response.data.mixers.keys()))
         return response.data
 
     async def set_accent_color(
         self,
         color: str,
     ) -> None:
-        """Set accent color"""
-        if self._mixer_serial_number is None:
-            raise BadMessageException(
-                "Mixer serial number is missing. Call get_status to set this."
-            )
-
-        self._logger.info(
-            "Setting accent color to '%s' for mixer '%s'",
-            color,
-            self._mixer_serial_number,
-        )
+        """Set accent color."""
         await self._send_message(
             Request(
+                id=None,
                 data={
-                    REQUEST_TYPE_COMMAND: [
-                        self._mixer_serial_number,
-                        {
-                            COMMAND_TYPE_SET_SIMPLE_COLOUR: [
-                                ACCENT,
-                                color,
-                            ],
-                        },
-                    ]
-                }
+                    KEY_TYPE: COMMAND_TYPE_SET_SIMPLE_COLOUR,
+                    ACCENT: color,
+                },
             ),
-            wait_for_response=False,
             response_type=RESPONSE_TYPE_OK,
         )
 
@@ -184,35 +155,18 @@ class WebsocketClient(Base):
         color_one: str,
         color_two: str,
     ) -> None:
-        """Set button color"""
-        if self._mixer_serial_number is None:
-            raise BadMessageException(
-                "Mixer serial number is missing. Call get_status to set this."
-            )
-
-        self._logger.info(
-            "Setting button '%s' color to '%s' and '%s' for mixer '%s'",
-            name,
-            color_one,
-            color_two,
-            self._mixer_serial_number,
-        )
+        """Set button color."""
         await self._send_message(
             Request(
+                id=None,
                 data={
-                    REQUEST_TYPE_COMMAND: [
-                        self._mixer_serial_number,
-                        {
-                            COMMAND_TYPE_SET_BUTTON_COLOURS: [
-                                name,
-                                color_one,
-                                color_two,
-                            ],
-                        },
-                    ]
-                }
+                    KEY_TYPE: COMMAND_TYPE_SET_BUTTON_COLOURS,
+                    name: {
+                        "colour_one": color_one,
+                        "colour_two": color_two,
+                    },
+                },
             ),
-            wait_for_response=False,
             response_type=RESPONSE_TYPE_OK,
         )
 
@@ -222,35 +176,18 @@ class WebsocketClient(Base):
         color_top: str,
         color_bottom: str,
     ) -> None:
-        """Set fader color"""
-        if self._mixer_serial_number is None:
-            raise BadMessageException(
-                "Mixer serial number is missing. Call get_status to set this."
-            )
-
-        self._logger.info(
-            "Setting fader '%s' color to '%s' and '%s' for mixer '%s'",
-            name,
-            color_top,
-            color_bottom,
-            self._mixer_serial_number,
-        )
+        """Set fader color."""
         await self._send_message(
             Request(
+                id=None,
                 data={
-                    REQUEST_TYPE_COMMAND: [
-                        self._mixer_serial_number,
-                        {
-                            COMMAND_TYPE_SET_FADER_COLOURS: [
-                                name,
-                                color_top,
-                                color_bottom,
-                            ],
-                        },
-                    ]
-                }
+                    KEY_TYPE: COMMAND_TYPE_SET_FADER_COLOURS,
+                    name: {
+                        "colour_one": color_top,
+                        "colour_two": color_bottom,
+                    },
+                },
             ),
-            wait_for_response=False,
             response_type=RESPONSE_TYPE_OK,
         )
 
@@ -259,33 +196,15 @@ class WebsocketClient(Base):
         channel: str,
         muted: bool,
     ) -> None:
-        """Set muted state of channel"""
-        if self._mixer_serial_number is None:
-            raise BadMessageException(
-                "Mixer serial number is missing. Call get_status to set this."
-            )
-
-        self._logger.info(
-            "Setting muted state of '%s' to '%s' for mixer '%s'",
-            channel,
-            muted,
-            self._mixer_serial_number,
-        )
+        """Set muted."""
         await self._send_message(
             Request(
+                id=None,
                 data={
-                    REQUEST_TYPE_COMMAND: [
-                        self._mixer_serial_number,
-                        {
-                            COMMAND_TYPE_SET_MUTE_STATE: [
-                                channel,
-                                MUTED_STATE if muted else UNMUTED_STATE,
-                            ],
-                        },
-                    ]
-                }
+                    KEY_TYPE: COMMAND_TYPE_SET_MUTE_STATE,
+                    channel: MUTED_STATE if muted else UNMUTED_STATE,
+                },
             ),
-            wait_for_response=False,
             response_type=RESPONSE_TYPE_OK,
         )
 
@@ -294,33 +213,15 @@ class WebsocketClient(Base):
         channel: str,
         volume: int,
     ) -> None:
-        """Set volume of channel"""
-        if self._mixer_serial_number is None:
-            raise BadMessageException(
-                "Mixer serial number is missing. Call get_status to set this."
-            )
-
-        self._logger.info(
-            "Setting volume of '%s' to '%s' for mixer '%s'",
-            channel,
-            volume,
-            self._mixer_serial_number,
-        )
+        """Set volume."""
         await self._send_message(
             Request(
+                id=None,
                 data={
-                    REQUEST_TYPE_COMMAND: [
-                        self._mixer_serial_number,
-                        {
-                            COMMAND_TYPE_SET_VOLUME: [
-                                channel,
-                                volume,
-                            ],
-                        },
-                    ]
-                }
+                    KEY_TYPE: COMMAND_TYPE_SET_VOLUME,
+                    channel: volume,
+                },
             ),
-            wait_for_response=False,
             response_type=RESPONSE_TYPE_OK,
         )
 
@@ -328,32 +229,15 @@ class WebsocketClient(Base):
         self,
         profile: str,
     ) -> None:
-        """Load profile"""
-        if self._mixer_serial_number is None:
-            raise BadMessageException(
-                "Mixer serial number is missing. Call get_status to set this."
-            )
-
-        self._logger.info(
-            "Loading profile '%s' for mixer '%s'",
-            profile,
-            self._mixer_serial_number,
-        )
+        """Load profile."""
         await self._send_message(
             Request(
+                id=None,
                 data={
-                    REQUEST_TYPE_COMMAND: [
-                        self._mixer_serial_number,
-                        {
-                            COMMAND_TYPE_LOAD_PROFILE: [
-                                profile,
-                                False,
-                            ],
-                        },
-                    ]
-                }
+                    KEY_TYPE: COMMAND_TYPE_LOAD_PROFILE,
+                    "profile": profile,
+                },
             ),
-            wait_for_response=False,
             response_type=RESPONSE_TYPE_OK,
         )
 
@@ -361,29 +245,15 @@ class WebsocketClient(Base):
         self,
         profile: str,
     ) -> None:
-        """Load profile colours"""
-        if self._mixer_serial_number is None:
-            raise BadMessageException(
-                "Mixer serial number is missing. Call get_status to set this."
-            )
-
-        self._logger.info(
-            "Loading profile colours '%s' for mixer '%s'",
-            profile,
-            self._mixer_serial_number,
-        )
+        """Load profile colours."""
         await self._send_message(
             Request(
+                id=None,
                 data={
-                    REQUEST_TYPE_COMMAND: [
-                        self._mixer_serial_number,
-                        {
-                            COMMAND_TYPE_LOAD_PROFILE_COLOURS: profile,
-                        },
-                    ]
-                }
+                    KEY_TYPE: COMMAND_TYPE_LOAD_PROFILE_COLOURS,
+                    "profile": profile,
+                },
             ),
-            wait_for_response=False,
             response_type=RESPONSE_TYPE_OK,
         )
 
@@ -391,133 +261,57 @@ class WebsocketClient(Base):
         self,
         patch_callback: Optional[Callable[[Response[Patch]], Awaitable[None]]] = None,
     ) -> None:
-        """Listen for patches from GoXLR"""
-
+        """Listen for messages."""
         async def _message_callback(message: dict) -> None:
-            """Message callback"""
-            self._logger.debug("New message")
+            """Handle message."""
+            try:
+                if KEY_ID in message:
+                    response = Response(**message)
+                    if response.id in self._message_events:
+                        self._message_responses[response.id] = response
+                        self._message_events[response.id].set()
+                    return
 
-            # Get message ID
-            message_id = message.get(KEY_ID)
+                if KEY_TYPE in message and message[KEY_TYPE] == RESPONSE_TYPE_PATCH:
+                    response = Response(**message)
+                    if patch_callback is not None:
+                        await patch_callback(response)
+                    return
 
-            if (message_data := message.get(KEY_DATA)) is None:
-                raise BadMessageException("Message data is missing")
+                if KEY_TYPE in message and message[KEY_TYPE] == RESPONSE_TYPE_STATUS:
+                    response = Response(**message)
+                    if patch_callback is not None:
+                        await patch_callback(response)
+                    return
+            except (TypeError, ValueError) as error:
+                raise BadMessageException from error
 
-            # Get key of first object in message data
-            if (message_type := next(iter(message_data))) is None:
-                raise BadMessageException("Message type is missing")
-
-            self._logger.debug("Message ID: %s", message_id)
-            self._logger.debug("Message type: %s", message_type)
-
-            # Find model from module
-            if (model := MODEL_MAP.get(message_type)) is None:
-                self._logger.warning("Unknown model: %s", message_type)
-            else:
-                response = Response[Any](
-                    id=message_id,
-                    data=message_data.get(message_type),
-                    type=message_type,
-                )
-
-                if response.data is None:
-                    raise BadMessageException("Message data is missing")
-
-                try:
-                    if isinstance(response.data, list):
-                        response.data = [model(**item) for item in response.data]
-                    else:
-                        response.data = model(**response.data)
-                except (TypeError, ValidationError) as error:
-                    raise BadMessageException(
-                        f"Failed to create model '{message_type}' with data:\n{response.data}"
-                    ) from error
-
-                self._logger.info(
-                    "Response: %s",
-                    response.json(
-                        include={
-                            KEY_ID,
-                            KEY_TYPE,
-                        },
-                        exclude_unset=True,
-                    ),
-                )
-
-                if message_id is not None:
-                    response_tuple = self._responses.get(message_id)
-                    if response_tuple is not None:
-                        future, response_type = response_tuple
-                        if response_type is not None and response_type != message_type:
-                            self._logger.info(
-                                "Response type '%s' does not match requested type '%s'.",
-                                message_type,
-                                response_type,
-                            )
-                        else:
-                            try:
-                                future.set_result(response)
-                            except asyncio.InvalidStateError:
-                                self._logger.debug(
-                                    "Future already set for response ID: %s",
-                                    message_id,
-                                )
-
-                if patch_callback is not None and message_type == RESPONSE_TYPE_PATCH:
-                    try:
-                        for item in response.data:
-                            patch_response = Response[Patch](
-                                id=response.id,
-                                type=response.type,
-                                data=item,
-                            )
-                            self._logger.debug("Patch callback: %s", patch_response)
-                            await patch_callback(patch_response)
-                    except (TypeError, ValidationError) as error:
-                        raise BadMessageException(
-                            f"Failed to create model patch response with data:\n{response.data}"
-                        ) from error
-
-        await self._listen_for_messages(callback=_message_callback)
+        await self._listen_for_messages(_message_callback)
 
     async def _listen_for_messages(
         self,
         callback: Callable[[dict[Any, Any]], Awaitable[None]],
     ) -> None:
-        """Listen for messages"""
+        """Listen for messages."""
         if not self.connected:
-            raise ConnectionClosedException("Connection is closed")
+            raise ConnectionClosedException
 
-        self._logger.info("Listen for messages")
-        if self._websocket is not None:
-            while not self._websocket.closed:
+        while True:
+            try:
                 message = await self.receive_message()
-                if isinstance(message, dict):
-                    await callback(message)
+                if message is None:
+                    break
+                await callback(message)
+            except (TypeError, ValueError) as error:
+                raise BadMessageException from error
 
     async def receive_message(self) -> Optional[dict]:
-        """Receive message"""
-        if not self.connected or self._websocket is None:
-            raise ConnectionClosedException("Connection is closed")
+        """Receive message."""
+        if not self.connected:
+            raise ConnectionClosedException
 
         try:
-            message = await self._websocket.receive()
-        except RuntimeError:
-            return None
-
-        if message.type == aiohttp.WSMsgType.ERROR:
-            raise ConnectionErrorException(self._websocket.exception())
-
-        if message.type in (
-            aiohttp.WSMsgType.CLOSE,
-            aiohttp.WSMsgType.CLOSED,
-            aiohttp.WSMsgType.CLOSING,
-        ):
-            raise ConnectionClosedException("Connection closed to server")
-
-        if message.type == aiohttp.WSMsgType.TEXT:
-            message_json = message.json()
-
-            return message_json
-
-        raise BadMessageException(f"Unknown message type: {message.type}")
+            message = await self._websocket.receive_json()
+            return message
+        except (aiohttp.ClientError, TypeError) as error:
+            raise ConnectionErrorException from error
