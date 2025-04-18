@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, List
+from typing import Any, Dict, List, Optional
 
 from . import DefaultBaseModel
 
@@ -14,6 +14,8 @@ class Patch(DefaultBaseModel):
     op: str
     path: str
     value: Any
+    from_value: Optional[Any] = None
+    metadata: Optional[Dict[str, Any]] = None
 
 
 @dataclass

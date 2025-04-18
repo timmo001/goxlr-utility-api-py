@@ -548,3 +548,15 @@ class Data(DefaultBaseModel):
     """Data Model"""
 
     status: Status = field(metadata={"alias": "Status"})
+
+
+@dataclass
+class Status:
+    """GoXLR Utility API: Status Model"""
+
+    id: str
+    status: str
+    data: Dict[str, Any]
+    jsonrpc: str = "2.0"
+    error: Optional[Dict[str, Any]] = None
+    metadata: Optional[Dict[str, Any]] = None

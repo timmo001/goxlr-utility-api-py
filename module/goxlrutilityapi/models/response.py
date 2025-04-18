@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Generic, Optional, TypeVar
+from typing import Any, Dict, Generic, Optional, TypeVar
 
 from . import DefaultBaseModel
 
@@ -13,8 +13,8 @@ T = TypeVar("T")
 class Response(DefaultBaseModel, Generic[T]):
     """Response Model"""
 
-    id: Optional[int] = field(default=None, metadata={"description": "Message ID"})
-    type: Optional[str] = field(
-        default=None, metadata={"description": "Type of Response"}
-    )
-    data: T = field(default=None, metadata={"description": "Data"})
+    id: str
+    result: Any
+    jsonrpc: str = "2.0"
+    error: Optional[Dict[str, Any]] = None
+    metadata: Optional[Dict[str, Any]] = None

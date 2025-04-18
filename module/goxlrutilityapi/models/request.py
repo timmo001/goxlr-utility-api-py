@@ -1,8 +1,8 @@
 """GoXLR Utility API: Request Model"""
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from typing import Any, Dict, Optional, Union
+from dataclasses import dataclass
+from typing import Any, Dict, Optional
 
 from . import DefaultBaseModel
 
@@ -11,5 +11,8 @@ from . import DefaultBaseModel
 class Request(DefaultBaseModel):
     """Request Model"""
 
-    id: Optional[int] = None
-    data: Union[str, Dict[str, Any]] = field(metadata={"description": "Data"})
+    id: str
+    method: str
+    params: Dict[str, Any]
+    jsonrpc: str = "2.0"
+    metadata: Optional[Dict[str, Any]] = None

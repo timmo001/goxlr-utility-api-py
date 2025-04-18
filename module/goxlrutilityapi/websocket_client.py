@@ -4,10 +4,10 @@ from __future__ import annotations
 import asyncio
 import socket
 from collections.abc import Awaitable, Callable
-from typing import Any, Optional
+from dataclasses import dataclass
+from typing import Any, Dict, Optional
 
 import aiohttp
-import async_timeout
 
 from .base import Base
 from .const import (
@@ -39,6 +39,18 @@ from .models.patch import Patch
 from .models.request import Request
 from .models.response import Response
 from .models.status import Status
+
+
+@dataclass
+class WebSocketClient:
+    """GoXLR Utility API: WebSocket Client Model"""
+
+    url: str
+    headers: Dict[str, str]
+    timeout: int = 30
+    reconnect_interval: int = 5
+    max_retries: int = 3
+    metadata: Optional[Dict[str, Any]] = None
 
 
 class WebsocketClient(Base):
@@ -112,8 +124,7 @@ class WebsocketClient(Base):
             return Response(id=request.id, type=RESPONSE_TYPE_OK, data=None)
 
         try:
-            async with async_timeout.timeout(10):
-                await self._message_events[request.id].wait()
+            await self._message_events[request.id].wait()
         except asyncio.TimeoutError as error:
             raise ConnectionErrorException from error
 
@@ -315,3 +326,43 @@ class WebsocketClient(Base):
             return message
         except (aiohttp.ClientError, TypeError) as error:
             raise ConnectionErrorException from error
+
+    async def _connect(self) -> None:
+        """Connect to the GoXLR Utility API websocket."""
+        try:
+            self._websocket = await self._session.ws_connect(
+                f"ws://{self._host}:{self._port}/api/websocket"
+            )
+            self._connected = True
+            self._logger.info("Connected to GoXLR Utility API websocket")
+            asyncio.create_task(self._listen())
+        except Exception as error:
+            self._logger.error(
+                "Failed to connect to GoXLR Utility API websocket: %s", error
+            )
+            self._connected = False
+            raise
+
+    async def _listen(self) -> None:
+        """Listen for messages from the GoXLR Utility API websocket."""
+        try:
+            while self._connected:
+                message = await self._websocket.receive_json()
+                self._logger.debug("Received message: %s", message)
+                if "id" in message:
+                    self._message_events[message["id"]].set()
+                    self._message_responses[message["id"]] = message
+                if "data" in message:
+                    self._on_message(message["data"])
+        except Exception as error:
+            self._logger.error(
+                "Error listening to GoXLR Utility API websocket: %s", error
+            )
+            self._connected = False
+            raise
+
+    async def _send(self, message: dict[str, Any]) -> None:
+        """Send a message to the GoXLR Utility API websocket."""
+        if not self._connected:
+            raise RuntimeError("Not connected to GoXLR Utility API websocket")
+        await self._websocket.send_json(message)
