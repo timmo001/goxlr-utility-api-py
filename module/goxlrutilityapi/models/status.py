@@ -35,7 +35,7 @@ class UsbDevice(DefaultBaseModel):
     version: list[int]
     bus_number: int
     address: int
-    identifier: str
+    identifier: str | None
 
 
 class Hardware(DefaultBaseModel):
