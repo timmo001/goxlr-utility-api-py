@@ -1,27 +1,94 @@
 ---
-name: Deploy
+name: "Deploy"
 
 # yamllint disable-line rule:truthy
 on:
   release:
     types:
       - published
-  # schedule:
-  #   - cron: "0 2 * * *"
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pull-requests: write
+env:
+  MODULE_NAME: goxlrutilityapi
 
 jobs:
-  deploy-module:
-    uses: timmo001/workflows/.github/workflows/deploy-python-linux.yml@master
-    secrets:
-      PUSH_TOKEN: ${{ secrets.PUSH_TOKEN }}
-      PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
-      PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-    with:
-      code-path: module
-      module-name: goxlrutilityapi
-      use-incremental: true
+  deploy:
+    name: 🚀 Linux - Deploy Module
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    steps:
+      - name: ⤵️ Check out code from GitHub
+        uses: actions/checkout@v5
+        with:
+          ref: "master"
+          token: ${{ secrets.PUSH_TOKEN }}
+      - name: 🏗 Set up Python
+        uses: actions/setup-python@v5.6.0
+        with:
+          python-version: "3.12"
+          architecture: "x64"
+          cache: "pip"
+      - name: 🏗 Install build tooling
+        run: |
+          python -m pip install --upgrade setuptools wheel twine
+      - name: 🔢 Get old version
+        id: get-version-old
+        run: |
+          result=$(python script/get_version.py)
+          echo "version=$result" >> $GITHUB_OUTPUT
+      - name: 🔢 Set correct version - Development
+        if: ${{ github.event_name != 'release' }}
+        run: |
+          python script/set_dev_version.py
+      - name: 🔢 Set correct version - Release
+        if: ${{ github.event_name == 'release' }}
+        run: |
+          python script/set_release_version.py
+      - name: 🔢 Get current version
+        id: get-version-current
+        run: |
+          result=$(python script/get_version.py)
+          echo "version=$result" >> $GITHUB_OUTPUT
+      - name: ⤵️ Pull latest changes from GitHub
+        run: |
+          git pull --ff
+      - name: 🖊 Commit
+        uses: stefanzweifel/git-auto-commit-action@v6.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.PUSH_TOKEN }}
+        with:
+          commit_message: |
+            Bump ${{ env.MODULE_NAME }} version to ${{ steps.get-version-current.outputs.version }}
+      - name: 🏗 Build distributions
+        run: |
+          cd module
+          python setup.py sdist bdist_wheel
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          verbose: true
+          packages-dir: module/dist
+      - name: 🔢 Increment version - Development
+        if: ${{ github.event_name != 'release' }}
+        run: |
+          python script/increment_version_dev.py
+      - name: 🔢 Increment version - Release
+        if: ${{ github.event_name == 'release' }}
+        run: |
+          python script/increment_version_release.py
+      - name: 🔢 Get new version
+        id: get-version-new
+        run: |
+          result=$(python script/get_version.py)
+          echo "version=$result" >> $GITHUB_OUTPUT
+      - name: ⤵️ Pull latest changes from GitHub
+        run: |
+          git pull --ff
+      - name: 🖊 Commit
+        uses: stefanzweifel/git-auto-commit-action@v6.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.PUSH_TOKEN }}
+        with:
+          commit_message: |
+            Bump ${{ env.MODULE_NAME }} version to ${{ steps.get-version-new.outputs.version }}
