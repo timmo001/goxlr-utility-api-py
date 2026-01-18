@@ -1,6 +1,6 @@
 """GoXLR Utility API: Constants"""
 
-from typing import Any
+from typing import Any, Final
 
 from .models.map_item import MapItem
 from .models.patch import Patch
