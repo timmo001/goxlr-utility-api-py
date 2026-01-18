@@ -42,7 +42,7 @@ jobs:
           pip install "pylint>=3.2"
       - name: Run pylint (uses pyproject.toml)
         run: |
-          pylint --rcfile=module/pyproject.toml module/goxlrutilityapi
+          pylint --rcfile=module/pyproject.toml --fail-on=E module/goxlrutilityapi
   lint-ruff:
     uses: timmo001/workflows/.github/workflows/lint-ruff.yml@master
     with:
