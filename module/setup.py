@@ -10,7 +10,7 @@ with io.open("requirements.txt", encoding="utf-8") as f:
 
 setup(
     name="goxlrutilityapi",
-    version="1.2.5.dev0",
+    version="1.2.5",
     description="GoXLR Utility API",
     keywords="GoXLR Utility API",
     author="Aidan Timson (Timmo)",
