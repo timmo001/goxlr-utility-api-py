@@ -1,4 +1,5 @@
 """GoXLR Utility API: Websocket Client"""
+
 from __future__ import annotations
 
 import asyncio
@@ -121,7 +122,7 @@ class WebsocketClient(Base):
         await self._websocket.send_json(request.__dict__)
 
         if not wait_for_response:
-            return Response(id=request.id, type=RESPONSE_TYPE_OK, data=None)
+            return Response(id=request.id, type=RESPONSE_TYPE_OK, data=None)  # pylint: disable=unexpected-keyword-arg
 
         try:
             await self._message_events[request.id].wait()
@@ -139,7 +140,7 @@ class WebsocketClient(Base):
     async def get_status(self) -> Status:
         """Get status."""
         response = await self._send_message(
-            Request(id=None, data=REQUEST_TYPE_GET_STATUS),
+            Request(id=None, data=REQUEST_TYPE_GET_STATUS),  # pylint: disable=unexpected-keyword-arg
             response_type=RESPONSE_TYPE_STATUS,
         )
         return response.data
@@ -150,7 +151,7 @@ class WebsocketClient(Base):
     ) -> None:
         """Set accent color."""
         await self._send_message(
-            Request(
+            Request(  # pylint: disable=unexpected-keyword-arg
                 id=None,
                 data={
                     KEY_TYPE: COMMAND_TYPE_SET_SIMPLE_COLOUR,
@@ -168,7 +169,7 @@ class WebsocketClient(Base):
     ) -> None:
         """Set button color."""
         await self._send_message(
-            Request(
+            Request(  # pylint: disable=unexpected-keyword-arg
                 id=None,
                 data={
                     KEY_TYPE: COMMAND_TYPE_SET_BUTTON_COLOURS,
@@ -189,7 +190,7 @@ class WebsocketClient(Base):
     ) -> None:
         """Set fader color."""
         await self._send_message(
-            Request(
+            Request(  # pylint: disable=unexpected-keyword-arg
                 id=None,
                 data={
                     KEY_TYPE: COMMAND_TYPE_SET_FADER_COLOURS,
@@ -209,7 +210,7 @@ class WebsocketClient(Base):
     ) -> None:
         """Set muted."""
         await self._send_message(
-            Request(
+            Request(  # pylint: disable=unexpected-keyword-arg
                 id=None,
                 data={
                     KEY_TYPE: COMMAND_TYPE_SET_MUTE_STATE,
@@ -226,7 +227,7 @@ class WebsocketClient(Base):
     ) -> None:
         """Set volume."""
         await self._send_message(
-            Request(
+            Request(  # pylint: disable=unexpected-keyword-arg
                 id=None,
                 data={
                     KEY_TYPE: COMMAND_TYPE_SET_VOLUME,
@@ -242,7 +243,7 @@ class WebsocketClient(Base):
     ) -> None:
         """Load profile."""
         await self._send_message(
-            Request(
+            Request(  # pylint: disable=unexpected-keyword-arg
                 id=None,
                 data={
                     KEY_TYPE: COMMAND_TYPE_LOAD_PROFILE,
@@ -258,7 +259,7 @@ class WebsocketClient(Base):
     ) -> None:
         """Load profile colours."""
         await self._send_message(
-            Request(
+            Request(  # pylint: disable=unexpected-keyword-arg
                 id=None,
                 data={
                     KEY_TYPE: COMMAND_TYPE_LOAD_PROFILE_COLOURS,
@@ -273,6 +274,7 @@ class WebsocketClient(Base):
         patch_callback: Optional[Callable[[Response[Patch]], Awaitable[None]]] = None,
     ) -> None:
         """Listen for messages."""
+
         async def _message_callback(message: dict) -> None:
             """Handle message."""
             try:
@@ -326,43 +328,3 @@ class WebsocketClient(Base):
             return message
         except (aiohttp.ClientError, TypeError) as error:
             raise ConnectionErrorException from error
-
-    async def _connect(self) -> None:
-        """Connect to the GoXLR Utility API websocket."""
-        try:
-            self._websocket = await self._session.ws_connect(
-                f"ws://{self._host}:{self._port}/api/websocket"
-            )
-            self._connected = True
-            self._logger.info("Connected to GoXLR Utility API websocket")
-            asyncio.create_task(self._listen())
-        except Exception as error:
-            self._logger.error(
-                "Failed to connect to GoXLR Utility API websocket: %s", error
-            )
-            self._connected = False
-            raise
-
-    async def _listen(self) -> None:
-        """Listen for messages from the GoXLR Utility API websocket."""
-        try:
-            while self._connected:
-                message = await self._websocket.receive_json()
-                self._logger.debug("Received message: %s", message)
-                if "id" in message:
-                    self._message_events[message["id"]].set()
-                    self._message_responses[message["id"]] = message
-                if "data" in message:
-                    self._on_message(message["data"])
-        except Exception as error:
-            self._logger.error(
-                "Error listening to GoXLR Utility API websocket: %s", error
-            )
-            self._connected = False
-            raise
-
-    async def _send(self, message: dict[str, Any]) -> None:
-        """Send a message to the GoXLR Utility API websocket."""
-        if not self._connected:
-            raise RuntimeError("Not connected to GoXLR Utility API websocket")
-        await self._websocket.send_json(message)
