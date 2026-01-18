@@ -1,14 +1,14 @@
 """GoXLR Utility API: Models"""
 
 from dataclasses import dataclass, field
-from typing import Any, Dict
+from typing import Any
 
 
 @dataclass
 class DefaultBaseModel:
     """Default Base Model"""
 
-    _extra: Dict[str, Any] = field(default_factory=dict)
+    _extra: dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self):
         """Handle extra fields"""

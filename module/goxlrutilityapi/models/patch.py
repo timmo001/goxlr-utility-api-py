@@ -1,8 +1,9 @@
 """GoXLR Utility API: Patch Models"""
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from . import DefaultBaseModel
 
@@ -15,11 +16,11 @@ class Patch(DefaultBaseModel):
     path: str
     value: Any
     from_value: Optional[Any] = None
-    metadata: Optional[Dict[str, Any]] = None
+    metadata: Optional[dict[str, Any]] = None
 
 
 @dataclass
 class Data(DefaultBaseModel):
     """Data Model"""
 
-    patch: List[Patch] = field(metadata={"alias": "Patch"})
+    patch: list[Patch] = field(metadata={"alias": "Patch"})

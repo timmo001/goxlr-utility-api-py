@@ -1,9 +1,10 @@
 """GoXLR Utility API: Base"""
+
 from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 
 @dataclass
@@ -12,7 +13,7 @@ class Base:
 
     id: str
     jsonrpc: str = "2.0"
-    metadata: Optional[Dict[str, Any]] = None
+    metadata: Optional[dict[str, Any]] = None
 
     def __post_init__(self):
         """Initialize"""

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Dict, Generic, Optional, TypeVar
+from typing import Any, Generic, Optional, TypeVar
 
 from . import DefaultBaseModel
 
@@ -17,5 +17,5 @@ class Response(DefaultBaseModel, Generic[T]):
     id: str
     result: Any
     jsonrpc: str = "2.0"
-    error: Optional[Dict[str, Any]] = None
-    metadata: Optional[Dict[str, Any]] = None
+    error: Optional[dict[str, Any]] = None
+    metadata: Optional[dict[str, Any]] = None

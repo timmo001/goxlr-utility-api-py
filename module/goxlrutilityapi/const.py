@@ -94,10 +94,12 @@ FADER_C: Final[str] = "C"
 FADER_D: Final[str] = "D"
 
 # Models
+# pylint: disable=invalid-name
 MODEL_PATCH: type[Patch] = Patch
 MODEL_REQUEST: type[Request] = Request
 MODEL_RESPONSE: type[Response[Any]] = Response
 MODEL_STATUS: type[Status] = Status
+# pylint: enable=invalid-name
 
 MODEL_MAP: Final[dict[str, Any]] = {
     RESPONSE_TYPE_PATCH: MODEL_PATCH,

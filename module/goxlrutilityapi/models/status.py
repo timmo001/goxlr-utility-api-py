@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from . import DefaultBaseModel
 
@@ -24,9 +24,9 @@ class Config(DefaultBaseModel):
 class Versions(DefaultBaseModel):
     """Versions Model"""
 
-    firmware: Optional[List[int]] = field(default=None)
+    firmware: Optional[list[int]] = field(default=None)
     fpga_count: Optional[int] = field(default=None)
-    dice: Optional[List[int]] = field(default=None)
+    dice: Optional[list[int]] = field(default=None)
 
 
 @dataclass
@@ -35,7 +35,7 @@ class UsbDevice(DefaultBaseModel):
 
     manufacturer_name: str
     product_name: str
-    version: List[int]
+    version: list[int]
     bus_number: int
     address: int
     identifier: str | None
@@ -405,8 +405,8 @@ class Lighting(DefaultBaseModel):
     faders: Faders
     buttons: Buttons
     simple: Simple
-    sampler: Optional[Dict[str, Any]] = field(default=None)
-    encoders: Optional[Dict[str, Any]] = field(default=None)
+    sampler: Optional[dict[str, Any]] = field(default=None)
+    encoders: Optional[dict[str, Any]] = field(default=None)
 
 
 @dataclass
@@ -497,7 +497,7 @@ class Mixer(DefaultBaseModel):
     """Mixer Model"""
 
     hardware: Hardware
-    shutdown_commands: List[Any]
+    shutdown_commands: list[Any]
     fader_status: FaderStatuses
     mic_status: MicStatus
     levels: Levels
@@ -527,11 +527,11 @@ class Paths(DefaultBaseModel):
 class Files(DefaultBaseModel):
     """Files Model"""
 
-    profiles: List[str]
-    mic_profiles: List[str]
-    presets: List[str]
-    samples: Dict[str, Any]
-    icons: List[str]
+    profiles: list[str]
+    mic_profiles: list[str]
+    presets: list[str]
+    samples: dict[str, Any]
+    icons: list[str]
 
 
 @dataclass
@@ -539,7 +539,7 @@ class StatusData(DefaultBaseModel):
     """Status Data Model"""
 
     config: Config
-    mixers: Dict[str, Mixer]
+    mixers: dict[str, Mixer]
     paths: Paths
     files: Files
 
@@ -557,7 +557,7 @@ class Status:
 
     id: str
     status: str
-    data: Dict[str, Any]
+    data: dict[str, Any]
     jsonrpc: str = "2.0"
-    error: Optional[Dict[str, Any]] = None
-    metadata: Optional[Dict[str, Any]] = None
+    error: Optional[dict[str, Any]] = None
+    metadata: Optional[dict[str, Any]] = None

@@ -6,7 +6,7 @@ import asyncio
 import socket
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 import aiohttp
 
@@ -47,11 +47,11 @@ class WebSocketClient:
     """GoXLR Utility API: WebSocket Client Model"""
 
     url: str
-    headers: Dict[str, str]
+    headers: dict[str, str]
     timeout: int = 30
     reconnect_interval: int = 5
     max_retries: int = 3
-    metadata: Optional[Dict[str, Any]] = None
+    metadata: Optional[dict[str, Any]] = None
 
 
 class WebsocketClient(Base):
@@ -311,8 +311,7 @@ class WebsocketClient(Base):
 
         while True:
             try:
-                message = await self.receive_message()
-                if message is None:
+                if (message := await self.receive_message()) is None:
                     break
                 await callback(message)
             except (TypeError, ValueError) as error:
