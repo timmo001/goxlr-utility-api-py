@@ -1,4 +1,5 @@
 """GoXLR Utility API: Status Models"""
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -534,8 +535,8 @@ class Files(DefaultBaseModel):
 
 
 @dataclass
-class Status(DefaultBaseModel):
-    """Status Model"""
+class StatusData(DefaultBaseModel):
+    """Status Data Model"""
 
     config: Config
     mixers: Dict[str, Mixer]
@@ -547,7 +548,7 @@ class Status(DefaultBaseModel):
 class Data(DefaultBaseModel):
     """Data Model"""
 
-    status: Status = field(metadata={"alias": "Status"})
+    status: StatusData = field(metadata={"alias": "Status"})
 
 
 @dataclass
